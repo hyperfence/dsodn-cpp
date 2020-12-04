@@ -17,8 +17,8 @@ Let's consider a scenario where the data is not located on a single machine but 
   The entire project was developed and coded by the following team of computer science students:
 </p>
 <ul>
-  <li>Malik Talha</li>
-  <li>Hammad Ahmed</li>
+  <li><a href="https://github.com/malik727">Malik Talha</a></li>
+  <li><a href="https://github.com/hammadahmedpk">Hammad Ahmed</a></li>
   <li>Hunaid Sohail</li>
 </ul>
 <br/>
