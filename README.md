@@ -19,7 +19,7 @@ Let's consider a scenario where the data is not located on a single machine but 
 <ul>
   <li><a href="https://github.com/malik727">Malik Talha</a></li>
   <li><a href="https://github.com/hammadahmedpk">Hammad Ahmed</a></li>
-  <li>Hunaid Sohail</li>
+  <li><a href="https://github.com/Hunaid2000">Hunaid Sohail</a></li>
 </ul>
 <br/>
 <h2>Source</h2>
