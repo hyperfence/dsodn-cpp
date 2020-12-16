@@ -1,4 +1,4 @@
-<h1 align="center">Distributed Storage over Distributed Networks (C++)</h1> 
+<h1 align="center">Data Storage over Distributed Networks (C++)</h1> 
 <br/><br/>
 <p align="center"><strong>Note: This is an educational project created for the sole purpose of self learning.</strong></p>
 <br/>
