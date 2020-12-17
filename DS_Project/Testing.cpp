@@ -373,14 +373,13 @@ public:
     int HashFunction(string s) {
         int sum = 0;
         for (int i = 0; s[i] != '\0'; i++)
-            sum += int(s[i])* pow(i,i);
-        cout << "\nSum: " << sum << endl;
-        cout << "\n-------\n";
-        while(machines.search(sum % int(pow(2, identifierSpace)) == true))
+            sum += int(s[i]);        
+        int temp = sum % int(pow(2, identifierSpace));
+        while(machines.search(temp) == true)
         {
-            sum += 1;
+            temp++;
         }
-        return (sum % int(pow(2, identifierSpace)));
+        return temp;    
     }
 
     void insert(string key, string value) {
