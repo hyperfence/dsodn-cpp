@@ -357,11 +357,9 @@ public:
     ringDHT(int space, int no_machines) {
         identifierSpace = space;
         noOfmachines = no_machines;
-        machines.insert(1);
-        machines.insert(4);
-        machines.insert(7);
-        machines.insert(12);
-        machines.insert(15);
+        for(int i = 0; i < no_machines; i++){
+            machines.insert(-1);
+        }
     }
 
     int HashFunction(string s) {
@@ -379,7 +377,6 @@ public:
         }
         curr->tree.Root = curr->tree.insert(curr->tree.Root, hash);
     }
-
     void insert(int key, string value) {
         node<int>* curr = machines.head;
         while (curr->data < key) {
@@ -387,28 +384,44 @@ public:
         }
         curr->tree.Root = curr->tree.insert(curr->tree.Root, key);
     }
+    
+    void autoAssigning()
+    {
+        node <int>* searchPtr = machines.head;
+        do {
+            int value = -1;
+            ostringstream address;
+            address << searchPtr;
+            string addressInString = address.str();
+            value = dht.HashFunction(addressInString);
 
-
-
+            if (value != -1)
+                searchPtr->data = value;
+            else
+                cout << "Hashing wasn't succesfull you noob!\n";
+            searchPtr = searchPtr->next;
+        } while (searchPtr != machines.head);
+    }
 };
 
 int main()
 {
-
     //Hash h(s.length());
     //h.insert(s);
     ringDHT<string> dht(4, 5);
-    dht.insert(2, "value");
-    dht.insert(3, "value");
-    dht.insert(4, "value");
-    node<int>* curr = dht.machines.head;
+    dht.autoAssigning();
+    dht.machines.display();
+    //dht.insert(2, "value");
+    //dht.insert(3, "value");
+    //dht.insert(4, "value");
+   // node<int>* curr = dht.machines.head;
 
 
-    ostringstream address;
-    address << curr;
-    string s1 = address.str();
-    cout << s1 << endl;
-    cout << dht.HashFunction(s1);
+    //ostringstream address;
+    //address << curr;
+    //string s1 = address.str();
+    //cout << s1 << endl;
+    //cout << dht.HashFunction(s1);
 
 
     // curr= curr->next;

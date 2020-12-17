@@ -75,7 +75,4 @@ public:
         } while (curr != head);
     }
 
-    // ~singlyCircularLinkedList() {
-    //     delete head;
-    // }
 };
