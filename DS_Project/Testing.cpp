@@ -340,9 +340,17 @@ struct singlyCircularLinkedList
         } while (curr != head);
     }
 
-    // ~singlyCircularLinkedList() {
-    //     delete head;
-    // }
+    // adding a new function - Hammad 
+    bool search(int value)
+    {
+        node <T>* ptr = head;
+        do {
+            if (ptr->data == value)
+                return true;
+            ptr = ptr->next;
+        } while (ptr != head);
+        return false;
+    }
 };
 
 
@@ -365,8 +373,14 @@ public:
     int HashFunction(string s) {
         int sum = 0;
         for (int i = 0; s[i] != '\0'; i++)
-            sum += int(s[i]);
-        return sum % int(pow(2, identifierSpace));
+            sum += int(s[i])* pow(i,i);
+        cout << "\nSum: " << sum << endl;
+        cout << "\n-------\n";
+        while(machines.search(sum % int(pow(2, identifierSpace)) == true))
+        {
+            sum += 1;
+        }
+        return (sum % int(pow(2, identifierSpace)));
     }
 
     void insert(string key, string value) {
@@ -393,7 +407,7 @@ public:
             ostringstream address;
             address << searchPtr;
             string addressInString = address.str();
-            value = dht.HashFunction(addressInString);
+            value = HashFunction(addressInString);
 
             if (value != -1)
                 searchPtr->data = value;
@@ -401,6 +415,10 @@ public:
                 cout << "Hashing wasn't succesfull you noob!\n";
             searchPtr = searchPtr->next;
         } while (searchPtr != machines.head);
+    }
+    ~ringDHT()
+    {
+
     }
 };
 
@@ -411,6 +429,7 @@ int main()
     ringDHT<string> dht(4, 5);
     dht.autoAssigning();
     dht.machines.display();
+    dht.machines.clear();
     //dht.insert(2, "value");
     //dht.insert(3, "value");
     //dht.insert(4, "value");
