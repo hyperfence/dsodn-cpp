@@ -415,6 +415,23 @@ public:
             searchPtr = searchPtr->next;
         } while (searchPtr != machines.head);
     }
+    // getting values from user manually 
+    void manualAssigning()
+    {
+        cout << "Enter values for machines respectively: \n";
+        int value = -1;
+        for (int i = 0; i < noOfmachines; i++)
+        {
+            cout << "Value # " << (i + 1) << " : " << endl;
+            cin >> value;
+            while(value < 0 || value > pow(2, identifierSpace))
+            {
+                cout << "Error!\nPlease input a value;\n1) Less than total number of machines!\n2) Greater than zero\n3) Unique\nYour Input: ";
+                cin >> value;
+            }
+            machines.insert(value);
+        }
+    }
     ~ringDHT()
     {
 
@@ -426,9 +443,17 @@ int main()
     //Hash h(s.length());
     //h.insert(s);
     ringDHT<string> dht(4, 5);
-    dht.autoAssigning();
+    //dht.autoAssigning();
     dht.machines.display();
     dht.machines.clear();
+
+    dht.manualAssigning();
+    dht.machines.display();
+    //string arr[] = { "Hammad","Hunaid","Talha","racket","Chairs","Ali","thousands","19I-0582","190.112.123","We are awesome!","You are noob!","Sorry!!!!!","xadasdsadasdasdasdasdasdasdasdasda0" };
+    //for (int i = 0; i < 13; i++)
+    //{
+    //    cout << dht.HashFunction(arr[i]) << endl;
+    //}
     //dht.insert(2, "value");
     //dht.insert(3, "value");
     //dht.insert(4, "value");
