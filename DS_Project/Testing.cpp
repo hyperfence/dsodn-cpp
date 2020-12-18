@@ -286,19 +286,28 @@ struct singlyCircularLinkedList
         temp->next = NULL;
         node<T>* curr = head;
 
-        if (head == NULL)
+        if (curr == NULL)
         {
+            temp->next = temp;
             head = temp;
-            temp->next = head;
         }
-        else
-        {
-            do {
-                curr = curr->next;
-            } while (curr->next != head);
 
+        else if (curr->data >= temp->data)
+        {
+            while (curr->next != head)
+                curr = curr->next;
             curr->next = temp;
             temp->next = head;
+            head = temp;
+        }
+
+        else
+        {
+            while (curr->next != head && curr->next->data < temp->data)
+                curr = curr->next;
+
+            temp->next = curr->next;
+            curr->next = temp;
         }
     }
 
@@ -312,6 +321,23 @@ struct singlyCircularLinkedList
         pre->next = curr->next;
         curr->next = NULL;
         delete curr;
+    }
+
+    void sort() {
+        node<T>* temp1 = head;
+        node<T>* temp2;
+        do {
+            temp2 = temp1->next;
+            while (temp2 != head) {
+                if (temp1->data > temp2->data) {
+                    int temp = temp1->data;
+                    temp1->data = temp2->data;
+                    temp2->data = temp;
+                }
+                temp2 = temp2->next;
+            }
+            temp1 = temp1->next;
+        } while (temp1->next != head);
     }
 
     void clear() {
@@ -364,22 +390,14 @@ struct ringDHT {
 public:
     ringDHT(int space, int no_machines) {
         identifierSpace = space;
-        noOfmachines = no_machines;
-        for(int i = 0; i < no_machines; i++){
-            machines.insert(-1);
-        }
+        noOfmachines = no_machines;        
     }
 
     int HashFunction(string s) {
         int sum = 0;
         for (int i = 0; s[i] != '\0'; i++)
             sum += int(s[i]);        
-        int temp = sum % int(pow(2, identifierSpace));
-        while(machines.search(temp) == true)
-        {
-            temp++;
-        }
-        return temp;    
+        return sum % int(pow(2, identifierSpace));
     }
 
     void insert(string key, string value) {
@@ -400,6 +418,9 @@ public:
     
     void autoAssigning()
     {
+        for (int i = 0; i < noOfmachines; i++) {
+            machines.insert(-1);
+        }
         node <int>* searchPtr = machines.head;
         do {
             int value = -1;
@@ -407,6 +428,10 @@ public:
             address << searchPtr;
             string addressInString = address.str();
             value = HashFunction(addressInString);
+            while (machines.search(value) == true)
+            {
+                value++;
+            }
 
             if (value != -1)
                 searchPtr->data = value;
@@ -414,6 +439,7 @@ public:
                 cout << "Hashing wasn't succesfull you noob!\n";
             searchPtr = searchPtr->next;
         } while (searchPtr != machines.head);
+        machines.sort();
     }
     // getting values from user manually 
     void manualAssigning()
@@ -424,7 +450,7 @@ public:
         {
             cout << "Value # " << (i + 1) << " : " << endl;
             cin >> value;
-            while(value < 0 || value > pow(2, identifierSpace))
+            while(value < 0 || value > pow(2, identifierSpace) || (i > 0 && machines.search(value) == true)) // check for unique number and for number between identifier space
             {
                 cout << "Error!\nPlease input a value;\n1) Less than total number of machines!\n2) Greater than zero\n3) Unique\nYour Input: ";
                 cin >> value;
@@ -443,12 +469,13 @@ int main()
     //Hash h(s.length());
     //h.insert(s);
     ringDHT<string> dht(4, 5);
-    //dht.autoAssigning();
+    /*dht.autoAssigning();
     dht.machines.display();
-    dht.machines.clear();
+    dht.machines.clear();*/
 
     dht.manualAssigning();
     dht.machines.display();
+    dht.machines.clear();
     //string arr[] = { "Hammad","Hunaid","Talha","racket","Chairs","Ali","thousands","19I-0582","190.112.123","We are awesome!","You are noob!","Sorry!!!!!","xadasdsadasdasdasdasdasdasdasdasda0" };
     //for (int i = 0; i < 13; i++)
     //{
