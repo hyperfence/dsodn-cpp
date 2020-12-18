@@ -144,8 +144,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AVL_Tree.h" />
-    <ClInclude Include="LinkedList.h" />
+    <ClInclude Include="CircularLinkedList.h" />
     <ClInclude Include="Machines.h" />
+    <ClInclude Include="Ring_DHT.h" />
+    <ClInclude Include="RoutingTable.h" />
+    <ClInclude Include="SinglyLinkedList.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

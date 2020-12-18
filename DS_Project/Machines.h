@@ -1,5 +1,6 @@
 #pragma once
 #include "AVL_Tree.h"
+#include "RoutingTable.h"
 
 using namespace std;
 
@@ -8,7 +9,7 @@ struct Machine_Node
 {
 	N data;
 	Machine_Node<N>* next;
-	Machine_Node<N>* routingTable;
+	RoutingTable* routingTable;
 	AVL<N> tree;
 };
 
@@ -35,7 +36,7 @@ public:
         Machine_Node<T>* temp = new Machine_Node<T>;
         temp->data = value;
         temp->next = NULL;
-        temp->routingTable = new Machine_Node<T>(); // Initializing the routing table for every node on heap
+        temp->routingTable = NULL;
         Machine_Node<T>* curr = head;
         if (this->head == NULL)
         {
@@ -183,17 +184,25 @@ public:
                 if (routingTable[i] > identifierSpace-1)
                 {
                     routingTable[i] = routingTable[i] - identifierSpace;
-                    //cout << " " << routingTable[i];
-                }
-                else
-                {
-                    //cout << " " << routingTable[i];
                 }
             }
             for (int i = 0; i < routingTableSize; i++)
             {
                 Machine_Node<T>* nearestActive = this->getSuccessorMachine(routingTable[i]);
-                cout << " " << nearestActive->data;
+                if (temp->routingTable == NULL) //The routing table is empty
+                {
+                    temp->routingTable = new RoutingTable();
+                    temp->routingTable->insert(static_cast<void*>(nearestActive));                   
+                }
+                else // The routing table is not empty. So lets assign the machine to its end
+                {
+                    temp->routingTable->insert(static_cast<void*>(nearestActive));
+                }
+            }
+            for (int i = 0; i < routingTableSize; i++)
+            {
+                Machine_Node<T>* temp2 = static_cast<Machine_Node<T>*>(temp->routingTable->getElement(i));
+                cout << " " << temp2->data;
             }
             temp = temp->next;
             cout << endl;
