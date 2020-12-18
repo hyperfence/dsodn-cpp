@@ -1,3 +1,8 @@
+#pragma once
+#include <iostream>
+
+using namespace std;
+
 template <class T>
 struct AVL {
     template <class U>

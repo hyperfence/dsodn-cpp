@@ -464,56 +464,56 @@ public:
     }
 };
 
-int main()
-{
-    //Hash h(s.length());
-    //h.insert(s);
-    ringDHT<string> dht(4, 5);
-    /*dht.autoAssigning();
-    dht.machines.display();
-    dht.machines.clear();*/
-
-    dht.manualAssigning();
-    dht.machines.display();
-    dht.machines.clear();
-    //string arr[] = { "Hammad","Hunaid","Talha","racket","Chairs","Ali","thousands","19I-0582","190.112.123","We are awesome!","You are noob!","Sorry!!!!!","xadasdsadasdasdasdasdasdasdasdasda0" };
-    //for (int i = 0; i < 13; i++)
-    //{
-    //    cout << dht.HashFunction(arr[i]) << endl;
-    //}
-    //dht.insert(2, "value");
-    //dht.insert(3, "value");
-    //dht.insert(4, "value");
-   // node<int>* curr = dht.machines.head;
-
-
-    //ostringstream address;
-    //address << curr;
-    //string s1 = address.str();
-    //cout << s1 << endl;
-    //cout << dht.HashFunction(s1);
-
-
-    // curr= curr->next;
-    // curr->tree.inOrder(curr->tree.Root);
-
-    // cout<<endl;
-    // dht.insert(7,"value");
-    // dht.insert(5,"value");
-    // curr= curr->next;
-    // curr->tree.inOrder(curr->tree.Root);
-
-    // cout<<endl;
-    // dht.insert(8,"value");
-    // dht.insert(12,"value");
-    // dht.insert(9,"value");
-    // dht.insert(10,"value");
-    // dht.insert(11,"value");
-    // curr= curr->next;
-    // curr->tree.inOrder(curr->tree.Root);
-
-    //cout<< h.HashFunction(s)<<endl;
-    //cout<<h.Search(s);
-
-    return 0;
-}
+//int main()
+//{
+//    //Hash h(s.length());
+//    //h.insert(s);
+//    ringDHT<string> dht(4, 5);
+//    /*dht.autoAssigning();
+//    dht.machines.display();
+//    dht.machines.clear();*/
+//
+//    dht.manualAssigning();
+//    dht.machines.display();
+//    dht.machines.clear();
+//    //string arr[] = { "Hammad","Hunaid","Talha","racket","Chairs","Ali","thousands","19I-0582","190.112.123","We are awesome!","You are noob!","Sorry!!!!!","xadasdsadasdasdasdasdasdasdasdasda0" };
+//    //for (int i = 0; i < 13; i++)
+//    //{
+//    //    cout << dht.HashFunction(arr[i]) << endl;
+//    //}
+//    //dht.insert(2, "value");
+//    //dht.insert(3, "value");
+//    //dht.insert(4, "value");
+//   // node<int>* curr = dht.machines.head;
+//
+//
+//    //ostringstream address;
+//    //address << curr;
+//    //string s1 = address.str();
+//    //cout << s1 << endl;
+//    //cout << dht.HashFunction(s1);
+//
+//
+//    // curr= curr->next;
+//    // curr->tree.inOrder(curr->tree.Root);
+//
+//    // cout<<endl;
+//    // dht.insert(7,"value");
+//    // dht.insert(5,"value");
+//    // curr= curr->next;
+//    // curr->tree.inOrder(curr->tree.Root);
+//
+//    // cout<<endl;
+//    // dht.insert(8,"value");
+//    // dht.insert(12,"value");
+//    // dht.insert(9,"value");
+//    // dht.insert(10,"value");
+//    // dht.insert(11,"value");
+//    // curr= curr->next;
+//    // curr->tree.inOrder(curr->tree.Root);
+//
+//    //cout<< h.HashFunction(s)<<endl;
+//    //cout<<h.Search(s);
+//
+//    return 0;
+//}

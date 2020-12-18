@@ -1,5 +1,5 @@
 template <class T>
-class singlyCircularLinkedList
+class singlyCircularList
 {
     template <class U>
     struct node
@@ -9,7 +9,7 @@ class singlyCircularLinkedList
     };
     node<T>* head;
 public:
-    singlyCircularLinkedList()
+    singlyCircularList()
     {
         head = NULL;
     }
