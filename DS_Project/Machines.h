@@ -116,6 +116,31 @@ public:
         return size;
     }
 
+    /*
+        This function takes the key of the machine and returns that specific machine if
+        found else this function will return NULL if machine not found.
+    */
+    Machine_Node<T>* getMachine(T value)
+    {
+        Machine_Node<T>* successor = new Machine_Node<T>();
+        successor = NULL;
+        Machine_Node<T>* ptr = head;
+        do
+        {
+            if (ptr->data == value)
+            {
+                successor = ptr;
+                break;
+            }
+            ptr = ptr->next;
+        } while (ptr != head);
+        return successor;
+    }
+
+    /*
+        This function takes the key of the machine and finds the immediate active successor
+        and then return that machine else this function will return NULL if machine not found.
+    */
     Machine_Node<T>* getSuccessorMachine(T value)
     {
         Machine_Node<T>* successor = new Machine_Node<T>();
@@ -152,7 +177,11 @@ public:
         } while (curr != head);
         cout << "NULL" << endl;
     }
-    bool search(T value)
+
+    /*
+        This function returns true if the machine exists in the DHT
+    */
+    bool machineExists(T value)
     {
         bool flag = false;
         Machine_Node<T>* ptr = head;
@@ -164,6 +193,59 @@ public:
             ptr = ptr->next;
         } while (ptr != head);
         return flag;
+    }
+
+    /*
+        This function takes hashed key of data and machine from the Ring_DHT class and then
+        performs the search according to the given keys
+    */
+    Machine_Node<T>* searchData(T dataKey, T machineKey, Machine_Node<T>* startingMachine = NULL)
+    {
+        if (startingMachine == NULL)
+        {
+            startingMachine = this->getMachine(machineKey);
+        }
+        for (int i=0; i<routingTableSize; i++)
+        {
+            Machine_Node<T>* temp = new Machine_Node<T>();
+            Machine_Node<T>* temp2 = new Machine_Node<T>();
+            temp = static_cast<Machine_Node<T>*>(startingMachine->routingTable->getElement(i));
+            temp2 = static_cast<Machine_Node<T>*>(startingMachine->routingTable->getElement(i+1)); 
+            if (temp->data == dataKey)
+            {
+                cout << "Reached Machine: " << temp->data << endl;
+                return startingMachine;
+            }
+            else if (dataKey > startingMachine->data && dataKey <= temp->data)
+            {
+                cout << "Reached Machine: " << temp->data << endl;
+                startingMachine = temp;
+                return startingMachine;
+            }
+            else if (dataKey > temp->data && temp2 != NULL && dataKey < temp2->data)
+            {
+                cout << "Reached Machine: " << temp->data << endl;
+                startingMachine = temp;
+                Machine_Node<T>* machineFound = new Machine_Node<T>();
+                machineFound = searchData(dataKey, machineKey, startingMachine);
+                if (machineFound != NULL)
+                {
+                    return machineFound;
+                }
+            }
+            else if (dataKey > temp->data && temp2 == NULL)
+            {
+                cout << "Reached Machine: " << temp->data << endl;
+                startingMachine = temp;
+                Machine_Node<T>* machineFound = new Machine_Node<T>();
+                machineFound = searchData(dataKey, machineKey, startingMachine);
+                if (machineFound != NULL)
+                {
+                    return machineFound;
+                }
+            }
+        }
+        return NULL;
     }
 
     /*
@@ -192,21 +274,24 @@ public:
                 if (temp->routingTable == NULL) //The routing table is empty
                 {
                     temp->routingTable = new RoutingTable();
-                    temp->routingTable->insert(static_cast<void*>(nearestActive));                   
+                    // Typecast the Machine_Node pointer to void pointer to store it in routing_tables linked list
+                    temp->routingTable->insert(static_cast<void*>(nearestActive));            
                 }
                 else // The routing table is not empty. So lets assign the machine to its end
                 {
+                    // Typecast the Machine_Node pointer to void pointer to store it in routing_tables linked list
                     temp->routingTable->insert(static_cast<void*>(nearestActive));
                 }
             }
+            // Display the values of routing tables
             for (int i = 0; i < routingTableSize; i++)
             {
+                // Now typecast the void pointer back to Machine_Node pointer to access the data
                 Machine_Node<T>* temp2 = static_cast<Machine_Node<T>*>(temp->routingTable->getElement(i));
                 cout << " " << temp2->data;
             }
             temp = temp->next;
             cout << endl;
-        } while (temp != head);
-        
+        } while (temp != head);    
 	}
 };

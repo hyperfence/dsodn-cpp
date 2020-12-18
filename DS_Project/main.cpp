@@ -16,6 +16,15 @@ int main()
 	m.insert(18);
 	m.display();
 	m.configureRoutingTable();
+	Machine_Node<int>* temp = m.searchData(12, 28);
+	if (temp != NULL)
+	{
+		cout << "Data is at Machine: " << temp->data << endl;
+	}
+	else
+	{
+		cout << "Couldn't find the data!" << endl;
+	}
 	return 0;
 }
 

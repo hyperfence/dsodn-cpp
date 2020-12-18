@@ -51,6 +51,10 @@ public:
 		Routing_Table_Node* n = head;
 		for (int i = 0; ; i++)
 		{
+			if (n == NULL)
+			{
+				return NULL;
+			}
 			if (i == elementID)
 			{
 				return n->data;
