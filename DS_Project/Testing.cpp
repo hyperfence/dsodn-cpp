@@ -392,13 +392,38 @@ public:
         identifierSpace = space;
         noOfmachines = no_machines;        
     }
-
-    int HashFunction(string s) {
-        int sum = 0;
-        for (int i = 0; s[i] != '\0'; i++)
-            sum += int(s[i]);        
-        return sum % int(pow(2, identifierSpace));
+    
+    // our finalized HashFunction..
+    int HashFunction(string key)
+    {
+        unsigned int hashedValue = 0;
+        for (int i = 0; key[i] != '\0'; i++)
+        {
+            hashedValue = 37 * hashedValue + key[i];
+        }
+        return hashedValue % (int)pow(2,identifierSpace);
     }
+
+    //int HashFunction(string const& s) {
+    //    const int p = 31;
+    //    const int m = 1e9 + 9;
+    //    long long hash_value = 0;
+    //    long long p_pow = 1;
+    //    for (char c : s) {
+    //        hash_value = (hash_value + (c - 'a' + 1) * p_pow) % m;
+    //        p_pow = (p_pow * p) % m;
+    //    }
+    //    if (hash_value < 0)
+    //        hash_value *= -1;
+    //    //cout << "Hash Value: " << (long long) hash_value << endl;
+    //    return hash_value % 16;
+    //}
+    //int HashFunction(string s) {
+    //    int sum = 0;
+    //    for (int i = 0; s[i] != '\0'; i++)
+    //        sum += int(s[i]);        
+    //    return sum % int(pow(2, identifierSpace));
+    //}
 
     void insert(string key, string value) {
         int hash = HashFunction(key);
@@ -415,7 +440,6 @@ public:
         }
         curr->tree.Root = curr->tree.insert(curr->tree.Root, key);
     }
-    
     void autoAssigning()
     {
         for (int i = 0; i < noOfmachines; i++) {
@@ -431,6 +455,7 @@ public:
             while (machines.search(value) == true)
             {
                 value++;
+                value = value % (int)pow(2, identifierSpace);
             }
 
             if (value != -1)
@@ -464,6 +489,12 @@ public:
     }
 };
 
+int main()
+{
+    ringDHT <string> dht(4, 16);
+    dht.autoAssigning();
+    dht.machines.display();
+}
 //int main()
 //{
 //    //Hash h(s.length());
