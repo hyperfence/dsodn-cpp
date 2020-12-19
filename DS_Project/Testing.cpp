@@ -1,16 +1,194 @@
 #include <iostream>
 #include <string>
+#include <fstream>
 #include <sstream>
 #include <math.h>
 #include "SinglyLinkedList.h"
 using namespace std;
 
+class MachineFile {
+    string path, fileName;
+    int lineNumber;
+public:
+    MachineFile() {
+        lineNumber = 0;
+        path = "";
+        fileName = "";
+    }
 
+    void setFileName(int machineID) {
+        fileName = "Machine_" + to_string(machineID) + ".txt";
+    }
+
+    void insert(string value) {
+        ofstream out;
+        out.open(path + fileName, ios::app);
+        out << value << endl;
+        out.close();
+    }
+
+};
+
+
+template <class U>
+struct node
+{
+    U data;
+    node<U>* next;
+    long long int beforeHash;
+    MachineFile file;
+};
+template <class T>
+class List
+{
+
+
+public:
+    node<T>* head;
+    List()
+    {
+        head = NULL;
+    }
+
+    void insert(T n)
+    {
+        node<T>* temp = new node<T>;
+        temp->data = n;
+        temp->next = NULL;
+        node<T>* curr = head;
+
+        if (head == NULL)
+        {
+            head = temp;
+        }
+        else
+        {
+            while (curr->next != NULL)
+                curr = curr->next;
+            curr->next = temp;
+        }
+    }
+
+    void insertAt(T n, int index)
+    {
+        node<T>* temp = new node<T>;
+        temp->data = n;
+        node<T>* pre = new node<T>;
+        node<T>* curr = head;
+        for (int i = 0; i < index; i++) {
+            pre = curr;
+            curr = curr->next;
+        }
+        pre->next = temp;
+        temp->next = curr;
+    }
+
+    void RemoveByValue(T n) {
+        node<T>* pre = new node<T>;
+        node<T>* curr = head;
+        while (curr->data != n) {
+            pre = curr;
+            curr = curr->next;
+        }
+        pre->next = curr->next;
+        curr->next = NULL;
+        delete curr;
+    }
+
+    void Remove() {
+        node<T>* curr = head;
+        node<T>* pre = new node<T>;
+        while (curr->next != NULL) {
+            pre = curr;
+            curr = curr->next;
+        }
+        pre->next = NULL;
+        curr->next = NULL;
+        delete curr;
+    }
+
+    void RemoveAt(int index) {
+        node<T>* pre = new node<T>;
+        node<T>* curr = head;
+        for (int i = 0; i < index; i++) {
+            pre = curr;
+            curr = curr->next;
+        }
+        pre->next = curr->next;
+        curr->next = NULL;
+        delete curr;
+    }
+
+    void replaceAt(T n, int index) {
+        node<T>* curr = head;
+        for (int i = 0; i < index; i++) {
+            curr = curr->next;
+        }
+        curr->data = n;
+    }
+
+    void clear() {
+        node<T>* curr;
+        while (head != NULL)
+        {
+            curr = head;
+            delete curr;
+            head = head->next;
+        }
+    }
+
+    void display() {
+        node<T>* temp = head;
+        if (head == NULL)
+        {
+            cout << "Empty List";
+        }
+        while (temp != NULL)
+        {
+            cout << temp->data << " ";
+            temp = temp->next;
+        }
+    }
+
+    void sort() {
+        node<T>* temp1 = head;
+        node<T>* temp2;
+        while (temp1->next != NULL) {
+            temp2 = temp1->next;
+            while (temp2 != NULL) {
+                if (temp1->data > temp2->data) {
+                    T temp = temp1->data;
+                    temp1->data = temp2->data;
+                    temp2->data = temp;
+                }
+                temp2 = temp2->next;
+            }
+            temp1 = temp1->next;
+        }
+    }
+
+    void insertAtMiddle(T n) {
+        int len = 0;
+        node<T>* curr = head;
+        while (curr->next != NULL) {
+            len++;
+            curr = curr->next;
+        }
+        insertAt(n, len / 2 + 1);
+    }
+
+    ~List() {
+        delete head;
+    }
+};
+
+
+/////// AVL CLass ///////
 template <class T>
 struct AVL {
     template <class U>
     struct Node {
-        SinglyLinkedList <U> data;
+        List<U> l;
         Node<U>* Left;
         Node<U>* Right;
         int height;
@@ -69,16 +247,17 @@ struct AVL {
     Node<T>* insert(Node<T>* n, T value) {
         if (n == NULL) {
             n = new Node<T>;
-            n->data = value;
+            //n->l.head->data = value;
+            n->l.insert(value);
             n->Left = NULL;
             n->Right = NULL;
             n->height = 1;
             return n;
         }
-        else if (value < n->data) {
+        else if (value < n->l.head->data) {
             n->Left = insert(n->Left, value);
         }
-        else if (value > n->data) {
+        else if (value > n->l.head->data) {
             n->Right = insert(n->Right, value);
         }
         else
@@ -87,19 +266,19 @@ struct AVL {
         n->height = 1 + max(getHeight(n->Left), getHeight(n->Right));
         int balance = Balance(n);
 
-        if (balance > 1 && value < n->Left->data)
+        if (balance > 1 && value < n->Left->l.head->data)
             return rotateRight(n);
 
-        if (balance < -1 && value > n->Right->data)
+        if (balance < -1 && value > n->Right->l.head->data)
             return rotateLeft(n);
 
-        if (balance > 1 && value > n->Left->data)
+        if (balance > 1 && value > n->Left->l.head->data)
         {
             n->Left = rotateLeft(n->Left);
             return rotateRight(n);
         }
 
-        if (balance < -1 && value < n->Right->data)
+        if (balance < -1 && value < n->Right->l.head->data)
         {
             n->Right = rotateRight(n->Right);
             return rotateLeft(n);
@@ -181,13 +360,13 @@ struct AVL {
     void inOrder(Node<T>* n) {
         if (n != NULL) {
             inOrder(n->Left);
-            cout << n->data << " ";
+            cout << n->l.head->data << " ";
             inOrder(n->Right);
         }
     }
 
 };
-////////////////////////////////// routing table ////////////////////////////
+/////// Routing_Table ///////
 
 struct Routing_Table_Node
 {
@@ -571,20 +750,21 @@ struct ringDHT {
 public:
     ringDHT(int space, int no_machines) {
         identifierSpace = space;
-        noOfmachines = no_machines;        
+        noOfmachines = no_machines;
     }
-    
+
     // our finalized HashFunction..
-    int HashFunction(string key, long long &object)
+    int HashFunction(string key)
     {
-        unsigned int hashedValue = 0;
+        long long int hashedValue = 0;
         for (int i = 0; key[i] != '\0'; i++)
         {
             hashedValue = 37 * hashedValue + key[i];
         }
-        // classVar = hashedValue;
-        // object = hashValue;
-        return hashedValue % (int)pow(2,identifierSpace);
+        cout << hashedValue << endl;
+        if (hashedValue < 0)
+            hashedValue *= -1;
+        return hashedValue % (int)pow(2, identifierSpace);
     }
 
     //int HashFunction(string const& s) {
@@ -616,6 +796,7 @@ public:
         }
         curr->tree.Root = curr->tree.insert(curr->tree.Root, hash);
     }
+
     void insert(int key, string value) {
         Machine_Node<int>* curr = machines.head;
         while (curr->data < key) {
@@ -623,6 +804,7 @@ public:
         }
         curr->tree.Root = curr->tree.insert(curr->tree.Root, key);
     }
+
     void autoAssigning()
     {
         for (int i = 0; i < noOfmachines; i++) {
@@ -658,7 +840,7 @@ public:
         {
             cout << "Value # " << (i + 1) << " : " << endl;
             cin >> value;
-            while(value < 0 || value > pow(2, identifierSpace) || (i > 0 && machines.machineExists(value) == true)) // check for unique number and for number between identifier space
+            while (value < 0 || value > pow(2, identifierSpace) || (i > 0 && machines.machineExists(value) == true)) // check for unique number and for number between identifier space
             {
                 cout << "Error!\nPlease input a value;\n1) Less than total number of machines!\n2) Greater than zero\n3) Unique\nYour Input: ";
                 cin >> value;
@@ -672,62 +854,23 @@ public:
     }
 };
 
-int main()
-{
-    ringDHT <string> dht(4, 5);
+
+
+
+int main() {
+    ringDHT<string> dht(4, 5);
     dht.autoAssigning();
     dht.machines.display();
+    dht.insert("Hammad Ahmed", "i192043");
+
+
+    Machine_Node<int>* searchPtr = dht.machines.head;
+    do {
+        cout << searchPtr->data << " ";
+        searchPtr->tree.inOrder(searchPtr->tree.Root);
+        cout << endl;
+        searchPtr = searchPtr->next;
+    } while (searchPtr != dht.machines.head);
+
+    return 0;
 }
-//int main()
-//{
-//    //Hash h(s.length());
-//    //h.insert(s);
-//    ringDHT<string> dht(4, 5);
-//    /*dht.autoAssigning();
-//    dht.machines.display();
-//    dht.machines.clear();*/
-//
-//    dht.manualAssigning();
-//    dht.machines.display();
-//    dht.machines.clear();
-//    //string arr[] = { "Hammad","Hunaid","Talha","racket","Chairs","Ali","thousands","19I-0582","190.112.123","We are awesome!","You are noob!","Sorry!!!!!","xadasdsadasdasdasdasdasdasdasdasda0" };
-//    //for (int i = 0; i < 13; i++)
-//    //{
-//    //    cout << dht.HashFunction(arr[i]) << endl;
-//    //}
-//    //dht.insert(2, "value");
-//    //dht.insert(3, "value");
-//    //dht.insert(4, "value");
-//   // node<int>* curr = dht.machines.head;
-//
-//
-//    //ostringstream address;
-//    //address << curr;
-//    //string s1 = address.str();
-//    //cout << s1 << endl;
-//    //cout << dht.HashFunction(s1);
-//
-//
-//    // curr= curr->next;
-//    // curr->tree.inOrder(curr->tree.Root);
-//
-//    // cout<<endl;
-//    // dht.insert(7,"value");
-//    // dht.insert(5,"value");
-//    // curr= curr->next;
-//    // curr->tree.inOrder(curr->tree.Root);
-//
-//    // cout<<endl;
-//    // dht.insert(8,"value");
-//    // dht.insert(12,"value");
-//    // dht.insert(9,"value");
-//    // dht.insert(10,"value");
-//    // dht.insert(11,"value");
-//    // curr= curr->next;
-//    // curr->tree.inOrder(curr->tree.Root);
-//
-//    //cout<< h.HashFunction(s)<<endl;
-//    //cout<<h.Search(s);
-//
-//    return 0;
-//}
