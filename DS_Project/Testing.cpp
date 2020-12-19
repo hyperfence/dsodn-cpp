@@ -3,7 +3,6 @@
 #include <fstream>
 #include <sstream>
 #include <math.h>
-#include "SinglyLinkedList.h"
 using namespace std;
 
 class MachineFile {
@@ -245,7 +244,6 @@ struct AVL {
     Node<T>* insert(Node<T>* n, T value) {
         if (n == NULL) {
             n = new Node<T>;
-            //n->l.head->data = value;
             n->l.insert(value);
             n->Left = NULL;
             n->Right = NULL;
@@ -257,6 +255,9 @@ struct AVL {
         }
         else if (value > n->l.head->data) {
             n->Right = insert(n->Right, value);
+        }
+        else if (value == n->l.head->data) {
+            n->l.insert(value);
         }
         else
             return n;
@@ -358,7 +359,8 @@ struct AVL {
     void inOrder(Node<T>* n) {
         if (n != NULL) {
             inOrder(n->Left);
-            cout << n->l.head->data << " ";
+            //cout << n->l.head->data << " ";
+            n->l.display();
             inOrder(n->Right);
         }
     }
@@ -446,8 +448,6 @@ public:
     }
 };
 
-
-/// ////////////////////////////////// machine node ///////////////////////////
 
 template <typename N>
 struct Machine_Node
@@ -762,9 +762,9 @@ public:
         {
             hashedValue = 37 * hashedValue + key[i];
         }
-        
-        //if (hashedValue < 0)
-        //    hashedValue *= -1;
+        cout << hashedValue << endl;
+        if (hashedValue < 0)
+            hashedValue *= -1;
         return hashedValue % (int)pow(2, identifierSpace);
     }
 
@@ -862,9 +862,7 @@ int main() {
     ringDHT<string> dht(4, 5);
     dht.autoAssigning();
     dht.machines.display();
-   // dht.insert("Hammad Ahmed is a goodest badest boy!", "i190582");
-    dht.insert("sdasdasfasfdsgafdgadrdfhadfhdfdhadfherfh", "i190582");
-   // dht.insert("Hammad Ahmed is a goodest badest boy!", "i190582");
+    dht.insert("Hammad Ahmed", "i192043");
 
 
     Machine_Node<int>* searchPtr = dht.machines.head;
