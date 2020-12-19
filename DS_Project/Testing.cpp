@@ -380,13 +380,383 @@ struct singlyCircularLinkedList
 };
 
 
+struct Routing_Table_Node
+{
+    void* data;
+    Routing_Table_Node* next;
+};
+
+class RoutingTable
+{
+private:
+    Routing_Table_Node* head;
+
+public:
+    RoutingTable()
+    {
+        head = NULL;
+    }
+    void* getHead()
+    {
+        return head;
+    }
+    void insert(void* data)
+    {
+        Routing_Table_Node* temp = new Routing_Table_Node();
+        temp->data = data;
+        temp->next = NULL;
+        if (head == NULL)
+        {
+            head = temp;
+        }
+        else
+        {
+            Routing_Table_Node* n = head;
+            for (int i = 0; ; i++)
+            {
+                if (n->next == NULL)
+                {
+                    n->next = temp;
+                    break;
+                }
+                n = n->next;
+            }
+        }
+    }
+    void* getElement(int elementID)
+    {
+        Routing_Table_Node* n = head;
+        for (int i = 0; ; i++)
+        {
+            if (n == NULL)
+            {
+                return NULL;
+            }
+            if (i == elementID)
+            {
+                return n->data;
+            }
+            n = n->next;
+        }
+        return NULL;
+    }
+    void display()
+    {
+        Routing_Table_Node* n = head;
+        while (n != NULL)
+        {
+            cout << " " << n->data;
+            n = n->next;
+        }
+    }
+    bool isEmpty()
+    {
+        bool flag = true;
+        if (head != NULL)
+        {
+            flag = false;
+        }
+        return flag;
+    }
+};
+
+
+template <typename N>
+struct Machine_Node
+{
+    N data;
+    Machine_Node<N>* next;
+    RoutingTable* routingTable;
+    AVL<N> tree;
+};
+
+template <class T>
+struct Machines {
+    int routingTableSize;
+    Machine_Node<T>* head;
+
+    Machines()
+    {
+        this->head = NULL;
+    }
+
+    Machines(int identifierSpace)
+    {
+        identifierSpace = log2(identifierSpace);
+        this->routingTableSize = identifierSpace;
+    }
+
+    void insert(T value)
+    {
+        Machine_Node<T>* temp = new Machine_Node<T>;
+        temp->data = value;
+        temp->next = NULL;
+        temp->routingTable = NULL;
+        Machine_Node<T>* curr = head;
+        if (this->head == NULL)
+        {
+            temp->next = temp;
+            head = temp;
+        }
+        else if (curr->data >= temp->data)
+        {
+            while (curr->next != head)
+            {
+                curr = curr->next;
+            }
+            curr->next = temp;
+            temp->next = head;
+            head = temp;
+        }
+        else
+        {
+            while (curr->next != head && curr->next->data < temp->data)
+                curr = curr->next;
+
+            temp->next = curr->next;
+            curr->next = temp;
+        }
+    }
+
+    void remove(T value) {
+        Machine_Node<T>* pre = new Machine_Node<T>;
+        Machine_Node<T>* curr = head;
+        while (curr->data != value) {
+            pre = curr;
+            curr = curr->next;
+        }
+        pre->next = curr->next;
+        curr->next = NULL;
+        delete curr;
+    }
+
+    void sort() {
+        Machine_Node<T>* temp1 = head;
+        Machine_Node<T>* temp2;
+        do {
+            temp2 = temp1->next;
+            while (temp2 != head) {
+                if (temp1->data > temp2->data) {
+                    int temp = temp1->data;
+                    temp1->data = temp2->data;
+                    temp2->data = temp;
+                }
+                temp2 = temp2->next;
+            }
+            temp1 = temp1->next;
+        } while (temp1->next != head);
+    }
+
+    void clear() {
+        Machine_Node<T>* curr = head;
+        Machine_Node<T>* temp;
+        do
+        {
+            temp = curr;
+            curr = curr->next;
+            delete temp;
+        } while (curr != head);
+        head = NULL;
+    }
+
+    int getTotalSize()
+    {
+        int size = 0;
+        Machine_Node<T>* temp = head;
+        do
+        {
+            temp = temp->next;
+            size++;
+        } while (temp != head);
+        return size;
+    }
+
+    /*
+        This function takes the key of the machine and returns that specific machine if
+        found else this function will return NULL if machine not found.
+    */
+    Machine_Node<T>* getMachine(T value)
+    {
+        Machine_Node<T>* successor = new Machine_Node<T>();
+        successor = NULL;
+        Machine_Node<T>* ptr = head;
+        do
+        {
+            if (ptr->data == value)
+            {
+                successor = ptr;
+                break;
+            }
+            ptr = ptr->next;
+        } while (ptr != head);
+        return successor;
+    }
+
+    /*
+        This function takes the key of the machine and finds the immediate active successor
+        and then return that machine else this function will return NULL if machine not found.
+    */
+    Machine_Node<T>* getSuccessorMachine(T value)
+    {
+        Machine_Node<T>* successor = new Machine_Node<T>();
+        successor = NULL;
+        Machine_Node<T>* ptr = head;
+        while (1) // Infinite Loop Until Successor is found
+        {
+            if (ptr->data >= value)
+            {
+                successor = ptr;
+                break;
+            }
+            ptr = ptr->next;
+            if (ptr == head)
+            {
+                successor = ptr;
+                break;
+            }
+        }
+        return successor;
+    }
+
+    void display() {
+        Machine_Node<T>* curr = head;
+        if (head == NULL)
+        {
+            cout << "Empty List" << endl;
+            return;
+        }
+        do
+        {
+            cout << curr->data << " -> ";
+            curr = curr->next;
+        } while (curr != head);
+        cout << "NULL" << endl;
+    }
+
+    /*
+        This function returns true if the machine exists in the DHT
+    */
+    bool machineExists(T value)
+    {
+        bool flag = false;
+        Machine_Node<T>* ptr = head;
+        do {
+            if (ptr->data == value)
+            {
+                flag = true;
+            }
+            ptr = ptr->next;
+        } while (ptr != head);
+        return flag;
+    }
+
+    /*
+        This function takes hashed key of data and machine from the Ring_DHT class and then
+        performs the search according to the given keys
+    */
+    Machine_Node<T>* searchData(T dataKey, T machineKey, Machine_Node<T>* startingMachine = NULL)
+    {
+        if (startingMachine == NULL)
+        {
+            startingMachine = this->getMachine(machineKey);
+        }
+        for (int i = 0; i < routingTableSize; i++)
+        {
+            Machine_Node<T>* temp = new Machine_Node<T>();
+            Machine_Node<T>* temp2 = new Machine_Node<T>();
+            temp = static_cast<Machine_Node<T>*>(startingMachine->routingTable->getElement(i));
+            temp2 = static_cast<Machine_Node<T>*>(startingMachine->routingTable->getElement(i + 1));
+            if (temp->data == dataKey)
+            {
+                cout << "Reached Machine: " << temp->data << endl;
+                return startingMachine;
+            }
+            else if (dataKey > startingMachine->data && dataKey <= temp->data)
+            {
+                cout << "Reached Machine: " << temp->data << endl;
+                startingMachine = temp;
+                return startingMachine;
+            }
+            else if (dataKey > temp->data && temp2 != NULL && dataKey < temp2->data)
+            {
+                cout << "Reached Machine: " << temp->data << endl;
+                startingMachine = temp;
+                Machine_Node<T>* machineFound = new Machine_Node<T>();
+                machineFound = searchData(dataKey, machineKey, startingMachine);
+                if (machineFound != NULL)
+                {
+                    return machineFound;
+                }
+            }
+            else if (dataKey > temp->data && temp2 == NULL)
+            {
+                cout << "Reached Machine: " << temp->data << endl;
+                startingMachine = temp;
+                Machine_Node<T>* machineFound = new Machine_Node<T>();
+                machineFound = searchData(dataKey, machineKey, startingMachine);
+                if (machineFound != NULL)
+                {
+                    return machineFound;
+                }
+            }
+        }
+        return NULL;
+    }
+
+    /*
+        This function adjusts routing tables for every machine
+    */
+    void configureRoutingTable()
+    {
+        int numOfMachines = this->getTotalSize();
+        Machine_Node<T>* temp = head;
+        do
+        {
+            int identifierSpace = pow(2, this->routingTableSize);
+            cout << "Machine " << temp->data << ": ";
+            T* routingTable = new T[this->routingTableSize];
+            for (int i = 0; i < routingTableSize; i++)
+            {
+                routingTable[i] = temp->data + pow(2, i);
+                if (routingTable[i] > identifierSpace - 1)
+                {
+                    routingTable[i] = routingTable[i] - identifierSpace;
+                }
+            }
+            for (int i = 0; i < routingTableSize; i++)
+            {
+                Machine_Node<T>* nearestActive = this->getSuccessorMachine(routingTable[i]);
+                if (temp->routingTable == NULL) //The routing table is empty
+                {
+                    temp->routingTable = new RoutingTable();
+                    // Typecast the Machine_Node pointer to void pointer to store it in routing_tables linked list
+                    temp->routingTable->insert(static_cast<void*>(nearestActive));
+                }
+                else // The routing table is not empty. So lets assign the machine to its end
+                {
+                    // Typecast the Machine_Node pointer to void pointer to store it in routing_tables linked list
+                    temp->routingTable->insert(static_cast<void*>(nearestActive));
+                }
+            }
+            // Display the values of routing tables
+            for (int i = 0; i < routingTableSize; i++)
+            {
+                // Now typecast the void pointer back to Machine_Node pointer to access the data
+                Machine_Node<T>* temp2 = static_cast<Machine_Node<T>*>(temp->routingTable->getElement(i));
+                cout << " " << temp2->data;
+            }
+            temp = temp->next;
+            cout << endl;
+        } while (temp != head);
+    }
+};
 
 
 template <class T>
 struct ringDHT {
     int noOfmachines;
     int identifierSpace;
-    singlyCircularLinkedList<int> machines;
+    Machines<int> machines;
 public:
     ringDHT(int space, int no_machines) {
         identifierSpace = space;
@@ -429,14 +799,14 @@ public:
 
     void insert(string key, string value) {
         int hash = HashFunction(key);
-        node<int>* curr = machines.head;
+        Machine_Node<int>* curr = machines.head;
         while (curr->data < hash) {
             curr = curr->next;
         }
         curr->tree.Root = curr->tree.insert(curr->tree.Root, hash);
     }
     void insert(int key, string value) {
-        node<int>* curr = machines.head;
+        Machine_Node<int>* curr = machines.head;
         while (curr->data < key) {
             curr = curr->next;
         }
@@ -447,14 +817,14 @@ public:
         for (int i = 0; i < noOfmachines; i++) {
             machines.insert(-1);
         }
-        node <int>* searchPtr = machines.head;
+        Machine_Node<int>* searchPtr = machines.head;
         do {
             int value = -1;
             ostringstream address;
             address << searchPtr;
             string addressInString = address.str();
             value = HashFunction(addressInString);
-            while (machines.search(value) == true)
+            while (machines.machineExists(value) == true)
             {
                 value++;
                 value = value % (int)pow(2, identifierSpace);
@@ -477,7 +847,7 @@ public:
         {
             cout << "Value # " << (i + 1) << " : " << endl;
             cin >> value;
-            while(value < 0 || value > pow(2, identifierSpace) || (i > 0 && machines.search(value) == true)) // check for unique number and for number between identifier space
+            while(value < 0 || value > pow(2, identifierSpace) || (i > 0 && machines.machineExists(value) == true)) // check for unique number and for number between identifier space
             {
                 cout << "Error!\nPlease input a value;\n1) Less than total number of machines!\n2) Greater than zero\n3) Unique\nYour Input: ";
                 cin >> value;
@@ -487,13 +857,13 @@ public:
     }
     ~ringDHT()
     {
-
+        machines.clear();
     }
 };
 
 int main()
 {
-    ringDHT <string> dht(4, 16);
+    ringDHT <string> dht(4, 5);
     dht.autoAssigning();
     dht.machines.display();
 }
