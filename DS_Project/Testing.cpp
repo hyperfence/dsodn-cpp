@@ -34,7 +34,7 @@ struct node
 {
     U data;
     node<U>* next;
-    long long int beforeHash;
+    unsigned long long int beforeHash;
     MachineFile file;
 };
 template <class T>
@@ -755,13 +755,17 @@ public:
     // our finalized HashFunction..
     int HashFunction(string key)
     {
-        long long int hashedValue = 0;
-        for (int i = 0; key[i] != '\0'; i++)
+        unsigned long long int hashedValue = 0;
+        int length = key.size();
+        if (key.size() > 8)
+            length = 8;
+        for (int i = 0; i < length; i++)
         {
             hashedValue = 37 * hashedValue + key[i];
         }
-        if (hashedValue < 0)
-            hashedValue *= -1;
+
+        //if (hashedValue < 0)
+        //    hashedValue *= -1;
         return hashedValue % (int)pow(2, identifierSpace);
     }
 
@@ -821,8 +825,9 @@ public:
                 value = value % (int)pow(2, identifierSpace);
             }
 
-            if (value != -1)
+            if (value != -1) {
                 searchPtr->data = value;
+            }
             else
                 cout << "Hashing wasn't succesfull you noob!\n";
             searchPtr = searchPtr->next;
@@ -862,7 +867,8 @@ int main() {
     cout << endl;
     dht.insert(5, "i192043");
     dht.insert(5, "i192043");
-
+    // 	dht.insert(9,"i192043");
+    // 	dht.insert(13,"i192043");
 
     Machine_Node<int>* searchPtr = dht.machines.head;
     do {
