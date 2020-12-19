@@ -1,225 +1,156 @@
 #pragma once
 #include <iostream>
-
+#include "MachineFile.h"
 using namespace std;
 
-template <class T>
-struct Singly_List_Node
+template <class U>
+struct node
 {
-	T data;
-	long long beforeHash;
-	Singly_List_Node<T>* next;
+    U data;
+    node<U>* next;
+    unsigned long long int beforeHash;
+    MachineFile file;
 };
-
 template <class T>
-class SinglyLinkedList
+class AVL_Tree_List
 {
-private:
-	Singly_List_Node<T>* head;
+
 public:
-	SinglyLinkedList()
-	{
-		this->head = NULL;
-	}
-	int sizeOfList()
-	{
-		int size = 0;
-		Singly_List_Node<T>* n = head;
-		for (int i = 0; ; i++)
-		{
-			if (n->next == NULL)
-			{
-				break;
-			}
-			n = n->next;
-			size++;
-		}
-		return size;
-	}
-	void insertStart(T data)
-	{
-		Singly_List_Node<T>* temp = new Singly_List_Node<T>();
-		temp->data = data;
-		temp->next = NULL;
-		if (head == NULL)
-		{
-			head = temp;
-		}
-		else
-		{
-			temp->next = head;
-			head = temp;
-		}
-	}
-	void insertEnd(T data)
-	{
-		Singly_List_Node<T>* temp = new Singly_List_Node<T>();
-		temp->data = data;
-		temp->next = NULL;
-		if (head == NULL)
-		{
-			head = temp;
-		}
-		else
-		{
-			Singly_List_Node<T>* n = head;
-			for (int i = 0; ; i++)
-			{
-				if (n->next == NULL)
-				{
-					n->next = temp;
-					break;
-				}
-				n = n->next;
-			}
-		}
-	}
-	void middle(int data)
-	{
-		int j = 1;
-		int g = 0;
-		Singly_List_Node<T>* n = head;
-		Singly_List_Node<T>* m = head;
-		for (int i = 0; ; i++)
-		{
-			if (n->next == NULL)
-			{
-				Singly_List_Node<T>* temp = new Singly_List_Node<T>();
-				temp->data = data;
-				temp->next = m;
-				Singly_List_Node<T>* f = head;
-				for (int h = 0; h < g; h++)
-				{
-					f = f->next;
-				}
-				f->next = temp;
-				break;
-			}
-			n = n->next;
-			if (j % 2 == 0)
-			{
-				m = m->next;
-			}
-			j++;
-			g++;
-		}
-	}
-	void removeAt(int index)
-	{
-		int j = 0;
-		Singly_List_Node<T>* n = head;
-		for (int i = 0; ; i++)
-		{
-			if (j == index)
-			{
-				if (n->next == NULL)
-				{
-					n = NULL;
-				}
-				else
-				{
+    node<T>* head;
+    AVL_Tree_List()
+    {
+        head = NULL;
+    }
 
-					Singly_List_Node<T>* m = head;
-					for (int k = 0; k < j - 1; k++)
-					{
-						m = m->next;
-					}
-					m->next = n->next;
-					n = NULL;
-				}
-				break;
-			}
-			n = n->next;
-			j++;
-		}
-	}
-	void replaceAt(int data, int index)
-	{
-		int j = 0;
-		Singly_List_Node<T>* n = head;
-		for (int i = 0; ; i++)
-		{
-			if (j == index)
-			{
-				n->data = data;
-				break;
-			}
-			n = n->next;
-			j++;
-		}
-	}
-	void remove()
-	{
-		Singly_List_Node<T>* n = head;
-		for (int i = 0; ; i++)
-		{
-			if (n->next->next == NULL)
-			{
-				n->next = NULL;
-				break;
-			}
-			n = n->next;
-		}
-	}
-	void insertAt(int data, int index)
-	{
-		int j = 0;
-		Singly_List_Node<T>* n = head;
-		for (int i = 0; ; i++)
-		{
-			if (j == index)
-			{
-				Singly_List_Node<T>* temp = new Singly_List_Node<T>();
-				temp->data = data;
-				temp->next = n;
-				Singly_List_Node<T>* m = head;
-				for (int k = 0; k < j - 1; k++)
-				{
-					m = m->next;
-				}
-				m->next = temp;
+    void insert(T n)
+    {
+        node<T>* temp = new node<T>;
+        temp->data = n;
+        temp->next = NULL;
+        node<T>* curr = head;
 
-				break;
-			}
-			n = n->next;
-			j++;
-		}
-	}
-	void sort()
-	{
-		Singly_List_Node<T>* n = head;
-		for (int i = 0; ; i++)
-		{
-			if (n->next == NULL)
-			{
-				break;
-			}
-			Singly_List_Node<T>* m = head;
-			for (int j = 0; ; j++)
-			{
-				if (m->next == NULL)
-				{
-					break;
-				}
-				if (m->data > (m->next)->data)
-				{
-					Singly_List_Node<T>* temp = new Singly_List_Node<T>();
-					temp->data = m->data;
-					m->data = (m->next)->data;
-					(m->next)->data = temp->data;
-				}
-				m = m->next;
-			}
-			n = n->next;
-		}
-	}
-	void display()
-	{
-		Singly_List_Node<T>* n = head;
-		while (n != NULL)
-		{
-			cout << " " << n->data;
-			n = n->next;
-		}
-	}
+        if (head == NULL)
+        {
+            head = temp;
+        }
+        else
+        {
+            while (curr->next != NULL)
+                curr = curr->next;
+            curr->next = temp;
+        }
+    }
+
+    void insertAt(T n, int index)
+    {
+        node<T>* temp = new node<T>;
+        temp->data = n;
+        node<T>* pre = new node<T>;
+        node<T>* curr = head;
+        for (int i = 0; i < index; i++) {
+            pre = curr;
+            curr = curr->next;
+        }
+        pre->next = temp;
+        temp->next = curr;
+    }
+
+    void RemoveByValue(T n) {
+        node<T>* pre = new node<T>;
+        node<T>* curr = head;
+        while (curr->data != n) {
+            pre = curr;
+            curr = curr->next;
+        }
+        pre->next = curr->next;
+        curr->next = NULL;
+        delete curr;
+    }
+
+    void Remove() {
+        node<T>* curr = head;
+        node<T>* pre = new node<T>;
+        while (curr->next != NULL) {
+            pre = curr;
+            curr = curr->next;
+        }
+        pre->next = NULL;
+        curr->next = NULL;
+        delete curr;
+    }
+
+    void RemoveAt(int index) {
+        node<T>* pre = new node<T>;
+        node<T>* curr = head;
+        for (int i = 0; i < index; i++) {
+            pre = curr;
+            curr = curr->next;
+        }
+        pre->next = curr->next;
+        curr->next = NULL;
+        delete curr;
+    }
+
+    void replaceAt(T n, int index) {
+        node<T>* curr = head;
+        for (int i = 0; i < index; i++) {
+            curr = curr->next;
+        }
+        curr->data = n;
+    }
+
+    void clear() {
+        node<T>* curr;
+        while (head != NULL)
+        {
+            curr = head;
+            delete curr;
+            head = head->next;
+        }
+    }
+
+    void display() {
+        node<T>* temp = head;
+        if (head == NULL)
+        {
+            cout << "Empty AVL_Tree_List";
+        }
+        while (temp != NULL)
+        {
+            cout << temp->data << " ";
+            temp = temp->next;
+        }
+    }
+
+    void sort() {
+        node<T>* temp1 = head;
+        node<T>* temp2;
+        while (temp1->next != NULL) {
+            temp2 = temp1->next;
+            while (temp2 != NULL) {
+                if (temp1->data > temp2->data) {
+                    T temp = temp1->data;
+                    temp1->data = temp2->data;
+                    temp2->data = temp;
+                }
+                temp2 = temp2->next;
+            }
+            temp1 = temp1->next;
+        }
+    }
+
+    void insertAtMiddle(T n) {
+        int len = 0;
+        node<T>* curr = head;
+        while (curr->next != NULL) {
+            len++;
+            curr = curr->next;
+        }
+        insertAt(n, len / 2 + 1);
+    }
+
+    ~AVL_Tree_List() {
+        //clear();
+        delete head;
+    }
 };

@@ -803,6 +803,8 @@ public:
         Machine_Node<int>* curr = machines.head;
         while (curr->data < key) {
             curr = curr->next;
+            if (curr == machines.head)
+                break;
         }
         curr->tree.Root = curr->tree.insert(curr->tree.Root, key);
     }
@@ -824,12 +826,7 @@ public:
                 value++;
                 value = value % (int)pow(2, identifierSpace);
             }
-
-            if (value != -1) {
-                searchPtr->data = value;
-            }
-            else
-                cout << "Hashing wasn't succesfull you noob!\n";
+            searchPtr->data = value;
             searchPtr = searchPtr->next;
         } while (searchPtr != machines.head);
         machines.sort();
@@ -867,8 +864,8 @@ int main() {
     cout << endl;
     dht.insert(5, "i192043");
     dht.insert(5, "i192043");
-    // 	dht.insert(9,"i192043");
-    // 	dht.insert(13,"i192043");
+    dht.insert(9,"i192043");
+    dht.insert(13,"i192043");
 
     Machine_Node<int>* searchPtr = dht.machines.head;
     do {
