@@ -41,5 +41,8 @@
     <ClInclude Include="RoutingTable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MachineFile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
