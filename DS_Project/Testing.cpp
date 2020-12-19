@@ -5,10 +5,9 @@
 #include <math.h>
 using namespace std;
 
-class MachineFile {
+struct MachineFile {
     string path, fileName;
     int lineNumber;
-public:
     MachineFile() {
         lineNumber = 0;
         path = "";
@@ -35,7 +34,7 @@ struct node
     U data;
     node<U>* next;
     unsigned long long int beforeHash;
-    MachineFile file;
+
 };
 template <class T>
 class AVL_Tree_List
@@ -48,10 +47,11 @@ public:
         head = NULL;
     }
 
-    void insert(T n)
+    void insert(T n, unsigned long long int befHash)
     {
         node<T>* temp = new node<T>;
         temp->data = n;
+        temp->beforeHash = befHash;
         temp->next = NULL;
         node<T>* curr = head;
 
@@ -175,26 +175,48 @@ public:
         insertAt(n, len / 2 + 1);
     }
 
+    /*
+        This function search for the value of beforeHash
+        on each node of singly linked list.
+    */
+    bool searchBefHash(unsigned long long int befHash)
+    {
+        bool result = false;
+        node <T>* searchPtr = head;
+        while (searchPtr->next != NULL)
+        {
+            if (searchPtr->beforeHash == befHash)
+            {
+                result = true;
+                break;
+            }
+        }
+        return result;
+    }
+
     ~AVL_Tree_List() {
         //clear();
         delete head;
     }
 };
 
+// Node structure for AVL-Tree
+template <class U>
+struct AVL_Node {
+    AVL_Tree_List<U> chainingList;
+    AVL_Node<U>* Left;
+    AVL_Node<U>* Right;
+    int height;
+};
+
 
 /////// AVL CLass ///////
 template <class T>
 struct AVL {
-    template <class U>
-    struct Node {
-        AVL_Tree_List<U> chainingList;
-        Node<U>* Left;
-        Node<U>* Right;
-        int height;
-    };
-    Node<T>* Root = NULL;
 
-    int getHeight(Node<T>* n)
+    AVL_Node<T>* Root = NULL;
+
+    int getHeight(AVL_Node<T>* n)
     {
         if (n != NULL)
             return n->height;
@@ -209,9 +231,9 @@ struct AVL {
         return val2;
     }
 
-    Node<T>* rotateRight(Node<T>* n) {
-        Node<T>* temp1 = n->Left;
-        Node<T>* T2 = temp1->Right;
+    AVL_Node<T>* rotateRight(AVL_Node<T>* n) {
+        AVL_Node<T>* temp1 = n->Left;
+        AVL_Node<T>* T2 = temp1->Right;
 
         temp1->Right = n;
         n->Left = T2;
@@ -222,10 +244,10 @@ struct AVL {
         return temp1;
     }
 
-    Node<T>* rotateLeft(Node<T>* n)
+    AVL_Node<T>* rotateLeft(AVL_Node<T>* n)
     {
-        Node<T>* temp1 = n->Right;
-        Node<T>* temp2 = temp1->Left;
+        AVL_Node<T>* temp1 = n->Right;
+        AVL_Node<T>* temp2 = temp1->Left;
 
         temp1->Left = n;
         n->Right = temp2;
@@ -236,30 +258,30 @@ struct AVL {
         return temp1;
     }
 
-    int Balance(Node<T>* n)
+    int Balance(AVL_Node<T>* n)
     {
         if (n == NULL)
             return 0;
         return getHeight(n->Left) - getHeight(n->Right);
     }
 
-    Node<T>* insert(Node<T>* n, T value) {
+    AVL_Node<T>* insert(AVL_Node<T>* n, T value, unsigned long long int befHash) {
         if (n == NULL) {
             n = new Node<T>;
-            n->chainingList.insert(value);
+            n->chainingList.insert(value, befHash);
             n->Left = NULL;
             n->Right = NULL;
             n->height = 1;
             return n;
         }
         else if (value < n->chainingList.head->data) {
-            n->Left = insert(n->Left, value);
+            n->Left = insert(n->Left, value, befHash);
         }
         else if (value > n->chainingList.head->data) {
-            n->Right = insert(n->Right, value);
+            n->Right = insert(n->Right, value, befHash);
         }
         else if (value == n->chainingList.head->data) {
-            n->chainingList.insert(value);
+            n->chainingList.insert(value, befHash);
         }
         else
             return n;
@@ -288,9 +310,9 @@ struct AVL {
         return n;
     }
 
-    Node<T>* leftMostNode(Node<T>* n)
+    AVL_Node<T>* leftMostNode(AVL_Node<T>* n)
     {
-        Node<T>* current = n;
+        AVL_Node<T>* current = n;
 
         while (current->Left != NULL)
             current = current->Left;
@@ -298,7 +320,7 @@ struct AVL {
         return current;
     }
 
-    Node<T>* remove(Node<T>* n, int value)
+    AVL_Node<T>* remove(AVL_Node<T>* n, int value)
     {
         if (n == NULL)
             return n;
@@ -312,17 +334,17 @@ struct AVL {
         else
         {
             if (n->Left == NULL) {
-                Node<T>* temp = n->Right;
+                AVL_Node<T>* temp = n->Right;
                 delete n;
                 return temp;
             }
             else if (n->Right == NULL) {
-                Node<T>* temp = n->Left;
+                AVL_Node<T>* temp = n->Left;
                 delete n;
                 return temp;
             }
 
-            Node<T>* temp = n->Right;
+            AVL_Node<T>* temp = n->Right;
 
             while (temp && temp->Left != NULL)
                 temp = temp->Left;
@@ -358,13 +380,25 @@ struct AVL {
         return n;
     }
 
-    void inOrder(Node<T>* n) {
+    void inOrder(AVL_Node<T>* n) {
         if (n != NULL) {
             inOrder(n->Left);
             //cout << n->chainingList.head->data << " ";
             n->chainingList.display();
             inOrder(n->Right);
         }
+    }
+
+    AVL_Node<T>* search(AVL_Node <T>* temp, int val)
+    {
+        if (temp == NULL)
+            return temp;
+        else if (val < temp->data)
+            temp->Left = search(temp->Left, val);
+        else if (val > temp->data)
+            temp->Right = search(temp->Right, val);
+        else if (val == temp->data)
+            return temp;
     }
 
 };
@@ -458,6 +492,7 @@ struct Machine_Node
     Machine_Node<N>* next;
     RoutingTable* routingTable;
     AVL<N> tree;
+    MachineFile file;
 };
 
 template <class T>
@@ -470,10 +505,13 @@ struct Machines {
         this->head = NULL;
     }
 
-    Machines(int identifierSpace)
+    Machines(int space)
     {
-        identifierSpace = log2(identifierSpace);
-        this->routingTableSize = identifierSpace;
+        this->routingTableSize = space;
+    }
+
+    void setidentifierSpace(int space) {
+        this->routingTableSize = space;
     }
 
     void insert(T value)
@@ -583,6 +621,32 @@ struct Machines {
     }
 
     /*
+        This function takes the key of the machine and finds the immediate active routing successor
+        and then return that machine else this function will return NULL if machine not found.
+    */
+    Machine_Node<T>* getSuccessorRoutingMachine(T value)
+    {
+        Machine_Node<T>* successor = new Machine_Node<T>();
+        successor = NULL;
+        Machine_Node<T>* ptr = head;
+        while (1) // Infinite Loop Until Successor is found
+        {
+            if (ptr->data >= value)
+            {
+                successor = ptr;
+                break;
+            }
+            ptr = ptr->next;
+            if (ptr == head)
+            {
+                successor = ptr;
+                break;
+            }
+        }
+        return successor;
+    }
+
+    /*
         This function takes the key of the machine and finds the immediate active successor
         and then return that machine else this function will return NULL if machine not found.
     */
@@ -593,7 +657,7 @@ struct Machines {
         Machine_Node<T>* ptr = head;
         while (1) // Infinite Loop Until Successor is found
         {
-            if (ptr->data >= value)
+            if (ptr->data > value)
             {
                 successor = ptr;
                 break;
@@ -623,6 +687,19 @@ struct Machines {
         cout << "NULL" << endl;
     }
 
+    Machine_Node<T>* getLastMachine() {
+        Machine_Node<T>* curr = head;
+        if (head == NULL)
+        {
+            return NULL;
+        }
+        do
+        {
+            curr = curr->next;
+        } while (curr->next != head);
+        return curr;
+    }
+
     /*
         This function returns true if the machine exists in the DHT
     */
@@ -640,58 +717,98 @@ struct Machines {
         return flag;
     }
 
+    bool isLastMachine(T value)
+    {
+        Machine_Node<T>* ptr = getMachine(value);
+        if (ptr->next == this->head)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    bool isFirstMachine(T value)
+    {
+        if (this->head->data == value)
+        {
+            return true;
+        }
+        return false;
+    }
+
     /*
         This function takes hashed key of data and machine from the Ring_DHT class and then
         performs the search according to the given keys
     */
-    Machine_Node<T>* searchData(T dataKey, T machineKey, Machine_Node<T>* startingMachine = NULL)
+    Machine_Node<T>* searchResponsibleMachine(T dataKey, T machineKey)
     {
-        if (startingMachine == NULL)
-        {
-            startingMachine = this->getMachine(machineKey);
-        }
+        cout << "\n...... Searching From Machine " << machineKey << " ......" << endl << endl;
+        Machine_Node<T>* startingMachine = new Machine_Node<T>();
+        startingMachine = getMachine(machineKey);
         for (int i = 0; i < routingTableSize; i++)
         {
             Machine_Node<T>* temp = new Machine_Node<T>();
             Machine_Node<T>* temp2 = new Machine_Node<T>();
             temp = static_cast<Machine_Node<T>*>(startingMachine->routingTable->getElement(i));
             temp2 = static_cast<Machine_Node<T>*>(startingMachine->routingTable->getElement(i + 1));
-            if (temp->data == dataKey)
+            if (dataKey > (this->getLastMachine())->data)
             {
-                cout << "Reached Machine: " << temp->data << endl;
+                cout << "  Reached Machine : " << startingMachine->data << " -> " << this->head->data << endl;
+                startingMachine = this->head;
+                cout << "\n......      Search Ended      ......" << endl << endl;
                 return startingMachine;
             }
-            else if (dataKey > startingMachine->data && dataKey <= temp->data)
+            else if (dataKey < this->head->data)
             {
-                cout << "Reached Machine: " << temp->data << endl;
+                cout << "  Reached Machine : " << startingMachine->data << " -> " << this->head->data << endl;
+                startingMachine = this->head;
+                cout << "\n......      Search Ended      ......" << endl << endl;
+                return startingMachine;
+            }
+            else if (isLastMachine(startingMachine->data) == true && dataKey >= startingMachine->data)
+            {
+                cout << "  Reached Machine: " << startingMachine->data << " -> " << this->head->data << endl;
+                startingMachine = this->head;
+                cout << "\n......      Search Ended      ......" << endl << endl;
+                return startingMachine;
+            }
+            else if (isFirstMachine(startingMachine->data) == true && dataKey <= startingMachine->data)
+            {
+                cout << "  Reached Machine: " << startingMachine->data << endl;
+                cout << "\n......      Search Ended      ......" << endl << endl;
+                return startingMachine;
+            }
+            else if (temp->data == dataKey)
+            {
+                cout << "  Reached Machine: " << startingMachine->data << " -> " << temp->data << endl;
                 startingMachine = temp;
+                cout << "\n......      Search Ended      ......" << endl << endl;
+                return startingMachine;
+            }
+            else if (dataKey > startingMachine->data && temp->data >= dataKey)
+            {
+                cout << "  Reached Machine: " << startingMachine->data << " -> " << temp->data << endl;
+                startingMachine = temp;
+                cout << "\n......      Search Ended      ......" << endl << endl;
                 return startingMachine;
             }
             else if (dataKey > temp->data && temp2 != NULL && dataKey < temp2->data)
             {
-                cout << "Reached Machine: " << temp->data << endl;
+                cout << "  Reached Machine: " << startingMachine->data << " -> " << temp->data << endl;
                 startingMachine = temp;
-                Machine_Node<T>* machineFound = new Machine_Node<T>();
-                machineFound = searchData(dataKey, machineKey, startingMachine);
-                if (machineFound != NULL)
-                {
-                    return machineFound;
-                }
+                i = -1;
             }
             else if (dataKey > temp->data && temp2 == NULL)
             {
-                cout << "Reached Machine: " << temp->data << endl;
+                cout << "  Reached Machine: " << startingMachine->data << " -> " << temp->data << endl;
                 startingMachine = temp;
-                Machine_Node<T>* machineFound = new Machine_Node<T>();
-                machineFound = searchData(dataKey, machineKey, startingMachine);
-                if (machineFound != NULL)
-                {
-                    return machineFound;
-                }
+                i = -1;
             }
         }
+        cout << "\n......      Search Ended      ......" << endl << endl;
         return NULL;
     }
+
 
     /*
         This function adjusts routing tables for every machine
@@ -715,7 +832,7 @@ struct Machines {
             }
             for (int i = 0; i < routingTableSize; i++)
             {
-                Machine_Node<T>* nearestActive = this->getSuccessorMachine(routingTable[i]);
+                Machine_Node<T>* nearestActive = this->getSuccessorRoutingMachine(routingTable[i]);
                 if (temp->routingTable == NULL) //The routing table is empty
                 {
                     temp->routingTable = new RoutingTable();
@@ -751,10 +868,11 @@ public:
     ringDHT(int space, int no_machines) {
         identifierSpace = space;
         noOfmachines = no_machines;
+        machines.setidentifierSpace(identifierSpace);
     }
 
     // our finalized HashFunction..
-    int HashFunction(string key)
+    int HashFunction(string key, unsigned long long* befHash)
     {
         unsigned long long int hashedValue = 0;
         int length = key.size();
@@ -764,7 +882,7 @@ public:
         {
             hashedValue = 37 * hashedValue + key[i];
         }
-
+        *befHash = hashedValue;
         //if (hashedValue < 0)
         //    hashedValue *= -1;
         return hashedValue % (int)pow(2, identifierSpace);
@@ -791,24 +909,23 @@ public:
     //    return sum % int(pow(2, identifierSpace));
     //}
 
-    void insert(string key, string value) {
-        int hash = HashFunction(key);
-        Machine_Node<int>* curr = machines.head;
-        while (curr->data < hash) {
-            curr = curr->next;
-        }
-        curr->tree.Root = curr->tree.insert(curr->tree.Root, hash);
+    void insert(string key, string value, int machineID) {
+        unsigned long long int beforeHashVal = 0;
+        int hash = HashFunction(key, &beforeHashVal);
+
+        Machine_Node<int>* curr = machines.searchResponsibleMachine(hash, machineID);
+        curr->tree.Root = curr->tree.insert(curr->tree.Root, hash, beforeHashVal);
+        curr->file.insert(value);
+        curr->file.lineNumber++;
     }
 
-    void insert(int key, string value) {
-        Machine_Node<int>* curr = machines.head;
-        while (curr->data < key) {
-            curr = curr->next;
-            if (curr == machines.head)
-                break;
-        }
-        curr->tree.Root = curr->tree.insert(curr->tree.Root, key);
-    }
+    // void insert(int key, string value, int machineID) 
+    // {
+    //     Machine_Node<int>* curr = machines.searchResponsibleMachine(key, machineID);
+    //     curr->tree.Root = curr->tree.insert(curr->tree.Root, key);
+    //     curr->file.insert(value);
+    //     curr->file.lineNumber++;
+    // }
 
     void autoAssigning()
     {
@@ -828,9 +945,18 @@ public:
                 value = value % (int)pow(2, identifierSpace);
             }
             searchPtr->data = value;
+            searchPtr->file.setFileName(value);
             searchPtr = searchPtr->next;
         } while (searchPtr != machines.head);
         machines.sort();
+        machines.configureRoutingTable();
+        searchPtr = machines.head;
+        do {
+
+            searchPtr->file.setFileName(searchPtr->data);
+            searchPtr = searchPtr->next;
+        } while (searchPtr != machines.head);
+
     }
     // getting values from user manually 
     void manualAssigning()
@@ -848,6 +974,31 @@ public:
             }
             machines.insert(value);
         }
+        machines.sort();
+        machines.configureRoutingTable();
+        Machine_Node<int>* searchPtr = machines.head;
+        do {
+
+            searchPtr->file.setFileName(searchPtr->data);
+            searchPtr = searchPtr->next;
+        } while (searchPtr != machines.head);
+    }
+
+    T searchData(T key, T machineID = this->head->data)
+    {
+        unsigned long long int beforeHashVal = 0;
+        int hash = HashFunction(key, &beforeHashVal);
+
+
+        Machine_Node<int>* curr = machines.searchResponsibleMachine(hash, machineID);
+        AVL_Node<T>* tempPtr = curr->tree.search(curr->tree.Root, hash);
+        if (curr->tree.tempPtr->chainingList.searchBefHash(beforeHashVal) == true)
+        {
+            /*
+            **************** incomplete logic! ****************
+            */
+            cout << "Searched!" << endl;
+        }
     }
     ~ringDHT()
     {
@@ -858,23 +1009,33 @@ public:
 
 
 
-//int main() {
-//    ringDHT<string> dht(4, 5);
-//    dht.autoAssigning();
-//    dht.machines.display();
-//    cout << endl;
-//    dht.insert(5, "i192043");
-//    dht.insert(5, "i192043");
-//    dht.insert(9,"i192043");
-//    dht.insert(13,"i192043");
-//
-//    Machine_Node<int>* searchPtr = dht.machines.head;
-//    do {
-//        cout << searchPtr->data << " ";
-//        searchPtr->tree.inOrder(searchPtr->tree.Root);
-//        cout << endl;
-//        searchPtr = searchPtr->next;
-//    } while (searchPtr != dht.machines.head);
-//
-//    return 0;
-//}
+int main() {
+    ringDHT<string> dht(4, 5);
+    //dht.autoAssigning();
+    dht.manualAssigning();
+    dht.machines.display();
+    cout << endl;
+
+    dht.insert("Talha", "1st", 12);
+    dht.insert("Talha", "2nd", 2);
+    dht.insert("Hunaid", "3rd", 5);
+    dht.insert("Hassan Raza", "4th", 8);
+    dht.insert("Hammad", "4th", 7);
+
+    // dht.insert(5, "1st",12);
+    // dht.insert(5, "2nd",2);
+    // dht.insert(9,"3rd",5);
+    // dht.insert(13,"4th",8);
+
+    Machine_Node<int>* searchPtr = dht.machines.head;
+    do {
+        cout << searchPtr->data << " ";
+        searchPtr->tree.inOrder(searchPtr->tree.Root);
+        cout << endl;
+        searchPtr = searchPtr->next;
+    } while (searchPtr != dht.machines.head);
+
+
+    return 0;
+}
+
