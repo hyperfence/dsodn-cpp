@@ -394,13 +394,15 @@ public:
     }
     
     // our finalized HashFunction..
-    int HashFunction(string key)
+    int HashFunction(string key, long long &object)
     {
         unsigned int hashedValue = 0;
         for (int i = 0; key[i] != '\0'; i++)
         {
             hashedValue = 37 * hashedValue + key[i];
         }
+        // classVar = hashedValue;
+        // object = hashValue;
         return hashedValue % (int)pow(2,identifierSpace);
     }
 
