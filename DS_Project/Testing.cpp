@@ -38,12 +38,12 @@ struct node
     MachineFile file;
 };
 template <class T>
-class List
+class AVL_Tree_List
 {
 
 public:
     node<T>* head;
-    List()
+    AVL_Tree_List()
     {
         head = NULL;
     }
@@ -139,7 +139,7 @@ public:
         node<T>* temp = head;
         if (head == NULL)
         {
-            cout << "Empty List";
+            cout << "Empty AVL_Tree_List";
         }
         while (temp != NULL)
         {
@@ -175,7 +175,8 @@ public:
         insertAt(n, len / 2 + 1);
     }
 
-    ~List() {
+    ~AVL_Tree_List() {
+        //clear();
         delete head;
     }
 };
@@ -186,7 +187,7 @@ template <class T>
 struct AVL {
     template <class U>
     struct Node {
-        List<U> l;
+        AVL_Tree_List<U> chainingList;
         Node<U>* Left;
         Node<U>* Right;
         int height;
@@ -245,20 +246,20 @@ struct AVL {
     Node<T>* insert(Node<T>* n, T value) {
         if (n == NULL) {
             n = new Node<T>;
-            n->l.insert(value);
+            n->chainingList.insert(value);
             n->Left = NULL;
             n->Right = NULL;
             n->height = 1;
             return n;
         }
-        else if (value < n->l.head->data) {
+        else if (value < n->chainingList.head->data) {
             n->Left = insert(n->Left, value);
         }
-        else if (value > n->l.head->data) {
+        else if (value > n->chainingList.head->data) {
             n->Right = insert(n->Right, value);
         }
-        else if (value == n->l.head->data) {
-            n->l.insert(value);
+        else if (value == n->chainingList.head->data) {
+            n->chainingList.insert(value);
         }
         else
             return n;
@@ -266,19 +267,19 @@ struct AVL {
         n->height = 1 + max(getHeight(n->Left), getHeight(n->Right));
         int balance = Balance(n);
 
-        if (balance > 1 && value < n->Left->l.head->data)
+        if (balance > 1 && value < n->Left->chainingList.head->data)
             return rotateRight(n);
 
-        if (balance < -1 && value > n->Right->l.head->data)
+        if (balance < -1 && value > n->Right->chainingList.head->data)
             return rotateLeft(n);
 
-        if (balance > 1 && value > n->Left->l.head->data)
+        if (balance > 1 && value > n->Left->chainingList.head->data)
         {
             n->Left = rotateLeft(n->Left);
             return rotateRight(n);
         }
 
-        if (balance < -1 && value < n->Right->l.head->data)
+        if (balance < -1 && value < n->Right->chainingList.head->data)
         {
             n->Right = rotateRight(n->Right);
             return rotateLeft(n);
@@ -360,8 +361,8 @@ struct AVL {
     void inOrder(Node<T>* n) {
         if (n != NULL) {
             inOrder(n->Left);
-            //cout << n->l.head->data << " ";
-            n->l.display();
+            //cout << n->chainingList.head->data << " ";
+            n->chainingList.display();
             inOrder(n->Right);
         }
     }
@@ -803,6 +804,8 @@ public:
         Machine_Node<int>* curr = machines.head;
         while (curr->data < key) {
             curr = curr->next;
+            if (curr == machines.head)
+                break;
         }
         curr->tree.Root = curr->tree.insert(curr->tree.Root, key);
     }
@@ -824,12 +827,7 @@ public:
                 value++;
                 value = value % (int)pow(2, identifierSpace);
             }
-
-            if (value != -1) {
-                searchPtr->data = value;
-            }
-            else
-                cout << "Hashing wasn't succesfull you noob!\n";
+            searchPtr->data = value;
             searchPtr = searchPtr->next;
         } while (searchPtr != machines.head);
         machines.sort();
@@ -860,23 +858,23 @@ public:
 
 
 
-//int main() {
-//    ringDHT<string> dht(4, 5);
-//    dht.autoAssigning();
-//    dht.machines.display();
-//    cout << endl;
-//    dht.insert(5, "i192043");
-//    dht.insert(5, "i192043");
-//    // 	dht.insert(9,"i192043");
-//    // 	dht.insert(13,"i192043");
-//
-//    Machine_Node<int>* searchPtr = dht.machines.head;
-//    do {
-//        cout << searchPtr->data << " ";
-//        searchPtr->tree.inOrder(searchPtr->tree.Root);
-//        cout << endl;
-//        searchPtr = searchPtr->next;
-//    } while (searchPtr != dht.machines.head);
-//
-//    return 0;
-//}
+int main() {
+    ringDHT<string> dht(4, 5);
+    dht.autoAssigning();
+    dht.machines.display();
+    cout << endl;
+    dht.insert(5, "i192043");
+    dht.insert(5, "i192043");
+    dht.insert(9,"i192043");
+    dht.insert(13,"i192043");
+
+    Machine_Node<int>* searchPtr = dht.machines.head;
+    do {
+        cout << searchPtr->data << " ";
+        searchPtr->tree.inOrder(searchPtr->tree.Root);
+        cout << endl;
+        searchPtr = searchPtr->next;
+    } while (searchPtr != dht.machines.head);
+
+    return 0;
+}
