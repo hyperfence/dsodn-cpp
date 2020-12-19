@@ -2,6 +2,7 @@
 #include <string>
 #include <sstream>
 #include <math.h>
+#include "SinglyLinkedList.h"
 using namespace std;
 
 
@@ -9,7 +10,7 @@ template <class T>
 struct AVL {
     template <class U>
     struct Node {
-        U data;
+        SinglyLinkedList <U> data;
         Node<U>* Left;
         Node<U>* Right;
         int height;
@@ -186,199 +187,7 @@ struct AVL {
     }
 
 };
-
-class Hash {
-private:
-    int size;
-    int capacity;
-    int* arr;
-
-public:
-    Hash(int cap) {
-        size = 0;
-        capacity = cap;
-        arr = new int[cap];
-        for (int i = 0; i < capacity; i++)
-        {
-            arr[i] = 0;
-        }
-    }
-
-    int HashFunction(string s) {
-        int sum = 0;
-        for (int i = 0; s[i] != '\0'; i++)
-            sum += int(s[i]);
-        return sum % capacity;
-    }
-
-    //     int HashFunction(string s) {
-    // 	    int hash = 7;
-    //         for(int i=0; s[i]!='\0'; i++)
-    //             hash = hash*31 + int(s[i]);
-    //         return hash%capacity;    
-
-    // 	}
-
-    void insert(string s)
-    {
-        int index = HashFunction(s);
-        arr[index] = index;
-        size++;
-    }
-
-    void Delete(string s) {
-        int ind = Search(s);
-        arr[ind] = 0;
-    }
-
-    void display() {
-        for (int i = 0; i < capacity; i++) {
-            cout << arr[i] << " ";
-        }
-        cout << endl;
-    }
-
-    int Search(string s) {
-        int ind = HashFunction(s);
-        while (arr[ind] != 0 && arr[ind] != ind) {
-            ind = HashFunction(s);
-        }
-        if (arr[ind] == 0)
-            return -1;
-        else
-            return ind;
-    }
-
-    bool isEmpty() {
-        return (size == 0);
-    }
-
-    void Clear()
-    {
-        delete[] arr;
-    }
-
-};
-
-
-template <class T>
-struct node
-{
-    T data;
-    node* next;
-    AVL<T> tree;
-};
-
-template <class T>
-struct singlyCircularLinkedList
-{
-    node<T>* head;
-
-    singlyCircularLinkedList()
-    {
-        head = NULL;
-    }
-
-    void insert(T value)
-    {
-        node<T>* temp = new node<T>;
-        temp->data = value;
-        temp->next = NULL;
-        node<T>* curr = head;
-
-        if (curr == NULL)
-        {
-            temp->next = temp;
-            head = temp;
-        }
-
-        else if (curr->data >= temp->data)
-        {
-            while (curr->next != head)
-                curr = curr->next;
-            curr->next = temp;
-            temp->next = head;
-            head = temp;
-        }
-
-        else
-        {
-            while (curr->next != head && curr->next->data < temp->data)
-                curr = curr->next;
-
-            temp->next = curr->next;
-            curr->next = temp;
-        }
-    }
-
-    void Remove(T value) {
-        node<T>* pre = new node<T>;
-        node<T>* curr = head;
-        while (curr->data != value) {
-            pre = curr;
-            curr = curr->next;
-        }
-        pre->next = curr->next;
-        curr->next = NULL;
-        delete curr;
-    }
-
-    void sort() {
-        node<T>* temp1 = head;
-        node<T>* temp2;
-        do {
-            temp2 = temp1->next;
-            while (temp2 != head) {
-                if (temp1->data > temp2->data) {
-                    int temp = temp1->data;
-                    temp1->data = temp2->data;
-                    temp2->data = temp;
-                }
-                temp2 = temp2->next;
-            }
-            temp1 = temp1->next;
-        } while (temp1->next != head);
-    }
-
-    void clear() {
-        node<T>* curr = head;
-        node<T>* temp;
-        do
-        {
-            temp = curr;
-            curr = curr->next;
-            delete temp;
-        } while (curr != head);
-        head = NULL;
-    }
-
-    void display() {
-        node<T>* curr = head;
-        if (head == NULL)
-        {
-            cout << "Empty List" << endl;
-            return;
-        }
-        do
-        {
-            cout << curr->data << " ";
-            curr = curr->next;
-        } while (curr != head);
-    }
-
-    // adding a new function - Hammad 
-    bool search(int value)
-    {
-        node <T>* ptr = head;
-        do {
-            if (ptr->data == value)
-                return true;
-            ptr = ptr->next;
-        } while (ptr != head);
-        return false;
-    }
-};
-
+////////////////////////////////// routing table ////////////////////////////
 
 struct Routing_Table_Node
 {
@@ -460,6 +269,8 @@ public:
     }
 };
 
+
+/// ////////////////////////////////// machine node ///////////////////////////
 
 template <typename N>
 struct Machine_Node
