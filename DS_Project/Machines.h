@@ -275,6 +275,13 @@ public:
                 cout << "\n......      Search Ended      ......" << endl << endl;
                 return startingMachine;
             }
+            else if (dataKey < this->head->data)
+            {
+                cout << "  Reached Machine : " << startingMachine->data << " -> " << this->head->data << endl;
+                startingMachine = this->head;
+                cout << "\n......      Search Ended      ......" << endl << endl;
+                return startingMachine;
+            }
             else if (isLastMachine(startingMachine->data) == true && dataKey >= startingMachine->data)
             {
                 cout << "  Reached Machine: " << startingMachine->data << " -> " << this->head->data << endl;

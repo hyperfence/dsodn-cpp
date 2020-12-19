@@ -141,6 +141,7 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Testing.cpp" />
+    <ClCompile Include="testing2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AVL_Tree.h" />
