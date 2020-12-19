@@ -204,6 +204,19 @@ public:
         cout << "NULL" << endl;
     }
 
+    Machine_Node<T>* getLastMachine() {
+        Machine_Node<T>* curr = head;
+        if (head == NULL)
+        {
+            return NULL;
+        }
+        do
+        {
+            curr = curr->next;
+        } while (curr->next != head);
+        return curr;
+    }
+
     /*
         This function returns true if the machine exists in the DHT
     */
@@ -255,7 +268,14 @@ public:
             Machine_Node<T>* temp2 = new Machine_Node<T>();
             temp = static_cast<Machine_Node<T>*>(startingMachine->routingTable->getElement(i));
             temp2 = static_cast<Machine_Node<T>*>(startingMachine->routingTable->getElement(i+1)); 
-            if (isLastMachine(startingMachine->data) == true && dataKey >= startingMachine->data)
+            if (dataKey > (this->getLastMachine())->data)
+            {
+                cout << "  Reached Machine : " << startingMachine->data << " -> " << this->head->data << endl;
+                startingMachine = this->head;
+                cout << "\n......      Search Ended      ......" << endl << endl;
+                return startingMachine;
+            }
+            else if (isLastMachine(startingMachine->data) == true && dataKey >= startingMachine->data)
             {
                 cout << "  Reached Machine: " << startingMachine->data << " -> " << this->head->data << endl;
                 startingMachine = this->head;

@@ -860,23 +860,23 @@ public:
 
 
 
-int main() {
-    ringDHT<string> dht(4, 5);
-    dht.autoAssigning();
-    dht.machines.display();
-    cout << endl;
-    dht.insert(5, "i192043");
-    dht.insert(5, "i192043");
-    // 	dht.insert(9,"i192043");
-    // 	dht.insert(13,"i192043");
-
-    Machine_Node<int>* searchPtr = dht.machines.head;
-    do {
-        cout << searchPtr->data << " ";
-        searchPtr->tree.inOrder(searchPtr->tree.Root);
-        cout << endl;
-        searchPtr = searchPtr->next;
-    } while (searchPtr != dht.machines.head);
-
-    return 0;
-}
+//int main() {
+//    ringDHT<string> dht(4, 5);
+//    dht.autoAssigning();
+//    dht.machines.display();
+//    cout << endl;
+//    dht.insert(5, "i192043");
+//    dht.insert(5, "i192043");
+//    // 	dht.insert(9,"i192043");
+//    // 	dht.insert(13,"i192043");
+//
+//    Machine_Node<int>* searchPtr = dht.machines.head;
+//    do {
+//        cout << searchPtr->data << " ";
+//        searchPtr->tree.inOrder(searchPtr->tree.Root);
+//        cout << endl;
+//        searchPtr = searchPtr->next;
+//    } while (searchPtr != dht.machines.head);
+//
+//    return 0;
+//}
