@@ -138,6 +138,32 @@ public:
     }
 
     /*
+        This function takes the key of the machine and finds the immediate active routing successor
+        and then return that machine else this function will return NULL if machine not found.
+    */
+    Machine_Node<T>* getSuccessorRoutingMachine(T value)
+    {
+        Machine_Node<T>* successor = new Machine_Node<T>();
+        successor = NULL;
+        Machine_Node<T>* ptr = head;
+        while(1) // Infinite Loop Until Successor is found
+        {
+            if (ptr->data >= value)
+            {
+                successor = ptr;
+                break;
+            }
+            ptr = ptr->next;
+            if (ptr == head)
+            {
+                successor = ptr;
+                break;
+            }
+        }
+        return successor;
+    }
+
+    /*
         This function takes the key of the machine and finds the immediate active successor
         and then return that machine else this function will return NULL if machine not found.
     */
@@ -146,9 +172,9 @@ public:
         Machine_Node<T>* successor = new Machine_Node<T>();
         successor = NULL;
         Machine_Node<T>* ptr = head;
-        while(1) // Infinite Loop Until Successor is found
+        while (1) // Infinite Loop Until Successor is found
         {
-            if (ptr->data >= value)
+            if (ptr->data > value)
             {
                 successor = ptr;
                 break;
@@ -195,56 +221,81 @@ public:
         return flag;
     }
 
+    bool isLastMachine(T value)
+    {
+        Machine_Node<T>* ptr = getMachine(value);
+        if (ptr->next == this->head)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    bool isFirstMachine(T value)
+    {
+        if (this->head->data == value)
+        {
+            return true;
+        }
+        return false;
+    }
+
     /*
         This function takes hashed key of data and machine from the Ring_DHT class and then
         performs the search according to the given keys
     */
-    Machine_Node<T>* searchData(T dataKey, T machineKey, Machine_Node<T>* startingMachine = NULL)
+    Machine_Node<T>* searchResponsibleMachine(T dataKey, T machineKey)
     {
-        if (startingMachine == NULL)
-        {
-            startingMachine = this->getMachine(machineKey);
-        }
+        cout << "\n...... Searching From Machine " << machineKey << " ......" << endl << endl;
+        Machine_Node<T>* startingMachine = new Machine_Node<T>();
+        startingMachine = getMachine(machineKey);
         for (int i=0; i<routingTableSize; i++)
         {
             Machine_Node<T>* temp = new Machine_Node<T>();
             Machine_Node<T>* temp2 = new Machine_Node<T>();
             temp = static_cast<Machine_Node<T>*>(startingMachine->routingTable->getElement(i));
             temp2 = static_cast<Machine_Node<T>*>(startingMachine->routingTable->getElement(i+1)); 
-            if (temp->data == dataKey)
+            if (isLastMachine(startingMachine->data) == true && dataKey >= startingMachine->data)
             {
-                cout << "Reached Machine: " << temp->data << endl;
+                cout << "  Reached Machine: " << startingMachine->data << " -> " << this->head->data << endl;
+                startingMachine = this->head;
+                cout << "\n......      Search Ended      ......" << endl << endl;
                 return startingMachine;
             }
-            else if (dataKey > startingMachine->data && dataKey <= temp->data)
+            else if (isFirstMachine(startingMachine->data) == true && dataKey <= startingMachine->data)
             {
-                cout << "Reached Machine: " << temp->data << endl;
+                cout << "  Reached Machine: " << startingMachine->data << endl;
+                cout << "\n......      Search Ended      ......" << endl << endl;
+                return startingMachine;
+            }
+            else if (temp->data == dataKey)
+            {
+                cout << "  Reached Machine: " <<startingMachine->data << " -> " << temp->data << endl;
                 startingMachine = temp;
+                cout << "\n......      Search Ended      ......" << endl << endl;
+                return startingMachine;
+            }
+            else if (dataKey > startingMachine->data && temp->data >= dataKey)
+            {
+                cout << "  Reached Machine: " << startingMachine->data << " -> " << temp->data << endl;
+                startingMachine = temp;
+                cout << "\n......      Search Ended      ......" << endl << endl;
                 return startingMachine;
             }
             else if (dataKey > temp->data && temp2 != NULL && dataKey < temp2->data)
             {
-                cout << "Reached Machine: " << temp->data << endl;
+                cout << "  Reached Machine: " << startingMachine->data << " -> " << temp->data << endl;
                 startingMachine = temp;
-                Machine_Node<T>* machineFound = new Machine_Node<T>();
-                machineFound = searchData(dataKey, machineKey, startingMachine);
-                if (machineFound != NULL)
-                {
-                    return machineFound;
-                }
+                i = -1;
             }
             else if (dataKey > temp->data && temp2 == NULL)
             {
-                cout << "Reached Machine: " << temp->data << endl;
+                cout << "  Reached Machine: " << startingMachine->data << " -> " << temp->data << endl;
                 startingMachine = temp;
-                Machine_Node<T>* machineFound = new Machine_Node<T>();
-                machineFound = searchData(dataKey, machineKey, startingMachine);
-                if (machineFound != NULL)
-                {
-                    return machineFound;
-                }
+                i = -1;
             }
         }
+        cout << "\n......      Search Ended      ......" << endl << endl;
         return NULL;
     }
 
@@ -270,7 +321,7 @@ public:
             }
             for (int i = 0; i < routingTableSize; i++)
             {
-                Machine_Node<T>* nearestActive = this->getSuccessorMachine(routingTable[i]);
+                Machine_Node<T>* nearestActive = this->getSuccessorRoutingMachine(routingTable[i]);
                 if (temp->routingTable == NULL) //The routing table is empty
                 {
                     temp->routingTable = new RoutingTable();
