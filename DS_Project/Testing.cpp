@@ -40,6 +40,7 @@ struct node
 template <class T>
 class List
 {
+
 public:
     node<T>* head;
     List()
