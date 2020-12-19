@@ -7,6 +7,7 @@ template <class T>
 struct Singly_List_Node
 {
 	T data;
+	long long beforeHash;
 	Singly_List_Node<T>* next;
 };
 
