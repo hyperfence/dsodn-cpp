@@ -35,14 +35,12 @@ struct node
 {
     U data;
     node<U>* next;
-    long long int beforeHash;
+    unsigned long long int beforeHash;
     MachineFile file;
 };
 template <class T>
 class List
 {
-
-
 public:
     node<T>* head;
     List()
@@ -756,14 +754,17 @@ public:
     // our finalized HashFunction..
     int HashFunction(string key)
     {
-        long long int hashedValue = 0;
-        for (int i = 0; key[i] != '\0'; i++)
+        unsigned long long int hashedValue = 0;
+        int length = key.size();
+        if (key.size() > 8)
+             length = 8;
+        for (int i = 0; i < length; i++)
         {
             hashedValue = 37 * hashedValue + key[i];
         }
-        cout << hashedValue << endl;
-        if (hashedValue < 0)
-            hashedValue *= -1;
+        
+        //if (hashedValue < 0)
+        //    hashedValue *= -1;
         return hashedValue % (int)pow(2, identifierSpace);
     }
 
@@ -861,7 +862,9 @@ int main() {
     ringDHT<string> dht(4, 5);
     dht.autoAssigning();
     dht.machines.display();
-    dht.insert("Hammad Ahmed", "i192043");
+   // dht.insert("Hammad Ahmed is a goodest badest boy!", "i190582");
+    dht.insert("sdasdasfasfdsgafdgadrdfhadfhdfdhadfherfh", "i190582");
+   // dht.insert("Hammad Ahmed is a goodest badest boy!", "i190582");
 
 
     Machine_Node<int>* searchPtr = dht.machines.head;
