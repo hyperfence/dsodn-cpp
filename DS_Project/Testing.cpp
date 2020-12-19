@@ -3,7 +3,6 @@
 #include <fstream>
 #include <sstream>
 #include <math.h>
-#include "SinglyLinkedList.h"
 using namespace std;
 
 class MachineFile {
@@ -450,8 +449,6 @@ public:
     }
 };
 
-
-/// ////////////////////////////////// machine node ///////////////////////////
 
 template <typename N>
 struct Machine_Node
