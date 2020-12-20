@@ -140,17 +140,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Testing.cpp" />
-    <ClCompile Include="testing2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AVL_Tree.h" />
-    <ClInclude Include="CircularLinkedList.h" />
+    <ClInclude Include="AVL_Tree_Lists.h" />
     <ClInclude Include="MachineFile.h" />
     <ClInclude Include="Machines.h" />
     <ClInclude Include="Ring_DHT.h" />
     <ClInclude Include="RoutingTable.h" />
-    <ClInclude Include="SinglyLinkedList.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

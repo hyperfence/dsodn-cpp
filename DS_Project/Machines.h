@@ -1,6 +1,7 @@
 #pragma once
 #include "AVL_Tree.h"
 #include "RoutingTable.h"
+#include "MachineFile.h"
 
 using namespace std;
 
@@ -11,6 +12,7 @@ struct Machine_Node
 	Machine_Node<N>* next;
 	RoutingTable* routingTable;
 	AVL<N> tree;
+    MachineFile file;
 };
 
 template <class T>
@@ -20,18 +22,28 @@ private:
 	Machine_Node<T>* head;
 
 public:
-	Machines()
-	{
-        this->head = NULL;
-	}
-
-    Machines(int identifierSpace)
+    Machines()
     {
-        identifierSpace = log2(identifierSpace);
-        this->routingTableSize = identifierSpace;
+        this->head = NULL;
     }
 
-    void insert(T value)
+    Machines(int space)
+    {
+        this->routingTableSize = space;
+    }
+
+    /*
+        This function sets the identifier space of the DHT
+    */
+    void setidentifierSpace(int space) 
+    {
+        this->routingTableSize = space;
+    }
+
+    /*
+        This function inserts a machine and performs insertion sort at the same time
+    */
+    void insertMachine(T value)
     {
         Machine_Node<T>* temp = new Machine_Node<T>;
         temp->data = value;
@@ -63,7 +75,10 @@ public:
         }
     }
 
-    void remove(T value) {
+    /*
+        This function deletes the specified machine
+    */
+    void removeMachine(T value) {
         Machine_Node<T>* pre = new Machine_Node<T>;
         Machine_Node<T>* curr = head;
         while (curr->data != value) {
@@ -75,7 +90,10 @@ public:
         delete curr;
     }
 
-    void sort() {
+    /*
+        This function sorts all the machines in ascending order based on their ID
+    */
+    void sortMachines() {
         Machine_Node<T>* temp1 = head;
         Machine_Node<T>* temp2;
         do {
@@ -92,18 +110,9 @@ public:
         } while (temp1->next != head);
     }
 
-    void clear() {
-        Machine_Node<T>* curr = head;
-        Machine_Node<T>* temp;
-        do
-        {
-            temp = curr;
-            curr = curr->next;
-            delete temp;
-        } while (curr != head);
-        head = NULL;
-    }
-
+    /*
+        This function returns the total number of active machines in the DHT
+    */
     int getTotalSize()
     {
         int size = 0;
@@ -122,8 +131,7 @@ public:
     */
     Machine_Node<T>* getMachine(T value)
     {
-        Machine_Node<T>* successor = new Machine_Node<T>();
-        successor = NULL;
+        Machine_Node<T>* successor = NULL;
         Machine_Node<T>* ptr = head;
         do
         {
@@ -143,10 +151,9 @@ public:
     */
     Machine_Node<T>* getSuccessorRoutingMachine(T value)
     {
-        Machine_Node<T>* successor = new Machine_Node<T>();
-        successor = NULL;
+        Machine_Node<T>* successor = NULL;
         Machine_Node<T>* ptr = head;
-        while(1) // Infinite Loop Until Successor is found
+        while (1) // Infinite Loop Until Successor is found
         {
             if (ptr->data >= value)
             {
@@ -169,8 +176,7 @@ public:
     */
     Machine_Node<T>* getSuccessorMachine(T value)
     {
-        Machine_Node<T>* successor = new Machine_Node<T>();
-        successor = NULL;
+        Machine_Node<T>* successor = NULL;
         Machine_Node<T>* ptr = head;
         while (1) // Infinite Loop Until Successor is found
         {
@@ -189,6 +195,9 @@ public:
         return successor;
     }
 
+    /*
+        This function displays the ring DHT of active machines in a linear manner
+    */
     void display() {
         Machine_Node<T>* curr = head;
         if (head == NULL)
@@ -204,7 +213,11 @@ public:
         cout << "NULL" << endl;
     }
 
-    Machine_Node<T>* getLastMachine() {
+    /*
+        This function returns the address of last machine in the ring DHT
+    */
+    Machine_Node<T>* getLastMachine()
+    {
         Machine_Node<T>* curr = head;
         if (head == NULL)
         {
@@ -214,6 +227,19 @@ public:
         {
             curr = curr->next;
         } while (curr->next != head);
+        return curr;
+    }
+
+    /*
+        This function returns the address of first machine in the ring DHT
+    */
+    Machine_Node<T>* getFirstMachine()
+    {
+        Machine_Node<T>* curr = head;
+        if (head == NULL)
+        {
+            return NULL;
+        }
         return curr;
     }
 
@@ -228,12 +254,15 @@ public:
             if (ptr->data == value)
             {
                 flag = true;
-            }     
+            }
             ptr = ptr->next;
         } while (ptr != head);
         return flag;
     }
 
+    /*
+        This function returns true if the machine is in last place of the DHT Ring
+    */
     bool isLastMachine(T value)
     {
         Machine_Node<T>* ptr = getMachine(value);
@@ -244,6 +273,9 @@ public:
         return false;
     }
 
+    /*
+        This function returns true if the machine is in first place of the DHT Ring
+    */
     bool isFirstMachine(T value)
     {
         if (this->head->data == value)
@@ -260,36 +292,35 @@ public:
     Machine_Node<T>* searchResponsibleMachine(T dataKey, T machineKey)
     {
         cout << "\n...... Searching From Machine " << machineKey << " ......" << endl << endl;
-        Machine_Node<T>* startingMachine = new Machine_Node<T>();
-        startingMachine = getMachine(machineKey);
-        for (int i=0; i<routingTableSize; i++)
+        Machine_Node<T>* startingMachine = getMachine(machineKey);
+        for (int i = 0; i < routingTableSize; i++)
         {
-            Machine_Node<T>* temp = new Machine_Node<T>();
-            Machine_Node<T>* temp2 = new Machine_Node<T>();
-            temp = static_cast<Machine_Node<T>*>(startingMachine->routingTable->getElement(i));
-            temp2 = static_cast<Machine_Node<T>*>(startingMachine->routingTable->getElement(i+1)); 
-            if (dataKey > (this->getLastMachine())->data)
+            //Machine_Node<T>* temp = new Machine_Node<T>();
+            //Machine_Node<T>* temp2 = new Machine_Node<T>();
+            Machine_Node<T>* temp = static_cast<Machine_Node<T>*>(startingMachine->routingTable->getElement(i));
+            Machine_Node<T>* temp2 = static_cast<Machine_Node<T>*>(startingMachine->routingTable->getElement(i + 1));
+            if (dataKey > getLastMachine()->data)
             {
-                cout << "  Reached Machine : " << startingMachine->data << " -> " << this->head->data << endl;
-                startingMachine = this->head;
+                cout << "  Reached Machine : " << startingMachine->data << " -> " << getFirstMachine()->data << endl;
+                startingMachine = getFirstMachine();
                 cout << "\n......      Search Ended      ......" << endl << endl;
                 return startingMachine;
             }
-            else if (dataKey < this->head->data)
+            else if (dataKey < getFirstMachine()->data)
             {
-                cout << "  Reached Machine : " << startingMachine->data << " -> " << this->head->data << endl;
-                startingMachine = this->head;
+                cout << "  Reached Machine : " << startingMachine->data << " -> " << getFirstMachine()->data << endl;
+                startingMachine = getFirstMachine();
                 cout << "\n......      Search Ended      ......" << endl << endl;
                 return startingMachine;
             }
             else if (isLastMachine(startingMachine->data) == true && dataKey >= startingMachine->data)
             {
-                cout << "  Reached Machine: " << startingMachine->data << " -> " << this->head->data << endl;
-                startingMachine = this->head;
+                cout << "  Reached Machine: " << startingMachine->data << " -> " << getFirstMachine()->data << endl;
+                startingMachine = getFirstMachine();
                 cout << "\n......      Search Ended      ......" << endl << endl;
                 return startingMachine;
             }
-            else if (isFirstMachine(startingMachine->data) == true && dataKey <= startingMachine->data)
+            else if (dataKey == startingMachine->data)
             {
                 cout << "  Reached Machine: " << startingMachine->data << endl;
                 cout << "\n......      Search Ended      ......" << endl << endl;
@@ -297,7 +328,7 @@ public:
             }
             else if (temp->data == dataKey)
             {
-                cout << "  Reached Machine: " <<startingMachine->data << " -> " << temp->data << endl;
+                cout << "  Reached Machine: " << startingMachine->data << " -> " << temp->data << endl;
                 startingMachine = temp;
                 cout << "\n......      Search Ended      ......" << endl << endl;
                 return startingMachine;
@@ -326,22 +357,23 @@ public:
         return NULL;
     }
 
+
     /*
         This function adjusts routing tables for every machine
     */
-	void configureRoutingTable()
-	{
+    void configureRoutingTable()
+    {
         int numOfMachines = this->getTotalSize();
         Machine_Node<T>* temp = head;
         do
         {
-            int identifierSpace = pow(2,this->routingTableSize);
+            int identifierSpace = pow(2, this->routingTableSize);
             cout << "Machine " << temp->data << ": ";
             T* routingTable = new T[this->routingTableSize];
-            for (int i=0; i<routingTableSize; i++)
+            for (int i = 0; i < routingTableSize; i++)
             {
-                routingTable[i] = temp->data + pow(2,i);
-                if (routingTable[i] > identifierSpace-1)
+                routingTable[i] = temp->data + pow(2, i);
+                if (routingTable[i] > identifierSpace - 1)
                 {
                     routingTable[i] = routingTable[i] - identifierSpace;
                 }
@@ -353,7 +385,7 @@ public:
                 {
                     temp->routingTable = new RoutingTable();
                     // Typecast the Machine_Node pointer to void pointer to store it in routing_tables linked list
-                    temp->routingTable->insert(static_cast<void*>(nearestActive));            
+                    temp->routingTable->insert(static_cast<void*>(nearestActive));
                 }
                 else // The routing table is not empty. So lets assign the machine to its end
                 {
@@ -370,6 +402,27 @@ public:
             }
             temp = temp->next;
             cout << endl;
-        } while (temp != head);    
-	}
+        } while (temp != head);
+    }
+
+    /*
+        This function clears up the memory allocated for the active machines
+    */
+    void clear() 
+    {
+        Machine_Node<T>* curr = head;
+        Machine_Node<T>* temp;
+        do
+        {
+            temp = curr;
+            curr = curr->next;
+            delete temp;
+        } while (curr != head);
+        head = NULL;
+    }
+
+    ~Machines()
+    {
+        
+    }
 };

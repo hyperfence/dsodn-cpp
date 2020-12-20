@@ -1,25 +1,45 @@
-//#include <iostream>
-//#include "Machines.h"
-//
-//int main()
-//{
-//	int identifierSpace = 32;
-//	Machines<int> m(identifierSpace);
-//	m.insert(12);
-//	m.insert(2);
-//	m.insert(5);
-//	m.insert(8);
-//	m.insert(7);
-//	m.display();
-//	m.configureRoutingTable();
-//	Machine_Node<int>* temp = m.searchResponsibleMachine(26, 7);
-//	if (temp != NULL)
-//	{
-//		cout << "Data is at Machine: " << temp->data << endl;
-//	}
-//	else
-//	{
-//		cout << "Couldn't find the data!" << endl;
-//	}
-//	return 0;
-//}
+#include "Ring_DHT.h"
+
+using namespace std;
+
+int main()
+{
+    RingDHT<string> dht(4, 5);
+    //dht.autoAssigning();
+    dht.manualAssigning();
+    dht.getMachines().display();
+    cout << endl;
+
+    dht.insert("Talha", "1st", 12);
+    dht.insert("Talha", "2nd", 2);
+    dht.insert("Hunaid", "3rd", 5);
+    dht.insert("Hassan Raza", "4th", 8);
+    // dht.insert("Akmal", "5th", 3);
+    // dht.insert("Ahsan", "6th", 5);
+    // dht.insert("Adam", "7th", 12);
+    // dht.insert("Khan", "8th", 8);
+
+    //dht.remove("Hunaid",5);
+
+    cout << dht.searchData("Hunaid", 5);
+    cout << dht.searchData("Talha", 8);
+    cout << dht.searchData("Hassan Raza", 12);
+    // cout << dht.searchData("Adam", 3);
+    // cout << dht.searchData("Khan", 8);
+    // cout << dht.searchData("Ahsan", 2);
+
+    // dht.insert(5, "1st",12);
+    // dht.insert(5, "2nd",2);
+    // dht.insert(9,"3rd",5);
+    // dht.insert(13,"4th",8);
+
+    // Machine_Node<int>* searchPtr = dht.machines.head;
+    // do {
+    //     cout << searchPtr->data << " ";
+    //     searchPtr->tree.inOrder(searchPtr->tree.Root);
+    //     cout << endl;
+    //     searchPtr = searchPtr->next;
+    // } while (searchPtr != dht.machines.head);
+
+	return 0;
+}

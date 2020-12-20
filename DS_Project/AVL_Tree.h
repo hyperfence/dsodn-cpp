@@ -1,20 +1,39 @@
 #pragma once
-#include <iostream>
 
-using namespace std;
+#include <iostream>
+#include "AVL_Tree_Lists.h"
+
+template <class U>
+struct AVL_Node {
+    AVL_Tree_List<U> chainingList;
+    AVL_Node<U>* Left;
+    AVL_Node<U>* Right;
+    int height;
+};
 
 template <class T>
-struct AVL {
-    template <class U>
-    struct Node {
-        U data;
-        Node<U>* Left;
-        Node<U>* Right;
-        int height;
-    };
-    Node<T>* Root = NULL;
+class AVL {
+private:
+    AVL_Node<T>* Root;
 
-    int getHeight(Node<T>* n)
+public:
+
+    AVL()
+    {
+        Root = NULL;
+    }
+
+    AVL_Node<T>* getRoot()const
+    {
+        return Root;
+    }
+
+    void setRoot(AVL_Node<T>* root)
+    {
+        this->Root = root;
+    }
+
+    int getHeight(AVL_Node<T>* n)
     {
         if (n != NULL)
             return n->height;
@@ -29,9 +48,9 @@ struct AVL {
         return val2;
     }
 
-    Node<T>* rotateRight(Node<T>* n) {
-        Node<T>* temp1 = n->Left;
-        Node<T>* T2 = temp1->Right;
+    AVL_Node<T>* rotateRight(AVL_Node<T>* n) {
+        AVL_Node<T>* temp1 = n->Left;
+        AVL_Node<T>* T2 = temp1->Right;
 
         temp1->Right = n;
         n->Left = T2;
@@ -42,10 +61,10 @@ struct AVL {
         return temp1;
     }
 
-    Node<T>* rotateLeft(Node<T>* n)
+    AVL_Node<T>* rotateLeft(AVL_Node<T>* n)
     {
-        Node<T>* temp1 = n->Right;
-        Node<T>* temp2 = temp1->Left;
+        AVL_Node<T>* temp1 = n->Right;
+        AVL_Node<T>* temp2 = temp1->Left;
 
         temp1->Left = n;
         n->Right = temp2;
@@ -56,130 +75,165 @@ struct AVL {
         return temp1;
     }
 
-    int Balance(Node<T>* n)
+    int Balance(AVL_Node<T>* n)
     {
         if (n == NULL)
             return 0;
         return getHeight(n->Left) - getHeight(n->Right);
     }
 
-    Node<T>* insert(Node<T>* n, T value) {
-        if (n == NULL) {
-            n = new Node<T>;
-            n->data = value;
+    AVL_Node<T>* insert(AVL_Node<T>* n, T value, unsigned long long int befHash, int lineNumber) 
+    {
+        if (n == NULL) 
+        {
+            n = new AVL_Node<T>;
+            n->chainingList.insert(value, befHash, lineNumber);
             n->Left = NULL;
             n->Right = NULL;
             n->height = 1;
             return n;
         }
-        else if (value < n->data) {
-            n->Left = insert(n->Left, value);
+        else if (value < n->chainingList.getRoot()->data) 
+        {
+            n->Left = insert(n->Left, value, befHash, lineNumber);
         }
-        else if (value > n->data) {
-            n->Right = insert(n->Right, value);
+        else if (value > n->chainingList.getRoot()->data) 
+        {
+            n->Right = insert(n->Right, value, befHash, lineNumber);
+        }
+        else if (value == n->chainingList.getRoot()->data) 
+        {
+            n->chainingList.insert(value, befHash, lineNumber);
         }
         else
+        {
             return n;
-
+        }
         n->height = 1 + max(getHeight(n->Left), getHeight(n->Right));
         int balance = Balance(n);
-
-        if (balance > 1 && value < n->Left->data)
+        if (balance > 1 && value < n->Left->chainingList.getRoot()->data)
+        {
             return rotateRight(n);
-
-        if (balance < -1 && value > n->Right->data)
+        }
+        if (balance < -1 && value > n->Right->chainingList.getRoot()->data)
+        {
             return rotateLeft(n);
-
-        if (balance > 1 && value > n->Left->data)
+        }
+        if (balance > 1 && value > n->Left->chainingList.getRoot()->data)
         {
             n->Left = rotateLeft(n->Left);
             return rotateRight(n);
         }
-
-        if (balance < -1 && value < n->Right->data)
+        if (balance < -1 && value < n->Right->chainingList.getRoot()->data)
         {
             n->Right = rotateRight(n->Right);
             return rotateLeft(n);
         }
-
         return n;
     }
 
-    Node<T>* leftMostNode(Node<T>* n)
+    AVL_Node<T>* leftMostNode(AVL_Node<T>* n)
     {
-        Node<T>* current = n;
-
+        AVL_Node<T>* current = n;
         while (current->Left != NULL)
+        {
             current = current->Left;
-
+        }
         return current;
     }
 
-    Node<T>* remove(Node<T>* n, int value)
+    AVL_Node<T>* remove(AVL_Node<T>* n, int value)
     {
         if (n == NULL)
+        {
             return n;
+        }
 
         if (value < n->data)
+        {
             n->Left = remove(n->Left, value);
+        }
 
         else if (value > n->data)
+        {
             n->Right = remove(n->Right, value);
-
+        }
         else
         {
-            if (n->Left == NULL) {
-                Node<T>* temp = n->Right;
+            if (n->Left == NULL) 
+            {
+                AVL_Node<T>* temp = n->Right;
                 delete n;
                 return temp;
             }
-            else if (n->Right == NULL) {
-                Node<T>* temp = n->Left;
+            else if (n->Right == NULL) 
+            {
+                AVL_Node<T>* temp = n->Left;
                 delete n;
                 return temp;
             }
-
-            Node<T>* temp = n->Right;
-
+            AVL_Node<T>* temp = n->Right;
             while (temp && temp->Left != NULL)
+            {
                 temp = temp->Left;
-
+            }
             n->data = temp->data;
             n->Right = remove(n->Right, temp->data);
         }
-
         if (n == NULL)
+        {
             return n;
-
+        }
         n->height = 1 + max(getHeight(n->Left), getHeight(n->Right));
         int balance = Balance(n);
-
         if (balance > 1 && Balance(n->Left) >= 0)
+        {
             return rotateRight(n);
-
+        }
         if (balance > 1 && Balance(n->Left) < 0)
         {
             n->Left = rotateLeft(n->Left);
             return rotateRight(n);
         }
-
         if (balance < -1 && Balance(n->Right) <= 0)
+        {
             return rotateLeft(n);
-
+        }
         if (balance < -1 && Balance(n->Right) > 0)
         {
             n->Right = rotateRight(n->Right);
             return rotateLeft(n);
         }
-
         return n;
     }
 
-    void inOrder(Node<T>* n) {
-        if (n != NULL) {
+    void inOrder(AVL_Node<T>* n) 
+    {
+        if (n != NULL) 
+        {
             inOrder(n->Left);
-            cout << n->data << " ";
+            n->chainingList.display();
             inOrder(n->Right);
+        }
+    }
+
+    AVL_Node<T>* search(AVL_Node <T>* temp, int val)
+    {
+        if (temp == NULL)
+        {
+            return temp;
+        }
+        else if (val < temp->chainingList.getRoot()->data)
+        {
+            temp->Left = search(temp->Left, val);
+        }
+        else if (val > temp->chainingList.getRoot()->data)
+        {
+            temp->Right = search(temp->Right, val);
+        }
+        else if (val == temp->chainingList.getRoot()->data)
+        {
+            return temp;
         }
     }
 

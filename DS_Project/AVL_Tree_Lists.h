@@ -1,33 +1,45 @@
 #pragma once
+
 #include <iostream>
-#include "MachineFile.h"
+
 using namespace std;
 
 template <class U>
-struct node
+struct AVL_List_Node
 {
     U data;
-    node<U>* next;
+    AVL_List_Node<U>* next;
     unsigned long long int beforeHash;
-    MachineFile file;
+    int valLineNumber = 0;
+
 };
+
 template <class T>
 class AVL_Tree_List
 {
+private:
+    AVL_List_Node<T>* head;
 
 public:
-    node<T>* head;
+
     AVL_Tree_List()
     {
         head = NULL;
     }
 
-    void insert(T n)
+    AVL_List_Node<T>* getRoot()
     {
-        node<T>* temp = new node<T>;
+        return head;
+    }
+
+    void insert(T n, unsigned long long int befHash, int lineNumber)
+    {
+        AVL_List_Node<T>* temp = new AVL_List_Node<T>;
         temp->data = n;
+        temp->beforeHash = befHash;
+        temp->valLineNumber = lineNumber;
         temp->next = NULL;
-        node<T>* curr = head;
+        AVL_List_Node<T>* curr = head;
 
         if (head == NULL)
         {
@@ -43,10 +55,10 @@ public:
 
     void insertAt(T n, int index)
     {
-        node<T>* temp = new node<T>;
+        AVL_List_Node<T>* temp = new AVL_List_Node<T>;
         temp->data = n;
-        node<T>* pre = new node<T>;
-        node<T>* curr = head;
+        AVL_List_Node<T>* pre = new AVL_List_Node<T>;
+        AVL_List_Node<T>* curr = head;
         for (int i = 0; i < index; i++) {
             pre = curr;
             curr = curr->next;
@@ -56,8 +68,8 @@ public:
     }
 
     void RemoveByValue(T n) {
-        node<T>* pre = new node<T>;
-        node<T>* curr = head;
+        AVL_List_Node<T>* pre = new AVL_List_Node<T>;
+        AVL_List_Node<T>* curr = head;
         while (curr->data != n) {
             pre = curr;
             curr = curr->next;
@@ -68,8 +80,8 @@ public:
     }
 
     void Remove() {
-        node<T>* curr = head;
-        node<T>* pre = new node<T>;
+        AVL_List_Node<T>* curr = head;
+        AVL_List_Node<T>* pre = new AVL_List_Node<T>;
         while (curr->next != NULL) {
             pre = curr;
             curr = curr->next;
@@ -80,8 +92,8 @@ public:
     }
 
     void RemoveAt(int index) {
-        node<T>* pre = new node<T>;
-        node<T>* curr = head;
+        AVL_List_Node<T>* pre = new AVL_List_Node<T>;
+        AVL_List_Node<T>* curr = head;
         for (int i = 0; i < index; i++) {
             pre = curr;
             curr = curr->next;
@@ -92,7 +104,7 @@ public:
     }
 
     void replaceAt(T n, int index) {
-        node<T>* curr = head;
+        AVL_List_Node<T>* curr = head;
         for (int i = 0; i < index; i++) {
             curr = curr->next;
         }
@@ -100,7 +112,7 @@ public:
     }
 
     void clear() {
-        node<T>* curr;
+        AVL_List_Node<T>* curr;
         while (head != NULL)
         {
             curr = head;
@@ -110,7 +122,7 @@ public:
     }
 
     void display() {
-        node<T>* temp = head;
+        AVL_List_Node<T>* temp = head;
         if (head == NULL)
         {
             cout << "Empty AVL_Tree_List";
@@ -123,12 +135,15 @@ public:
     }
 
     void sort() {
-        node<T>* temp1 = head;
-        node<T>* temp2;
-        while (temp1->next != NULL) {
+        AVL_List_Node<T>* temp1 = head;
+        AVL_List_Node<T>* temp2;
+        while (temp1->next != NULL) 
+        {
             temp2 = temp1->next;
-            while (temp2 != NULL) {
-                if (temp1->data > temp2->data) {
+            while (temp2 != NULL) 
+            {
+                if (temp1->data > temp2->data) 
+                {
                     T temp = temp1->data;
                     temp1->data = temp2->data;
                     temp2->data = temp;
@@ -141,16 +156,45 @@ public:
 
     void insertAtMiddle(T n) {
         int len = 0;
-        node<T>* curr = head;
-        while (curr->next != NULL) {
+        AVL_List_Node<T>* curr = head;
+        while (curr->next != NULL) 
+        {
             len++;
             curr = curr->next;
         }
         insertAt(n, len / 2 + 1);
     }
 
-    ~AVL_Tree_List() {
-        //clear();
-        delete head;
+    /*
+        This function search for the value of beforeHash
+        on each node of singly linked list.
+    */
+    bool searchBefHash(unsigned long long int befHash)
+    {
+        AVL_List_Node<T>* searchPtr = head;
+        while (searchPtr != NULL)
+        {
+            if (searchPtr->beforeHash == befHash)
+                return true;
+            searchPtr = searchPtr->next;
+        }
+        return false;
+    }
+
+    AVL_List_Node<T>* searchNode(unsigned long long int befHash)
+    {
+        AVL_List_Node<T>* searchPtr = head;
+        while (searchPtr != NULL)
+        {
+            if (searchPtr->beforeHash == befHash)
+                return searchPtr;
+            searchPtr = searchPtr->next;
+        }
+        return NULL;
+    }
+
+    ~AVL_Tree_List() 
+    {
+        
     }
 };
