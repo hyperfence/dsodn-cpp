@@ -93,15 +93,15 @@ public:
             n->height = 1;
             return n;
         }
-        else if (value < n->chainingList.getRoot()->data) 
+        else if (value < n->chainingList.getHead()->data)
         {
             n->Left = insert(n->Left, value, befHash, lineNumber);
         }
-        else if (value > n->chainingList.getRoot()->data) 
+        else if (value > n->chainingList.getHead()->data)
         {
             n->Right = insert(n->Right, value, befHash, lineNumber);
         }
-        else if (value == n->chainingList.getRoot()->data) 
+        else if (value == n->chainingList.getHead()->data)
         {
             n->chainingList.insert(value, befHash, lineNumber);
         }
@@ -111,20 +111,20 @@ public:
         }
         n->height = 1 + max(getHeight(n->Left), getHeight(n->Right));
         int balance = Balance(n);
-        if (balance > 1 && value < n->Left->chainingList.getRoot()->data)
+        if (balance > 1 && value < n->Left->chainingList.getHead()->data)
         {
             return rotateRight(n);
         }
-        if (balance < -1 && value > n->Right->chainingList.getRoot()->data)
+        if (balance < -1 && value > n->Right->chainingList.getHead()->data)
         {
             return rotateLeft(n);
         }
-        if (balance > 1 && value > n->Left->chainingList.getRoot()->data)
+        if (balance > 1 && value > n->Left->chainingList.getHead()->data)
         {
             n->Left = rotateLeft(n->Left);
             return rotateRight(n);
         }
-        if (balance < -1 && value < n->Right->chainingList.getRoot()->data)
+        if (balance < -1 && value < n->Right->chainingList.getHead()->data)
         {
             n->Right = rotateRight(n->Right);
             return rotateLeft(n);
@@ -212,7 +212,7 @@ public:
         if (n != NULL) 
         {
             inOrder(n->Left);
-            n->chainingList.display();
+            n->chainingList.getHead()->data << ",";
             inOrder(n->Right);
         }
     }
@@ -223,15 +223,15 @@ public:
         {
             return temp;
         }
-        else if (val < temp->chainingList.getRoot()->data)
+        else if (val < temp->chainingList.getHead()->data)
         {
             temp->Left = search(temp->Left, val);
         }
-        else if (val > temp->chainingList.getRoot()->data)
+        else if (val > temp->chainingList.getHead()->data)
         {
             temp->Right = search(temp->Right, val);
         }
-        else if (val == temp->chainingList.getRoot()->data)
+        else if (val == temp->chainingList.getHead()->data)
         {
             return temp;
         }

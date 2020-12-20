@@ -27,7 +27,7 @@ public:
         head = NULL;
     }
 
-    AVL_List_Node<T>* getRoot()
+    AVL_List_Node<T>* getHead()
     {
         return head;
     }
