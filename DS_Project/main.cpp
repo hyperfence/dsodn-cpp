@@ -1,3 +1,19 @@
+/*
+    The lines below are required for debugging memeory leaks.
+    These lines will be removed when all memory leaks are resolved.
+*/
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+#ifdef _DEBUG
+#define DEBUG_NEW new(_NORMAL_BLOCK, __FILE__, __LINE__)
+#define new DEBUG_NEW
+#endif
+
+
+/*
+    The main program starts here
+*/
 #include "Ring_DHT.h"
 
 using namespace std;
@@ -41,5 +57,6 @@ int main()
     //     searchPtr = searchPtr->next;
     // } while (searchPtr != dht.machines.head);
 
+    _CrtDumpMemoryLeaks(); // This line is required to debug memory leaks
 	return 0;
 }
