@@ -82,4 +82,16 @@ public:
 		}
 		return flag;
 	}
+	void clearRoutingTable()
+	{
+		Routing_Table_Node* curr = head;
+		Routing_Table_Node* temp;
+		while(curr != NULL)
+		{
+			temp = curr;
+			curr = curr->next;
+			delete temp;
+		};
+		head = NULL;
+	}
 };

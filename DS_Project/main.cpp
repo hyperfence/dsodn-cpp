@@ -57,6 +57,8 @@ int main()
     //     searchPtr = searchPtr->next;
     // } while (searchPtr != dht.machines.head);
 
+    dht.clearAllMachineMemory(); // Release all unwanted memory from the machines
+
     _CrtDumpMemoryLeaks(); // This line is required to debug memory leaks
 	return 0;
 }

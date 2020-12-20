@@ -402,6 +402,7 @@ public:
             }
             temp = temp->next;
             cout << endl;
+            delete routingTable;
         } while (temp != head);
     }
 
@@ -416,13 +417,10 @@ public:
         {
             temp = curr;
             curr = curr->next;
+            temp->routingTable->clearRoutingTable(); // This will clear the memory allocated for routing tables
+            delete temp->routingTable;
             delete temp;
         } while (curr != head);
         head = NULL;
-    }
-
-    ~Machines()
-    {
-        
     }
 };

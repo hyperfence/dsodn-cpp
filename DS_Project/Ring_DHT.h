@@ -126,8 +126,16 @@ public:
         }
     }
 
-    ~RingDHT()
+    /*
+        This function frees all memory used by the machines
+    */
+    void clearAllMachineMemory()
     {
         machines.clear();
+    }
+
+    ~RingDHT()
+    {
+       
     }
 };
