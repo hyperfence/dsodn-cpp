@@ -87,6 +87,8 @@ public:
         }
         pre->next = curr->next;
         curr->next = NULL;
+        curr->routingTable->clearRoutingTable();
+        delete curr->routingTable;
         delete curr;
     }
 
@@ -402,12 +404,12 @@ public:
             }
             temp = temp->next;
             cout << endl;
-            delete routingTable;
+            delete[] routingTable;
         } while (temp != head);
     }
 
     /*
-        This function clears up the memory allocated for the active machines
+        This function clears up the memory allocated for the active machines 
     */
     void clear() 
     {
