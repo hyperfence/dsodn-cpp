@@ -7,9 +7,9 @@ using namespace std;
 
 struct MachineFile {
     string path, fileName;
-    int lineNumber;
+    int fileLineNumber;
     MachineFile() {
-        lineNumber = 0;
+        fileLineNumber = 0;
         path = "";
         fileName = "";
     }
@@ -25,6 +25,49 @@ struct MachineFile {
         out.close();
     }
 
+    string search(int lineNumber) {
+        ifstream in;
+        in.open(path + fileName);
+        string value;
+        int checklineNumber = 0;
+        while (getline(in, value)) {
+            checklineNumber++;
+            if (checklineNumber == lineNumber)
+                return value;
+        }
+        in.close();
+    }
+
+    void remove(int lineNumber) {
+        ifstream in;
+        in.open(path + fileName);
+        ofstream out;
+        out.open(path + "temp.txt");
+
+        string value;
+        int checklineNumber = 0;
+        while (getline(in, value))
+        {
+            checklineNumber++;
+            if (checklineNumber == lineNumber) {
+                value = "";
+            }
+            out << value << endl;
+        }
+        in.close();
+        out.close();
+
+        in.open("temp.txt");
+        out.open(path + fileName);
+        value = "";
+        while (getline(in, value))
+        {
+            out << value << endl;
+        }
+        in.close();
+        out.close();
+    }
+
 };
 
 
@@ -34,6 +77,7 @@ struct node
     U data;
     node<U>* next;
     unsigned long long int beforeHash;
+    int valLineNumber = 0;
 
 };
 template <class T>
@@ -47,11 +91,12 @@ public:
         head = NULL;
     }
 
-    void insert(T n, unsigned long long int befHash)
+    void insert(T n, unsigned long long int befHash, int lineNumber)
     {
         node<T>* temp = new node<T>;
         temp->data = n;
         temp->beforeHash = befHash;
+        temp->valLineNumber = lineNumber;
         temp->next = NULL;
         node<T>* curr = head;
 
@@ -181,17 +226,26 @@ public:
     */
     bool searchBefHash(unsigned long long int befHash)
     {
-        bool result = false;
         node <T>* searchPtr = head;
-        while (searchPtr->next != NULL)
+        while (searchPtr != NULL)
         {
             if (searchPtr->beforeHash == befHash)
-            {
-                result = true;
-                break;
-            }
+                return true;
+            searchPtr = searchPtr->next;
         }
-        return result;
+        return false;
+    }
+
+    node<T>* searchNode(unsigned long long int befHash)
+    {
+        node <T>* searchPtr = head;
+        while (searchPtr != NULL)
+        {
+            if (searchPtr->beforeHash == befHash)
+                return searchPtr;
+            searchPtr = searchPtr->next;
+        }
+        return NULL;
     }
 
     ~AVL_Tree_List() {
@@ -265,23 +319,23 @@ struct AVL {
         return getHeight(n->Left) - getHeight(n->Right);
     }
 
-    AVL_Node<T>* insert(AVL_Node<T>* n, T value, unsigned long long int befHash) {
+    AVL_Node<T>* insert(AVL_Node<T>* n, T value, unsigned long long int befHash, int lineNumber) {
         if (n == NULL) {
-            n = new Node<T>;
-            n->chainingList.insert(value, befHash);
+            n = new AVL_Node<T>;
+            n->chainingList.insert(value, befHash, lineNumber);
             n->Left = NULL;
             n->Right = NULL;
             n->height = 1;
             return n;
         }
         else if (value < n->chainingList.head->data) {
-            n->Left = insert(n->Left, value, befHash);
+            n->Left = insert(n->Left, value, befHash, lineNumber);
         }
         else if (value > n->chainingList.head->data) {
-            n->Right = insert(n->Right, value, befHash);
+            n->Right = insert(n->Right, value, befHash, lineNumber);
         }
         else if (value == n->chainingList.head->data) {
-            n->chainingList.insert(value, befHash);
+            n->chainingList.insert(value, befHash, lineNumber);
         }
         else
             return n;
@@ -393,11 +447,11 @@ struct AVL {
     {
         if (temp == NULL)
             return temp;
-        else if (val < temp->data)
+        else if (val < temp->chainingList.head->data)
             temp->Left = search(temp->Left, val);
-        else if (val > temp->data)
+        else if (val > temp->chainingList.head->data)
             temp->Right = search(temp->Right, val);
-        else if (val == temp->data)
+        else if (val == temp->chainingList.head->data)
             return temp;
     }
 
@@ -772,7 +826,7 @@ struct Machines {
                 cout << "\n......      Search Ended      ......" << endl << endl;
                 return startingMachine;
             }
-            else if (isFirstMachine(startingMachine->data) == true && dataKey <= startingMachine->data)
+            else if (dataKey == startingMachine->data)
             {
                 cout << "  Reached Machine: " << startingMachine->data << endl;
                 cout << "\n......      Search Ended      ......" << endl << endl;
@@ -914,9 +968,10 @@ public:
         int hash = HashFunction(key, &beforeHashVal);
 
         Machine_Node<int>* curr = machines.searchResponsibleMachine(hash, machineID);
-        curr->tree.Root = curr->tree.insert(curr->tree.Root, hash, beforeHashVal);
         curr->file.insert(value);
-        curr->file.lineNumber++;
+        curr->file.fileLineNumber++;
+        curr->tree.Root = curr->tree.insert(curr->tree.Root, hash, beforeHashVal, curr->file.fileLineNumber);
+
     }
 
     // void insert(int key, string value, int machineID) 
@@ -924,7 +979,7 @@ public:
     //     Machine_Node<int>* curr = machines.searchResponsibleMachine(key, machineID);
     //     curr->tree.Root = curr->tree.insert(curr->tree.Root, key);
     //     curr->file.insert(value);
-    //     curr->file.lineNumber++;
+    //     curr->file.fileLineNumber++;
     // }
 
     void autoAssigning()
@@ -984,25 +1039,48 @@ public:
         } while (searchPtr != machines.head);
     }
 
-    T searchData(T key, T machineID = this->head->data)
+    T searchData(T key, int machineID)
     {
         unsigned long long int beforeHashVal = 0;
         int hash = HashFunction(key, &beforeHashVal);
 
-
         Machine_Node<int>* curr = machines.searchResponsibleMachine(hash, machineID);
-        AVL_Node<T>* tempPtr = curr->tree.search(curr->tree.Root, hash);
-        if (curr->tree.tempPtr->chainingList.searchBefHash(beforeHashVal) == true)
+        AVL_Node<int>* tempPtr = curr->tree.search(curr->tree.Root, hash);
+        if (tempPtr != NULL && (tempPtr->chainingList.searchBefHash(beforeHashVal) == true))
         {
-            /*
-            **************** incomplete logic! ****************
-            */
-            cout << "Searched!" << endl;
+            node<int>* listNode = tempPtr->chainingList.searchNode(beforeHashVal);
+            if (listNode != NULL) {
+                int lineNumber = listNode->valLineNumber;
+                // cout<<lineNumber<<endl;
+                // cout << "Searched!" << endl;
+                return "Value : " + curr->file.search(lineNumber);
+            }
         }
     }
+
+    void remove(T key, int machineID)
+    {
+        unsigned long long int beforeHashVal = 0;
+        int hash = HashFunction(key, &beforeHashVal);
+
+        Machine_Node<int>* curr = machines.searchResponsibleMachine(hash, machineID);
+        AVL_Node<int>* tempPtr = curr->tree.search(curr->tree.Root, hash);
+        if (tempPtr != NULL && (tempPtr->chainingList.searchBefHash(beforeHashVal) == true))
+        {
+            node<int>* listNode = tempPtr->chainingList.searchNode(beforeHashVal);
+            if (listNode != NULL) {
+                int lineNumber = listNode->valLineNumber;
+                // cout<<lineNumber<<endl;
+                // cout << "Searched!" << endl;
+                curr->file.remove(lineNumber);
+            }
+        }
+    }
+
     ~ringDHT()
     {
         machines.clear();
+        delete machines.head;
     }
 };
 
@@ -1020,22 +1098,33 @@ int main() {
     dht.insert("Talha", "2nd", 2);
     dht.insert("Hunaid", "3rd", 5);
     dht.insert("Hassan Raza", "4th", 8);
-    dht.insert("Hammad", "4th", 7);
+    // dht.insert("Akmal", "5th", 3);
+    // dht.insert("Ahsan", "6th", 5);
+    // dht.insert("Adam", "7th", 12);
+    // dht.insert("Khan", "8th", 8);
+
+    //dht.remove("Hunaid",5);
+
+    cout << dht.searchData("Hunaid", 5);
+    cout << dht.searchData("Talha", 8);
+    cout << dht.searchData("Hassan Raza", 12);
+    // cout << dht.searchData("Adam", 3);
+    // cout << dht.searchData("Khan", 8);
+    // cout << dht.searchData("Ahsan", 2);
 
     // dht.insert(5, "1st",12);
     // dht.insert(5, "2nd",2);
     // dht.insert(9,"3rd",5);
     // dht.insert(13,"4th",8);
 
-    Machine_Node<int>* searchPtr = dht.machines.head;
-    do {
-        cout << searchPtr->data << " ";
-        searchPtr->tree.inOrder(searchPtr->tree.Root);
-        cout << endl;
-        searchPtr = searchPtr->next;
-    } while (searchPtr != dht.machines.head);
+    // Machine_Node<int>* searchPtr = dht.machines.head;
+    // do {
+    //     cout << searchPtr->data << " ";
+    //     searchPtr->tree.inOrder(searchPtr->tree.Root);
+    //     cout << endl;
+    //     searchPtr = searchPtr->next;
+    // } while (searchPtr != dht.machines.head);
 
 
     return 0;
 }
-
