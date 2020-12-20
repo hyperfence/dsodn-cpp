@@ -39,4 +39,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="Machine_Files\sample.txt" />
+  </ItemGroup>
 </Project>

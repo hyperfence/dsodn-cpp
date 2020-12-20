@@ -149,6 +149,9 @@
     <ClInclude Include="Ring_DHT.h" />
     <ClInclude Include="RoutingTable.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="Machine_Files\sample.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
