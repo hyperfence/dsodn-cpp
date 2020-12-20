@@ -32,6 +32,11 @@ public:
         this->routingTableSize = space;
     }
 
+    Machine_Node<int>* getHead()
+    {
+        return head;
+    }
+
     /*
         This function sets the identifier space of the DHT
     */

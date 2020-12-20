@@ -237,4 +237,25 @@ public:
         }
     }
 
+    // deleting the list of every node of tree
+    void deleteTreeList(AVL_Node<T>* n)
+    {
+        if (n != NULL)
+        {
+            deleteTreeList(n->Left);
+            n->chainingList.clear();
+            deleteTreeList(n->Right);
+        }
+    }
+
+    // deleting the tree itself
+    void deleteTree(AVL_Node<T>* n) {
+        if (n != NULL) {
+            deleteTree(n->Left);
+            deleteTree(n->Right);
+            delete n;
+        }
+        n = NULL;
+    }
+
 };

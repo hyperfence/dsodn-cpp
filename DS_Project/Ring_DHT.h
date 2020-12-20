@@ -127,6 +127,32 @@ public:
     }
 
     /*
+        This function frees all memory used by the List in nodes of AVL trees
+    */
+    void clearAVLTreeListMemory()
+    {
+        Machine_Node<int>* curr = machines.getHead();
+        do
+        {
+            curr->tree.deleteTreeList(curr->tree.getRoot());
+            curr = curr->next;
+        } while (curr != machines.getHead());
+    }
+
+    /*
+        This function frees all memory used by AVL trees itself
+    */
+    void clearAVLTreeMemory()
+    {
+        Machine_Node<int>* curr = machines.getHead();
+        do
+        {
+            curr->tree.deleteTree(curr->tree.getRoot());
+            curr = curr->next;
+        } while (curr != machines.getHead());
+    }
+
+    /*
         This function frees all memory used by the machines
     */
     void clearAllMachineMemory()

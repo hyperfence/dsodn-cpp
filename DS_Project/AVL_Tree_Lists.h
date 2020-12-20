@@ -112,13 +112,15 @@ public:
     }
 
     void clear() {
-        AVL_List_Node<T>* curr;
-        while (head != NULL)
+        AVL_List_Node<T>* curr = head;
+        AVL_List_Node<T>* next;
+        while (curr != NULL)
         {
-            curr = head;
+            next = curr->next;
             delete curr;
-            head = head->next;
+            curr = next;
         }
+        head = NULL;
     }
 
     void display() {
