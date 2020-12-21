@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Machines.h"
+#include <sstream>
 
 template <class T>
 class RingDHT {
@@ -54,15 +55,20 @@ public:
     void autoAssigning()
     {
         for (int i = 0; i < noOfmachines; i++) {
-            machines.insert(-1);
+            machines.insertMachine(-1);
         }
         Machine_Node<int>* searchPtr = machines.getFirstMachine();
         do {
+            unsigned long long int befHash = 0;
             int value = -1;
-            ostringstream address;
-            address << searchPtr;
-            string addressInString = address.str();
-            value = HashFunction(addressInString);
+
+            string addressInString = to_string((long)searchPtr);
+
+            //ostringstream address;
+            //address << searchPtr;
+            //string addressInString = address.str();
+
+            value = HashFunction(addressInString,&befHash);
             while (machines.machineExists(value) == true)
             {
                 value++;
@@ -72,15 +78,13 @@ public:
             searchPtr->file.setFileName(value);
             searchPtr = searchPtr->next;
         } while (searchPtr != machines.getFirstMachine());
-        machines.sort();
+        machines.sortMachines();
         machines.configureRoutingTable();
         searchPtr = machines.getFirstMachine();
         do {
-
             searchPtr->file.setFileName(searchPtr->data);
             searchPtr = searchPtr->next;
         } while (searchPtr != machines.getFirstMachine());
-
     }
 
     // getting values from user manually 
@@ -109,6 +113,26 @@ public:
         } while (searchPtr != machines.getFirstMachine());
     }
 
+    void removeData(T key, int machineID)
+    {
+        unsigned long long int beforeHashVal = 0;
+        int hash = HashFunction(key, &beforeHashVal);
+
+        Machine_Node<int>* curr = machines.searchResponsibleMachine(hash, machineID);
+        AVL_Node<int>* tempPtr = curr->tree.search(curr->tree.getRoot(), hash);
+        if (tempPtr != NULL && (tempPtr->chainingList.searchBefHash(beforeHashVal) == true))
+        {
+            AVL_List_Node<int>* listNode = tempPtr->chainingList.searchNode(beforeHashVal);
+            if (listNode != NULL) {
+                int lineNumber = listNode->valLineNumber;
+                curr->file.remove(lineNumber);
+                cout << "\nData succesfully removed!\n";
+                return;
+            }
+        }
+        cout << "\n404 Error. Data not found!\n";
+    }
+
     T searchData(T key, int machineID)
     {
         unsigned long long int beforeHashVal = 0;
@@ -121,7 +145,11 @@ public:
             AVL_List_Node<int>* listNode = tempPtr->chainingList.searchNode(beforeHashVal);
             if (listNode != NULL) {
                 int lineNumber = listNode->valLineNumber;
+                cout << "\n----------------------------------------------------\n";
+                cout << "File Name : " << curr->file.getFileName() << endl;
+                cout << "Line Number : " << lineNumber << endl;
                 return "Data Value : " + curr->file.search(lineNumber);
+                cout << "\n----------------------------------------------------\n";
             }
         }
     }
@@ -162,6 +190,5 @@ public:
 
     ~RingDHT()
     {
-       
     }
 };

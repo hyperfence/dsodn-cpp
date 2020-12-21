@@ -28,7 +28,9 @@ public:
     {
         return fileLineNumber;
     }
-
+    string getFileName() const {
+        return fileName;
+    }
     void increaseFileLineNumber(int val)
     {
         this->fileLineNumber += val;
@@ -75,7 +77,7 @@ public:
         }
         in.close();
         out.close();
-        in.open("temp.txt");
+        in.open(path + "temp.txt");
         out.open(path + fileName);
         value = "";
         while (getline(in, value))
@@ -85,5 +87,4 @@ public:
         in.close();
         out.close();
     }
-
 };
