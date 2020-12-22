@@ -126,6 +126,7 @@ public:
             if (listNode != NULL) {
                 int lineNumber = listNode->valLineNumber;
                 curr->file.remove(lineNumber);
+                tempPtr->chainingList.RemoveByValue(beforeHashVal);
                 cout << "\nData succesfully removed!\n";
                 return;
             }

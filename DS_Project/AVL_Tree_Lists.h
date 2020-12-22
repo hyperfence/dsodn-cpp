@@ -67,10 +67,15 @@ public:
         temp->next = curr;
     }
 
-    void RemoveByValue(T n) {
+    void RemoveByValue(unsigned long long int n) {
+        if (head->beforeHash == n) {
+            head = NULL;
+            delete head;
+            return;
+        }
         AVL_List_Node<T>* pre = new AVL_List_Node<T>;
         AVL_List_Node<T>* curr = head;
-        while (curr->data != n) {
+        while (curr->beforeHash != n) {
             pre = curr;
             curr = curr->next;
         }

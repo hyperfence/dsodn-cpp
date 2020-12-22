@@ -212,7 +212,8 @@ public:
         if (n != NULL) 
         {
             inOrder(n->Left);
-            cout << n->chainingList.getHead()->data << ",";
+            if (n->chainingList.getHead() != NULL)
+                cout << n->chainingList.getHead()->data << ",";
             inOrder(n->Right);
         }
     }
