@@ -5,21 +5,21 @@
 
 using namespace std;
 
-template <typename N>
+template <typename D, typename N>
 struct Machine_Node
 {
 	N data;
-	Machine_Node<N>* next;
+	Machine_Node<D,N>* next;
 	RoutingTable* routingTable;
 	AVL<N> tree;
-    MachineFile file;
+    MachineFile <D> file;
 };
 
-template <class T>
+template <class D, class T>
 class Machines {
 private:
     int routingTableSize;
-	Machine_Node<T>* head;
+	Machine_Node<D,T>* head;
 
 public:
     Machines()
@@ -32,7 +32,7 @@ public:
         this->routingTableSize = space;
     }
 
-    Machine_Node<int>* getHead()
+    Machine_Node<D,int>* getHead()
     {
         return head;
     }
@@ -50,11 +50,11 @@ public:
     */
     void insertMachine(T value)
     {
-        Machine_Node<T>* temp = new Machine_Node<T>;
+        Machine_Node<D, T>* temp = new Machine_Node<D, T>;
         temp->data = value;
         temp->next = NULL;
         temp->routingTable = NULL;
-        Machine_Node<T>* curr = head;
+        Machine_Node<D, T>* curr = head;
         if (this->head == NULL)
         {
             temp->next = temp;
@@ -83,9 +83,9 @@ public:
     /*
         This function deletes the specified machine
     */
-    void removeMachine(T value) {
-        Machine_Node<T>* pre = new Machine_Node<T>;
-        Machine_Node<T>* curr = head;
+    D* removeMachine(T value) {
+        Machine_Node<D, T>* pre = new Machine_Node<D, T>;
+        Machine_Node<D, T>* curr = head;
         while (curr->data != value) {
             pre = curr;
             curr = curr->next;
@@ -101,8 +101,8 @@ public:
         This function sorts all the machines in ascending order based on their ID
     */
     void sortMachines() {
-        Machine_Node<T>* temp1 = head;
-        Machine_Node<T>* temp2;
+        Machine_Node<D,T>* temp1 = head;
+        Machine_Node<D,T>* temp2;
         do {
             temp2 = temp1->next;
             while (temp2 != head) {
@@ -123,7 +123,7 @@ public:
     int getTotalSize()
     {
         int size = 0;
-        Machine_Node<T>* temp = head;
+        Machine_Node<D,T>* temp = head;
         do
         {
             temp = temp->next;
@@ -136,10 +136,10 @@ public:
         This function takes the key of the machine and returns that specific machine if
         found else this function will return NULL if machine not found.
     */
-    Machine_Node<T>* getMachine(T value)
+    Machine_Node<D,T>* getMachine(T value)
     {
-        Machine_Node<T>* successor = NULL;
-        Machine_Node<T>* ptr = head;
+        Machine_Node<D, T>* successor = NULL;
+        Machine_Node<D, T>* ptr = head;
         do
         {
             if (ptr->data == value)
@@ -156,10 +156,10 @@ public:
         This function takes the key of the machine and finds the immediate active routing successor
         and then return that machine else this function will return NULL if machine not found.
     */
-    Machine_Node<T>* getSuccessorRoutingMachine(T value)
+    Machine_Node<D,T>* getSuccessorRoutingMachine(T value)
     {
-        Machine_Node<T>* successor = NULL;
-        Machine_Node<T>* ptr = head;
+        Machine_Node<D, T>* successor = NULL;
+        Machine_Node<D, T>* ptr = head;
         while (1) // Infinite Loop Until Successor is found
         {
             if (ptr->data >= value)
@@ -181,10 +181,10 @@ public:
         This function takes the key of the machine and finds the immediate active successor
         and then return that machine else this function will return NULL if machine not found.
     */
-    Machine_Node<T>* getSuccessorMachine(T value)
+    Machine_Node<D,T>* getSuccessorMachine(T value)
     {
-        Machine_Node<T>* successor = NULL;
-        Machine_Node<T>* ptr = head;
+        Machine_Node<D,T>* successor = NULL;
+        Machine_Node<D,T>* ptr = head;
         while (1) // Infinite Loop Until Successor is found
         {
             if (ptr->data > value)
@@ -206,7 +206,7 @@ public:
         This function displays the ring DHT of active machines in a linear manner
     */
     void display() {
-        Machine_Node<T>* curr = head;
+        Machine_Node<D,T>* curr = head;
         if (head == NULL)
         {
             cout << "Empty List" << endl;
@@ -223,9 +223,9 @@ public:
     /*
         This function returns the address of last machine in the ring DHT
     */
-    Machine_Node<T>* getLastMachine()
+    Machine_Node<D,T>* getLastMachine()
     {
-        Machine_Node<T>* curr = head;
+        Machine_Node<D,T>* curr = head;
         if (head == NULL)
         {
             return NULL;
@@ -240,9 +240,9 @@ public:
     /*
         This function returns the address of first machine in the ring DHT
     */
-    Machine_Node<T>* getFirstMachine()
+    Machine_Node<D,T>* getFirstMachine()
     {
-        Machine_Node<T>* curr = head;
+        Machine_Node<D,T>* curr = head;
         if (head == NULL)
         {
             return NULL;
@@ -256,7 +256,7 @@ public:
     bool machineExists(T value)
     {
         bool flag = false;
-        Machine_Node<T>* ptr = head;
+        Machine_Node<D,T>* ptr = head;
         do {
             if (ptr->data == value)
             {
@@ -272,7 +272,7 @@ public:
     */
     bool isLastMachine(T value)
     {
-        Machine_Node<T>* ptr = getMachine(value);
+        Machine_Node<D, T>* ptr = getMachine(value);
         if (ptr->next == this->head)
         {
             return true;
@@ -296,16 +296,16 @@ public:
         This function takes hashed key of data and machine from the Ring_DHT class and then
         performs the search according to the given keys
     */
-    Machine_Node<T>* searchResponsibleMachine(T dataKey, T machineKey)
+    Machine_Node<D,T>* searchResponsibleMachine(T dataKey, T machineKey)
     {
         cout << "\n...... Searching From Machine " << machineKey << " ......" << endl << endl;
-        Machine_Node<T>* startingMachine = getMachine(machineKey);
+        Machine_Node<D,T>* startingMachine = getMachine(machineKey);
         for (int i = 0; i < routingTableSize; i++)
         {
             //Machine_Node<T>* temp = new Machine_Node<T>();
             //Machine_Node<T>* temp2 = new Machine_Node<T>();
-            Machine_Node<T>* temp = static_cast<Machine_Node<T>*>(startingMachine->routingTable->getElement(i));
-            Machine_Node<T>* temp2 = static_cast<Machine_Node<T>*>(startingMachine->routingTable->getElement(i + 1));
+            Machine_Node<D,T>* temp = static_cast<Machine_Node<D,T>*>(startingMachine->routingTable->getElement(i));
+            Machine_Node<D,T>* temp2 = static_cast<Machine_Node<D,T>*>(startingMachine->routingTable->getElement(i + 1));
             if (dataKey > getLastMachine()->data)
             {
                 cout << "  Reached Machine : " << startingMachine->data << " -> " << getFirstMachine()->data << endl;
@@ -371,7 +371,7 @@ public:
     void configureRoutingTable()
     {
         int numOfMachines = this->getTotalSize();
-        Machine_Node<T>* temp = head;
+        Machine_Node<D,T>* temp = head;
         do
         {
             int identifierSpace = pow(2, this->routingTableSize);
@@ -387,7 +387,7 @@ public:
             }
             for (int i = 0; i < routingTableSize; i++)
             {
-                Machine_Node<T>* nearestActive = this->getSuccessorRoutingMachine(routingTable[i]);
+                Machine_Node<D,T>* nearestActive = this->getSuccessorRoutingMachine(routingTable[i]);
                 if (temp->routingTable == NULL) //The routing table is empty
                 {
                     temp->routingTable = new RoutingTable();
@@ -404,7 +404,7 @@ public:
             for (int i = 0; i < routingTableSize; i++)
             {
                 // Now typecast the void pointer back to Machine_Node pointer to access the data
-                Machine_Node<T>* temp2 = static_cast<Machine_Node<T>*>(temp->routingTable->getElement(i));
+                Machine_Node<D,T>* temp2 = static_cast<Machine_Node<D,T>*>(temp->routingTable->getElement(i));
                 cout << " " << temp2->data;
             }
             temp = temp->next;
@@ -418,8 +418,8 @@ public:
     */
     void clear() 
     {
-        Machine_Node<T>* curr = head;
-        Machine_Node<T>* temp;
+        Machine_Node<D,T>* curr = head;
+        Machine_Node<D,T>* temp;
         do
         {
             temp = curr;

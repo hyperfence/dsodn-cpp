@@ -20,7 +20,7 @@ using namespace std;
 
 int main()
 {
-    RingDHT<string> dht(4, 5);
+    RingDHT<string, int> dht(4, 5);
    // dht.autoAssigning();
     dht.manualAssigning();
     dht.getMachines().display();
@@ -42,7 +42,8 @@ int main()
     cout << dht.searchData("Hunaid", 5);
     cout << dht.searchData("Talha", 8);
     cout << dht.searchData("Hassan Raza", 12);
-    dht.removeData("Hunaid", 5);
+    cout << "\n------------------------------------\n";
+    cout << "Removed data is: " << dht.removeData("Hunaid", 5);
     //cout << dht.searchData("Adam", 3);
     //cout << dht.searchData("Khan", 8);
     // cout << dht.searchData("Ahsan", 2);

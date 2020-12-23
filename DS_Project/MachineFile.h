@@ -6,6 +6,7 @@
 
 using namespace std;
 
+template <typename T>
 class MachineFile {
 private:
     string path, fileName;
@@ -48,7 +49,7 @@ public:
     {
         ifstream in;
         in.open(path + fileName);
-        string value;
+        string value = "";
         int checklineNumber = 0;
         while (getline(in, value)) {
             checklineNumber++;
@@ -56,21 +57,24 @@ public:
                 return value;
         }
         in.close();
+        return value;
     }
-
-    void remove(int lineNumber) 
+    
+    T remove(int lineNumber) 
     {
         ifstream in;
         in.open(path + fileName);
         ofstream out;
         out.open(path + "temp.txt");
 
+        T removedData = "";
         string value;
         int checklineNumber = 0;
         while (getline(in, value))
         {
             checklineNumber++;
             if (checklineNumber == lineNumber) {
+                removedData = value;
                 value = "";
             }
             out << value << endl;
@@ -86,5 +90,6 @@ public:
         }
         in.close();
         out.close();
+        return removedData;
     }
 };

@@ -3,12 +3,12 @@
 #include "Machines.h"
 #include <sstream>
 
-template <class T>
+template <typename D, typename T>
 class RingDHT {
 private:
     int noOfmachines;
     int identifierSpace;
-    Machines<int> machines;
+    Machines<D, T> machines;
 
 public:
 
@@ -19,7 +19,7 @@ public:
         machines.setidentifierSpace(identifierSpace);
     }
 
-    Machines<int> getMachines()
+    Machines<D,T> getMachines()
     {
         return machines;
     }
@@ -45,7 +45,7 @@ public:
         unsigned long long int beforeHashVal = 0;
         int hash = HashFunction(key, &beforeHashVal);
 
-        Machine_Node<int>* curr = machines.searchResponsibleMachine(hash, machineID);
+        Machine_Node<D,T>* curr = machines.searchResponsibleMachine(hash, machineID);
         curr->file.insert(value);
         curr->file.increaseFileLineNumber(1);
         curr->tree.setRoot(curr->tree.insert(curr->tree.getRoot(), hash, beforeHashVal, curr->file.getFileLineNumber()));
@@ -57,7 +57,7 @@ public:
         for (int i = 0; i < noOfmachines; i++) {
             machines.insertMachine(-1);
         }
-        Machine_Node<int>* searchPtr = machines.getFirstMachine();
+        Machine_Node<D,T>* searchPtr = machines.getFirstMachine();
         do {
             unsigned long long int befHash = 0;
             int value = -1;
@@ -105,7 +105,7 @@ public:
         }
         machines.sortMachines();
         machines.configureRoutingTable();
-        Machine_Node<int>* searchPtr = machines.getFirstMachine();
+        Machine_Node<D,T>* searchPtr = machines.getFirstMachine();
         do {
 
             searchPtr->file.setFileName(searchPtr->data);
@@ -113,37 +113,39 @@ public:
         } while (searchPtr != machines.getFirstMachine());
     }
 
-    void removeData(T key, int machineID)
+    D removeData(D key, T machineID)
     {
         unsigned long long int beforeHashVal = 0;
         int hash = HashFunction(key, &beforeHashVal);
+        D removedData = "";
 
-        Machine_Node<int>* curr = machines.searchResponsibleMachine(hash, machineID);
-        AVL_Node<int>* tempPtr = curr->tree.search(curr->tree.getRoot(), hash);
+        Machine_Node<D,T>* curr = machines.searchResponsibleMachine(hash, machineID);
+        AVL_Node<T>* tempPtr = curr->tree.search(curr->tree.getRoot(), hash);
         if (tempPtr != NULL && (tempPtr->chainingList.searchBefHash(beforeHashVal) == true))
         {
-            AVL_List_Node<int>* listNode = tempPtr->chainingList.searchNode(beforeHashVal);
+            AVL_List_Node<T>* listNode = tempPtr->chainingList.searchNode(beforeHashVal);
             if (listNode != NULL) {
                 int lineNumber = listNode->valLineNumber;
-                curr->file.remove(lineNumber);
+                removedData = curr->file.remove(lineNumber);
                 tempPtr->chainingList.RemoveByValue(beforeHashVal);
                 cout << "\nData succesfully removed!\n";
-                return;
+                return removedData;
             }
         }
-        cout << "\n404 Error. Data not found!\n";
+        cout << "\nData not found!\n";
+        return removedData;   
     }
 
-    T searchData(T key, int machineID)
+    D searchData(D key, T machineID)
     {
         unsigned long long int beforeHashVal = 0;
         int hash = HashFunction(key, &beforeHashVal);
 
-        Machine_Node<int>* curr = machines.searchResponsibleMachine(hash, machineID);
-        AVL_Node<int>* tempPtr = curr->tree.search(curr->tree.getRoot(), hash);
+        Machine_Node<D, T>* curr = machines.searchResponsibleMachine(hash, machineID);
+        AVL_Node<T>* tempPtr = curr->tree.search(curr->tree.getRoot(), hash);
         if (tempPtr != NULL && (tempPtr->chainingList.searchBefHash(beforeHashVal) == true))
         {
-            AVL_List_Node<int>* listNode = tempPtr->chainingList.searchNode(beforeHashVal);
+            AVL_List_Node<T>* listNode = tempPtr->chainingList.searchNode(beforeHashVal);
             if (listNode != NULL) {
                 int lineNumber = listNode->valLineNumber;
                 cout << "\n----------------------------------------------------\n";
@@ -160,7 +162,7 @@ public:
     */
     void clearAVLTreeListMemory()
     {
-        Machine_Node<int>* curr = machines.getHead();
+        Machine_Node<D, T>* curr = machines.getHead();
         do
         {
             curr->tree.deleteTreeList(curr->tree.getRoot());
@@ -173,7 +175,7 @@ public:
     */
     void clearAVLTreeMemory()
     {
-        Machine_Node<int>* curr = machines.getHead();
+        Machine_Node<D,T>* curr = machines.getHead();
         do
         {
             curr->tree.deleteTree(curr->tree.getRoot());
