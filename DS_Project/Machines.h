@@ -12,7 +12,7 @@ struct Machine_Node
 	Machine_Node<D,N>* next;
 	RoutingTable* routingTable;
 	AVL<N> tree;
-    MachineFile <D> file;
+    MachineFile<D> file;
 };
 
 template <class D, class T>
@@ -79,6 +79,38 @@ public:
             curr->next = temp;
         }
     }
+
+    void setMachineAVL(AVL<T>* avl)
+    {
+        head->tree = avl;
+    }
+
+    AVL_Node<T>* getMachineAVL(T machineID)
+    {
+        Machine_Node<D, T>* curr = head;
+        while (curr->data != machineID) {
+            cout << "Data: " << curr->data << endl;
+            curr = curr->next;
+        }
+        return curr->tree.getRoot();
+    }
+
+    /*
+        This function takes machineID as input and returns the data
+        stored on that machine as a pointer to the template data type
+    */
+    //D* getMachineData(T value, int& size)
+    //{
+    //    D* retrievedData = NULL;
+    //    if (machineExists(value))
+    //    {
+    //        AVL<T> temp = head->tree->getRoot();
+
+    //    }
+    //    return retrievedData;
+    //}
+
+
 
     /*
         This function deletes the specified machine
@@ -200,6 +232,26 @@ public:
             }
         }
         return successor;
+    }
+
+    Machine_Node<D, T>* getPredecessorMachine(T value)
+    {
+        Machine_Node<D, T>* predecessor = NULL;
+        Machine_Node<D, T>* ptr = head;
+        while (1) // Infinite Loop Until Successor is found
+        {
+            if (ptr->next == NULL || ptr == NULL)
+            {
+                break;
+            }
+            if (ptr->next->data == value)
+            {
+                predecessor = ptr;
+                break;
+            }
+            ptr = ptr->next;
+        }
+        return predecessor;
     }
 
     /*

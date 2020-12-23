@@ -207,6 +207,41 @@ public:
         return n;
     }
 
+    int getMachineDataSize(AVL_Node<T>* n, int& size, T machineID)
+    {
+        if (n != NULL)
+        {
+            inOrder(n->Left, size, machineID);
+            if (n->chainingList.getHead() != NULL)
+            {
+                if (n->chainingList.getHead()->data <= machineID)
+                {
+                    size++;
+                }
+            }
+            inOrder(n->Right, size, machineID);
+        }
+    }
+
+    void getMachineData(AVL_Node<T>* n, AVL<T>* retrievedAVL, T machineID)
+    {
+        if (n != NULL)
+        {
+            getMachineData(n->Left, retrievedAVL, machineID);
+            if (n->chainingList.getHead() != NULL)
+            {
+                if (n->chainingList.getHead()->data <= machineID)
+                {
+                    AVL_Node<T>* root = retrievedAVL->getRoot();
+                    cout << "AVL Data: " << n->chainingList.getHead()->beforeHash << endl;
+                    retrievedAVL->insert(root, n->chainingList.getHead()->data, n->chainingList.getHead()->beforeHash,0);
+                }
+            }
+            getMachineData(n->Right, retrievedAVL, machineID);
+        }
+    }
+    
+
     void inOrder(AVL_Node<T>* n) 
     {
         if (n != NULL) 

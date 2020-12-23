@@ -25,11 +25,49 @@ public:
         fileName = "Machine_" + to_string(machineID) + ".txt";
     }
 
+    T* getFileContents(string filePath, int& size)
+    {
+        T* retrievedData = NULL;
+        ifstream in;
+        in.open(filePath);
+        string value = "";
+        int counter = 0;
+        while (getline(in, value))
+        {
+            if (value == "")
+            {
+                continue;
+            }
+            counter++;
+        }
+        retrievedData = new T[counter];
+        size = counter;
+        counter = 0;
+        in.close();
+        in.open(filePath);
+        while (getline(in, value))
+        {
+            if (value == "")
+            {
+                continue;
+            }
+            retrievedData[counter] = value;
+            counter++;
+        }
+        in.close();
+        return retrievedData;
+    }
+
     int getFileLineNumber()const
     {
         return fileLineNumber;
     }
-    string getFileName() const {
+    string getFilePath()const
+    {
+        return path;
+    }
+    string getFileName()const 
+    {
         return fileName;
     }
     void increaseFileLineNumber(int val)

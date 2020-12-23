@@ -102,6 +102,7 @@ public:
                 cin >> value;
             }
             machines.insertMachine(value);
+            // function adjusts machine data .... paramater 
         }
         machines.sortMachines();
         machines.configureRoutingTable();
@@ -111,6 +112,20 @@ public:
             searchPtr->file.setFileName(searchPtr->data);
             searchPtr = searchPtr->next;
         } while (searchPtr != machines.getFirstMachine());
+    }
+
+    void insertMachineOnRuntime(int value)
+    {
+        Machine_Node<D, T>* successorMachine = machines.getSuccessorMachine(0);
+        machines.insertMachine(value);
+        machines.sortMachines();
+        machines.configureRoutingTable();
+        AVL<T>* retrievedAVL = NULL;
+        AVL_Node<T>* successorRoot = machines.getMachineAVL(successorMachine->data);
+        retrievedAVL->getMachineData(successorRoot, retrievedAVL, value);
+        cout << "\n\nIn order of the AVL: " << endl;
+        retrievedAVL->inOrder(retrievedAVL->getRoot());
+        cout << "\n\nIn order ended" << endl;
     }
 
     D removeData(D key, T machineID)
