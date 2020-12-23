@@ -120,7 +120,7 @@ public:
         machines.insertMachine(value);
         machines.sortMachines();
         machines.configureRoutingTable();
-        AVL<T>* retrievedAVL = NULL;
+        AVL<T>* retrievedAVL = new AVL<T>;
         AVL_Node<T>* successorRoot = machines.getMachineAVL(successorMachine->data);
         retrievedAVL->getMachineData(successorRoot, retrievedAVL, value);
         cout << "\n\nIn order of the AVL: " << endl;

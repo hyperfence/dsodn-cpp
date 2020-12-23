@@ -91,6 +91,7 @@ public:
             n->Left = NULL;
             n->Right = NULL;
             n->height = 1;
+            Root = n;
             return n;
         }
         else if (value < n->chainingList.getHead()->data)
@@ -227,6 +228,7 @@ public:
     {
         if (n != NULL)
         {
+
             getMachineData(n->Left, retrievedAVL, machineID);
             if (n->chainingList.getHead() != NULL)
             {
@@ -234,10 +236,13 @@ public:
                 {
                     AVL_Node<T>* root = retrievedAVL->getRoot();
                     cout << "AVL Data: " << n->chainingList.getHead()->beforeHash << endl;
-                    retrievedAVL->insert(root, n->chainingList.getHead()->data, n->chainingList.getHead()->beforeHash,0);
+                    retrievedAVL->insert(root, n->chainingList.getHead()->data, n->chainingList.getHead()->beforeHash, 0);
+                    cout << "displaying AVL tree: \n";
+                    retrievedAVL->inOrder(retrievedAVL->getRoot());
                 }
             }
             getMachineData(n->Right, retrievedAVL, machineID);
+
         }
     }
     
