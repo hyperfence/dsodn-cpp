@@ -235,10 +235,7 @@ public:
                 if (n->chainingList.getHead()->data <= machineID)
                 {
                     AVL_Node<T>* root = retrievedAVL->getRoot();
-                    cout << "AVL Data: " << n->chainingList.getHead()->beforeHash << endl;
                     retrievedAVL->insert(root, n->chainingList.getHead()->data, n->chainingList.getHead()->beforeHash, 0);
-                    cout << "displaying AVL tree: \n";
-                    retrievedAVL->inOrder(retrievedAVL->getRoot());
                 }
             }
             getMachineData(n->Right, retrievedAVL, machineID);
