@@ -37,7 +37,9 @@ int main()
     // dht.insert("Adam", "7th", 12);
     // dht.insert("Khan", "8th", 8);
 
-    //dht.remove("Hunaid",5);
+    dht.removeData("Hunaid", 5);
+    dht.removeData("Hassan Raza", 8);
+    dht.removeData("Akmal", 3);
 
     cout << dht.searchData("Hunaid", 5);
     cout << dht.searchData("Talha", 8);
@@ -60,7 +62,9 @@ int main()
     //     cout << endl;
     //     searchPtr = searchPtr->next;
     // } while (searchPtr != dht.machines.head);
+
     dht.insertMachineOnRuntime(0);
+
     dht.clearAVLTreeListMemory();   // Release all unwanted memory from the AVL Lists
     dht.clearAVLTreeMemory();   // Release all unwanted memory from AVL trees
     dht.clearAllMachineMemory(); // Release all unwanted memory from the machines

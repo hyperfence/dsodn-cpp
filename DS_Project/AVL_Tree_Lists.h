@@ -81,6 +81,7 @@ public:
         }
         pre->next = curr->next;
         curr->next = NULL;
+        cout << "Deleted File: " << curr->data << endl;
         delete curr;
     }
 

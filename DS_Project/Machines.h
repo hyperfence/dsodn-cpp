@@ -1,4 +1,5 @@
 #pragma once
+#include <iomanip>
 #include "AVL_Tree.h"
 #include "RoutingTable.h"
 #include "MachineFile.h"
@@ -261,15 +262,20 @@ public:
         Machine_Node<D,T>* curr = head;
         if (head == NULL)
         {
-            cout << "Empty List" << endl;
+            cout << "\n No Machines Found" << endl;
             return;
         }
+        cout << "\n---  Machines List  ---" << endl;
+        cout << "|" << endl;
+        cout << "|  ";
         do
         {
             cout << curr->data << " -> ";
             curr = curr->next;
         } while (curr != head);
         cout << "NULL" << endl;
+        cout << "|" << endl;
+        cout << "-----------------------" << endl << endl;
     }
 
     /*
@@ -350,7 +356,8 @@ public:
     */
     Machine_Node<D,T>* searchResponsibleMachine(T dataKey, T machineKey)
     {
-        cout << "\n...... Searching From Machine " << machineKey << " ......" << endl << endl;
+        cout << "\n\n------ Routing Starting From Machine " << setfill('0') << setw(3) << machineKey << " ------" << endl;
+        cout << "|" << endl;
         Machine_Node<D,T>* startingMachine = getMachine(machineKey);
         for (int i = 0; i < routingTableSize; i++)
         {
@@ -360,59 +367,66 @@ public:
             Machine_Node<D,T>* temp2 = static_cast<Machine_Node<D,T>*>(startingMachine->routingTable->getElement(i + 1));
             if (dataKey > getLastMachine()->data)
             {
-                cout << "  Reached Machine : " << startingMachine->data << " -> " << getFirstMachine()->data << endl;
+                cout << "|  Routing From Machine : " << setfill('0') << setw(3) << startingMachine->data << " -> " << setfill('0') << setw(3) << getFirstMachine()->data << endl;
                 startingMachine = getFirstMachine();
-                cout << "\n......      Search Ended      ......" << endl << endl;
+                cout << "|" << endl;
+                cout << "-----------------------------------------------" << endl << endl;
                 return startingMachine;
             }
             else if (dataKey < getFirstMachine()->data)
             {
-                cout << "  Reached Machine : " << startingMachine->data << " -> " << getFirstMachine()->data << endl;
+                cout << "|  Routing From Machine : " << setfill('0') << setw(3) << startingMachine->data << " -> " << setfill('0') << setw(3) << getFirstMachine()->data << endl;
                 startingMachine = getFirstMachine();
-                cout << "\n......      Search Ended      ......" << endl << endl;
+                cout << "|" << endl;
+                cout << "-----------------------------------------------" << endl << endl;
                 return startingMachine;
             }
             else if (isLastMachine(startingMachine->data) == true && dataKey >= startingMachine->data)
             {
-                cout << "  Reached Machine: " << startingMachine->data << " -> " << getFirstMachine()->data << endl;
+                cout << "|  Routing From Machine: " << setfill('0') << setw(3) << startingMachine->data << " -> " << setfill('0') << setw(3) << getFirstMachine()->data << endl;
                 startingMachine = getFirstMachine();
-                cout << "\n......      Search Ended      ......" << endl << endl;
+                cout << "|" << endl;
+                cout << "-----------------------------------------------" << endl << endl;
                 return startingMachine;
             }
             else if (dataKey == startingMachine->data)
             {
-                cout << "  Reached Machine: " << startingMachine->data << endl;
-                cout << "\n......      Search Ended      ......" << endl << endl;
+                cout << "|  Routing From Machine: " << setfill('0') << setw(3) << startingMachine->data << endl;
+                cout << "|" << endl;
+                cout << "-----------------------------------------------" << endl << endl;
                 return startingMachine;
             }
             else if (temp->data == dataKey)
             {
-                cout << "  Reached Machine: " << startingMachine->data << " -> " << temp->data << endl;
+                cout << "|  Routing From Machine: " << setfill('0') << setw(3) << startingMachine->data << " -> " << setfill('0') << setw(3) << temp->data << endl;
                 startingMachine = temp;
-                cout << "\n......      Search Ended      ......" << endl << endl;
+                cout << "|" << endl;
+                cout << "-----------------------------------------------" << endl << endl;
                 return startingMachine;
             }
             else if (dataKey > startingMachine->data && temp->data >= dataKey)
             {
-                cout << "  Reached Machine: " << startingMachine->data << " -> " << temp->data << endl;
+                cout << "|  Routing From Machine: " << setfill('0') << setw(3) << startingMachine->data << " -> " << setfill('0') << setw(3) << temp->data << endl;
                 startingMachine = temp;
-                cout << "\n......      Search Ended      ......" << endl << endl;
+                cout << "|" << endl;
+                cout << "-----------------------------------------------" << endl << endl;
                 return startingMachine;
             }
             else if (dataKey > temp->data && temp2 != NULL && dataKey < temp2->data)
             {
-                cout << "  Reached Machine: " << startingMachine->data << " -> " << temp->data << endl;
+                cout << "|  Routing From Machine: " << setfill('0') << setw(3) << startingMachine->data << " -> " << setfill('0') << setw(3) << temp->data << endl;
                 startingMachine = temp;
                 i = -1;
             }
             else if (dataKey > temp->data && temp2 == NULL)
             {
-                cout << "  Reached Machine: " << startingMachine->data << " -> " << temp->data << endl;
+                cout << "|  Routing From Machine: " << setfill('0') << setw(3) << startingMachine->data << " -> " << setfill('0') << setw(3) << temp->data << endl;
                 startingMachine = temp;
                 i = -1;
             }
         }
-        cout << "\n......      Search Ended      ......" << endl << endl;
+        cout << "|       -NULL-" << endl;
+        cout << "-----------------------------------------------" << endl << endl;
         return NULL;
     }
 
@@ -424,10 +438,12 @@ public:
     {
         int numOfMachines = this->getTotalSize();
         Machine_Node<D,T>* temp = head;
+        cout << "\n---- Routing Tables of Machines ----" << endl;
+        cout << "|" << endl;
         do
         {
             int identifierSpace = pow(2, this->routingTableSize);
-            cout << "Machine " << temp->data << ": ";
+            cout << "| -> Machine " << setfill('0') << setw(3) << temp->data << ": ";
             T* routingTable = new T[this->routingTableSize];
             for (int i = 0; i < routingTableSize; i++)
             {
@@ -463,6 +479,8 @@ public:
             cout << endl;
             delete[] routingTable;
         } while (temp != head);
+        cout << "|" << endl;
+        cout << "------------------------------------" << endl << endl;
     }
 
     /*

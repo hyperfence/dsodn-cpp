@@ -143,34 +143,36 @@ public:
         return current;
     }
 
-    AVL_Node<T>* remove(AVL_Node<T>* n, int value)
+    AVL_Node<T>* remove(AVL_Node<T>* n, T value, unsigned long long int befHash)
     {
         if (n == NULL)
         {
             return n;
         }
 
-        if (value < n->data)
+        if (value < n->chainingList.getHead()->data)
         {
-            n->Left = remove(n->Left, value);
+            n->Left = remove(n->Left, value, befHash);
         }
 
-        else if (value > n->data)
+        else if (value > n->chainingList.getHead()->data)
         {
-            n->Right = remove(n->Right, value);
+            n->Right = remove(n->Right, value, befHash);
         }
         else
         {
             if (n->Left == NULL) 
             {
                 AVL_Node<T>* temp = n->Right;
-                delete n;
+                //delete n;
+                n->chainingList.RemoveByValue(befHash);
                 return temp;
             }
             else if (n->Right == NULL) 
             {
                 AVL_Node<T>* temp = n->Left;
-                delete n;
+                //delete n;
+                n->chainingList.RemoveByValue(befHash);
                 return temp;
             }
             AVL_Node<T>* temp = n->Right;
@@ -178,8 +180,8 @@ public:
             {
                 temp = temp->Left;
             }
-            n->data = temp->data;
-            n->Right = remove(n->Right, temp->data);
+            n->chainingList.getHead()->data = temp->chainingList.getHead()->data;
+            n->Right = remove(n->Right, temp->chainingList.getHead()->data, befHash);
         }
         if (n == NULL)
         {
@@ -224,21 +226,21 @@ public:
         }
     }
 
-    void getMachineData(AVL_Node<T>* n, AVL<T>* retrievedAVL, T machineID)
+    void getMachineData(AVL_Node<T>* successorTree, AVL_Node<T>* successorRoot, AVL<T>* retrievedAVL, T machineID)
     {
-        if (n != NULL)
+        if (successorTree != NULL)
         {
-
-            getMachineData(n->Left, retrievedAVL, machineID);
-            if (n->chainingList.getHead() != NULL)
+            getMachineData(successorTree->Left, successorRoot, retrievedAVL, machineID);
+            if (successorTree->chainingList.getHead() != NULL)
             {
-                if (n->chainingList.getHead()->data <= machineID)
+                if (successorTree->chainingList.getHead()->data <= machineID)
                 {
                     AVL_Node<T>* root = retrievedAVL->getRoot();
-                    retrievedAVL->insert(root, n->chainingList.getHead()->data, n->chainingList.getHead()->beforeHash, 0);
+                    retrievedAVL->insert(root, successorTree->chainingList.getHead()->data, successorTree->chainingList.getHead()->beforeHash, 0);
+                    this->remove(successorRoot, 2, successorTree->chainingList.getHead()->data);
                 }
             }
-            getMachineData(n->Right, retrievedAVL, machineID);
+            getMachineData(successorTree->Right, successorRoot, retrievedAVL, machineID);
 
         }
     }
@@ -260,6 +262,11 @@ public:
         if (temp == NULL)
         {
             return temp;
+        }
+        else if (temp->chainingList.getHead() == NULL)
+        {
+            cout << "\n--- The Chaining List Is Empty! ---" << endl;
+            return NULL;
         }
         else if (val < temp->chainingList.getHead()->data)
         {

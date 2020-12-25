@@ -122,7 +122,7 @@ public:
         machines.configureRoutingTable();
         AVL<T>* retrievedAVL = new AVL<T>;
         AVL_Node<T>* successorRoot = machines.getMachineAVL(successorMachine->data);
-        retrievedAVL->getMachineData(successorRoot, retrievedAVL, value);
+        retrievedAVL->getMachineData(successorRoot, successorRoot, retrievedAVL, value);
         cout << "\n\nIn order of the AVL: " << endl;
         retrievedAVL->inOrder(retrievedAVL->getRoot());
         cout << "\n\nIn order ended" << endl;
@@ -135,6 +135,11 @@ public:
         D removedData = "";
 
         Machine_Node<D,T>* curr = machines.searchResponsibleMachine(hash, machineID);
+        if (curr == NULL)
+        {
+            cout << "\n --- No Responsible Machine Found For Key: "<< key <<" ---" << endl;
+            return "";
+        }
         AVL_Node<T>* tempPtr = curr->tree.search(curr->tree.getRoot(), hash);
         if (tempPtr != NULL && (tempPtr->chainingList.searchBefHash(beforeHashVal) == true))
         {
@@ -156,6 +161,8 @@ public:
         unsigned long long int beforeHashVal = 0;
         int hash = HashFunction(key, &beforeHashVal);
 
+        string finalOutput = "";
+
         Machine_Node<D, T>* curr = machines.searchResponsibleMachine(hash, machineID);
         AVL_Node<T>* tempPtr = curr->tree.search(curr->tree.getRoot(), hash);
         if (tempPtr != NULL && (tempPtr->chainingList.searchBefHash(beforeHashVal) == true))
@@ -163,13 +170,18 @@ public:
             AVL_List_Node<T>* listNode = tempPtr->chainingList.searchNode(beforeHashVal);
             if (listNode != NULL) {
                 int lineNumber = listNode->valLineNumber;
-                cout << "\n----------------------------------------------------\n";
-                cout << "File Name : " << curr->file.getFileName() << endl;
-                cout << "Line Number : " << lineNumber << endl;
-                return "Data Value : " + curr->file.search(lineNumber);
-                cout << "\n----------------------------------------------------\n";
+                finalOutput += "\n---------- Searching Data From Machine "+to_string(machineID);
+                finalOutput += " ----------\n";
+                finalOutput += "|\n";
+                finalOutput += "| File Name:   "+ curr->file.getFileName()+"\n";
+                finalOutput += "| Line Number: "+ to_string(lineNumber) + "\n";
+                finalOutput += "| Found Data:  "+ curr->file.search(lineNumber);
+                finalOutput += "\n|";
+                finalOutput += "\n----------------------------------------------------\n\n";
+                return finalOutput;
             }
         }
+        return finalOutput;
     }
 
     /*
