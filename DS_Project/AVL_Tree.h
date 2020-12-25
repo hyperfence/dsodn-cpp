@@ -145,11 +145,19 @@ public:
 
     AVL_Node<T>* remove(AVL_Node<T>* n, T value, unsigned long long int befHash)
     {
+
+        AVL_Node<T>* searchNode = search(n,value);
+       
+        if(searchNode->chainingList.getHead()->next != NULL)
+        {
+            searchNode->chainingList.setAVLTreeList(searchNode->chainingList.RemoveByValue(befHash));
+            return n;
+        }
+
         if (n == NULL)
         {
             return n;
         }
-
         if (value < n->chainingList.getHead()->data)
         {
             n->Left = remove(n->Left, value, befHash);
@@ -166,6 +174,7 @@ public:
                 AVL_Node<T>* temp = n->Right;
                 //delete n;
                 n->chainingList.RemoveByValue(befHash);
+                cout << "\n\nNode Removed" << endl;
                 return temp;
             }
             else if (n->Right == NULL) 
@@ -173,6 +182,7 @@ public:
                 AVL_Node<T>* temp = n->Left;
                 //delete n;
                 n->chainingList.RemoveByValue(befHash);
+                cout << "\n\nNode Removed: " << temp->chainingList.getHead()->data << endl;
                 return temp;
             }
             AVL_Node<T>* temp = n->Right;
@@ -237,7 +247,7 @@ public:
                 {
                     AVL_Node<T>* root = retrievedAVL->getRoot();
                     retrievedAVL->insert(root, successorTree->chainingList.getHead()->data, successorTree->chainingList.getHead()->beforeHash, 0);
-                    this->remove(successorRoot, 2, successorTree->chainingList.getHead()->data);
+                    successorRoot = this->remove(successorRoot, successorTree->chainingList.getHead()->data, successorTree->chainingList.getHead()->beforeHash);
                 }
             }
             getMachineData(successorTree->Right, successorRoot, retrievedAVL, machineID);
@@ -251,8 +261,12 @@ public:
         if (n != NULL) 
         {
             inOrder(n->Left);
-            if (n->chainingList.getHead() != NULL)
-                cout << n->chainingList.getHead()->data << ",";
+            // We can add a loop here till the end of singly list to display content of that list
+            if (n->chainingList.getHead() == NULL)
+            {
+                return;
+            }
+            cout << n->chainingList.getHead()->data << ",";
             inOrder(n->Right);
         }
     }

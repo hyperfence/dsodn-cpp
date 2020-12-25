@@ -126,6 +126,9 @@ public:
         cout << "\n\nIn order of the AVL: " << endl;
         retrievedAVL->inOrder(retrievedAVL->getRoot());
         cout << "\n\nIn order ended" << endl;
+        cout << "\n\n--- In order of Machine " << 2<< " AVL Tree ---" << endl;
+        machines.getMachineAVLTree(2).inOrder(machines.getMachineAVL(2));
+        cout << "\n--------- In order Ended ---------" << endl;
     }
 
     D removeData(D key, T machineID)
@@ -141,13 +144,19 @@ public:
             return "";
         }
         AVL_Node<T>* tempPtr = curr->tree.search(curr->tree.getRoot(), hash);
+
         if (tempPtr != NULL && (tempPtr->chainingList.searchBefHash(beforeHashVal) == true))
         {
             AVL_List_Node<T>* listNode = tempPtr->chainingList.searchNode(beforeHashVal);
             if (listNode != NULL) {
                 int lineNumber = listNode->valLineNumber;
                 removedData = curr->file.remove(lineNumber);
-                tempPtr->chainingList.RemoveByValue(beforeHashVal);
+                //tempPtr->chainingList.RemoveByValue(beforeHashVal);
+                tempPtr = machines.getMachineAVLTree(curr->data).remove(tempPtr, hash, beforeHashVal);
+                //machines.setMachineAVLRoot(tempPtr);
+                cout << "\n\n--- In order of Machine " << curr->data << " AVL Tree ---" << endl;
+                machines.getMachineAVLTree(curr->data).inOrder(machines.getMachineAVL(curr->data));
+                cout << "\n--------- In order Ended ---------" << endl;
                 cout << "\nData succesfully removed!\n";
                 return removedData;
             }

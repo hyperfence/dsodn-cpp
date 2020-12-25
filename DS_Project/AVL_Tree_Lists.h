@@ -53,6 +53,11 @@ public:
         }
     }
 
+    void setAVLTreeList(AVL_List_Node<T>* list)
+    {
+        head = list;
+    }
+
     void insertAt(T n, int index)
     {
         AVL_List_Node<T>* temp = new AVL_List_Node<T>;
@@ -65,24 +70,33 @@ public:
         }
         pre->next = temp;
         temp->next = curr;
-    }
+    } 
 
-    void RemoveByValue(unsigned long long int n) {
-        if (head->beforeHash == n) {
+   AVL_List_Node<T>* RemoveByValue(unsigned long long int n) {
+        if (head->beforeHash == n && head->next == NULL) {
             head = NULL;
             delete head;
-            return;
+            return NULL;
         }
         AVL_List_Node<T>* pre = new AVL_List_Node<T>;
+        pre = NULL;
         AVL_List_Node<T>* curr = head;
         while (curr->beforeHash != n) {
             pre = curr;
             curr = curr->next;
         }
-        pre->next = curr->next;
+        if (pre == NULL)
+        {
+            pre = curr->next;
+        }
+        else
+        {
+            pre->next = curr->next;
+        }
         curr->next = NULL;
         cout << "Deleted File: " << curr->data << endl;
         delete curr;
+        return pre;
     }
 
     void Remove() {

@@ -85,6 +85,10 @@ public:
     {
         head->tree = avl;
     }
+    void setMachineAVLRoot(AVL_Node<T>* root)
+    {
+        head->tree.setRoot(root);
+    }
 
     AVL_Node<T>* getMachineAVL(T machineID)
     {
@@ -94,6 +98,15 @@ public:
             curr = curr->next;
         }
         return curr->tree.getRoot();
+    }
+
+    AVL<T> getMachineAVLTree(T machineID)
+    {
+        Machine_Node<D, T>* curr = head;
+        while (curr->data != machineID) {
+            curr = curr->next;
+        }
+        return curr->tree;
     }
 
     /*
