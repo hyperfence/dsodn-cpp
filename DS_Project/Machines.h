@@ -3,6 +3,7 @@
 #include "AVL_Tree.h"
 #include "RoutingTable.h"
 #include "MachineFile.h"
+#include "math.h"
 
 using namespace std;
 
@@ -466,20 +467,11 @@ public:
                     routingTable[i] = routingTable[i] - identifierSpace;
                 }
             }
+            temp->routingTable = new RoutingTable();
             for (int i = 0; i < routingTableSize; i++)
             {
                 Machine_Node<D,T>* nearestActive = this->getSuccessorRoutingMachine(routingTable[i]);
-                if (temp->routingTable == NULL) //The routing table is empty
-                {
-                    temp->routingTable = new RoutingTable();
-                    // Typecast the Machine_Node pointer to void pointer to store it in routing_tables linked list
-                    temp->routingTable->insert(static_cast<void*>(nearestActive));
-                }
-                else // The routing table is not empty. So lets assign the machine to its end
-                {
-                    // Typecast the Machine_Node pointer to void pointer to store it in routing_tables linked list
-                    temp->routingTable->insert(static_cast<void*>(nearestActive));
-                }
+                temp->routingTable->insert(static_cast<void*>(nearestActive));
             }
             // Display the values of routing tables
             for (int i = 0; i < routingTableSize; i++)
