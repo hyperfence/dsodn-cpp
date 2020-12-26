@@ -78,25 +78,43 @@ public:
             delete head;
             return NULL;
         }
-        AVL_List_Node<T>* pre = new AVL_List_Node<T>;
-        pre = NULL;
-        AVL_List_Node<T>* curr = head;
-        while (curr->beforeHash != n) {
-            pre = curr;
-            curr = curr->next;
+        AVL_List_Node<T>* mainList = head;
+        AVL_List_Node<T>* traverseList = head;
+        while (traverseList != NULL) {
+            if (traverseList->beforeHash == n)
+            {
+                if (traverseList == mainList)
+                {
+                    head = traverseList->next;
+                    cout << "\n------- Chaining List Data Removed -------" << endl;
+                    cout << "|" << endl;
+                    cout << "| Deleted Data Key:  " << traverseList->data << endl;
+                    cout << "| Deleted Data Hash: " << traverseList->beforeHash << endl;
+                    cout << "|" << endl;
+                    cout << "------------------------------------------" << endl << endl;
+                    AVL_List_Node<T>* delNode = new AVL_List_Node<T>();
+                    delNode = traverseList;
+                    delNode->next == NULL;
+                    delete delNode;
+                    break;
+                }
+                mainList->next = traverseList->next;
+                cout << "\n------- Chaining List Data Removed -------" << endl;
+                cout << "|" << endl;
+                cout << "| Deleted Data Key:  " << traverseList->data << endl;
+                cout << "| Deleted Data Hash: " << traverseList->beforeHash << endl;
+                cout << "|" << endl;
+                cout << "------------------------------------------" << endl << endl;
+                AVL_List_Node<T>* delNode = new AVL_List_Node<T>();
+                delNode = traverseList;
+                delNode->next == NULL;
+                delete delNode;
+                break;
+            }
+            mainList = traverseList;
+            traverseList = traverseList->next;
         }
-        if (pre == NULL)
-        {
-            pre = curr->next;
-        }
-        else
-        {
-            pre->next = curr->next;
-        }
-        curr->next = NULL;
-        cout << "Deleted File: " << curr->data << endl;
-        delete curr;
-        return pre;
+        return head;
     }
 
     void Remove() {

@@ -38,8 +38,8 @@ int main()
     // dht.insert("Adam", "7th", 12);
     // dht.insert("Khan", "8th", 8);
 
-    /*dht.removeData("Hunaid", 5);
-    dht.removeData("Hassan Raza", 8);*/
+    //dht.removeData("Hunaid", 5);
+    dht.removeData("Hassan Raza", 8);
     dht.removeData("Akmal", 3);
 
     cout << dht.searchData("Hunaid", 5);
