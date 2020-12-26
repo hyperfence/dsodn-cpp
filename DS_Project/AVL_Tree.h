@@ -174,7 +174,6 @@ public:
                 AVL_Node<T>* temp = n->Right;
                 //delete n;
                 n->chainingList.RemoveByValue(befHash);
-                cout << "\n\nNode Removed" << endl;
                 return temp;
             }
             else if (n->Right == NULL) 
@@ -182,7 +181,6 @@ public:
                 AVL_Node<T>* temp = n->Left;
                 //delete n;
                 n->chainingList.RemoveByValue(befHash);
-                cout << "\n\nNode Removed: " << temp->chainingList.getHead()->data << endl;
                 return temp;
             }
             AVL_Node<T>* temp = n->Right;
@@ -254,6 +252,7 @@ public:
                         succTreeChainingList = successorTree->chainingList.getHead();
                     }
                 }
+                
             }
             getMachineData(successorTree->Right, successorRoot, retrievedAVL, machineID);
 
@@ -271,7 +270,14 @@ public:
             {
                 return;
             }
-            cout << n->chainingList.getHead()->data << ",";
+            AVL_List_Node<T>* treeChainingList = n->chainingList.getHead();
+            cout << "| -> ";
+            while (treeChainingList != NULL)
+            {
+                cout << treeChainingList->data << " >> ";
+                treeChainingList = treeChainingList->next;
+            }
+            cout << "NULL" << endl;
             inOrder(n->Right);
         }
     }
