@@ -123,6 +123,7 @@ public:
         AVL<T>* retrievedAVL = new AVL<T>;
         AVL_Node<T>* successorRoot = machines.getMachineAVL(successorMachine->data);
         retrievedAVL->getMachineData(successorRoot, successorRoot, retrievedAVL, value);
+        machines.setMachineAVLRoot(retrievedAVL->getRoot(), value); // Set The AVL of New Machine
         cout << "\n\nIn order of the AVL: " << endl;
         retrievedAVL->inOrder(retrievedAVL->getRoot());
         cout << "\n\nIn order ended" << endl;
