@@ -228,11 +228,11 @@ public:
         return n;
     }
 
-    void adjustMachineData(AVL_Node<T>* successorTree, AVL_Node<T>* successorRoot, AVL<T>* retrievedAVL, T machineID, T predecessorID, Machine_Node <string,T>* newMachine)
+    void adjustMachineData(AVL_Node<T>* successorTree, AVL_Node<T>* successorRoot, AVL<T>* retrievedAVL, T machineID, T predecessorID, Machines <string, T> machines)//Machine_Node <string,T>* newMachine)
     {
         if (successorTree != NULL)
         {
-            adjustMachineData(successorTree->Left, successorRoot, retrievedAVL, machineID, predecessorID,newMachine);
+            adjustMachineData(successorTree->Left, successorRoot, retrievedAVL, machineID, predecessorID,machines);
             if (successorTree->chainingList.getHead() != NULL)
             {
                 if (successorTree->chainingList.getHead()->data <= machineID)
@@ -248,10 +248,14 @@ public:
                         //Machine_Node <string, T>* predecessorMachine = tempObject.getPredecessorMachine(newMachine->data);
 
 
-                      //  string valueInserted = succTreeChainingList->valLineNumber
-                        
+                      
+                        Machine_Node <string, T>* newMachine = machines.getMachine(machineID);
+                        Machine_Node <string, T>* successorMachine = machines.getSuccessorMachine(newMachine->data);
+
+                        string valueInserted = successorMachine->file.remove(succTreeChainingList->valLineNumber);
+
                         newMachine->file.increaseFileLineNumber(1);
-                        newMachine->file.insert(to_string(succTreeChainingList->data));
+                        newMachine->file.insert(valueInserted);
                         retrievedAVL->setRoot(retrievedAVL->insert(root, succTreeChainingList->data, succTreeChainingList->beforeHash, newMachine->file.getFileLineNumber()));
                         successorRoot = this->remove(successorRoot, succTreeChainingList->data, succTreeChainingList->beforeHash);
                         succTreeChainingList = successorTree->chainingList.getHead();
@@ -263,8 +267,13 @@ public:
                     while (succTreeChainingList != NULL)
                     {
                         AVL_Node<T>* root = retrievedAVL->getRoot();
+                        Machine_Node <string, T>* newMachine = machines.getMachine(machineID);
+                        Machine_Node <string, T>* successorMachine = machines.getSuccessorMachine(newMachine->data);
+
+                        string valueInserted = successorMachine->file.remove(succTreeChainingList->valLineNumber);
+
                         newMachine->file.increaseFileLineNumber(1);
-                        newMachine->file.insert(to_string(succTreeChainingList->data));
+                        newMachine->file.insert(valueInserted);
                         // Create The File of this Machine
                         // Then Insert the Data by calling succtreeChainingList->data
                         // Then insert the line number in the below function
@@ -274,7 +283,7 @@ public:
                     }
                 }      
             }
-            adjustMachineData(successorTree->Right, successorRoot, retrievedAVL, machineID, predecessorID, newMachine);
+            adjustMachineData(successorTree->Right, successorRoot, retrievedAVL, machineID, predecessorID, machines);
         }
     }
     

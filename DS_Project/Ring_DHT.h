@@ -208,8 +208,8 @@ public:
         cout << "\n> --- Fetching & Removing Data From Successor Machine --- <" << endl << endl;
         AVL<T>* retrievedAVL = new AVL<T>;
         AVL_Node<T>* successorRoot = machines.getMachineAVL(successorMachine->data);
-        Machine_Node <D, T>* newMachine = machines.getMachine(value);
-        retrievedAVL->adjustMachineData(successorRoot, successorRoot, retrievedAVL, value, predecessorMachine->data, newMachine);
+        //Machine_Node <D, T>* newMachine = machines.getMachine(value);
+        retrievedAVL->adjustMachineData(successorRoot, successorRoot, retrievedAVL, value, predecessorMachine->data, machines);//newMachine);
         machines.setMachineAVLRoot(retrievedAVL->getRoot(), value); // Set The AVL of New Machine
         cout << "\n> --- Machine " << value << " Got Inserted Successfully --- <" << endl;
         cout << "\n\n--- In Order of Machine " << value << " AVL Tree ---" << endl;
