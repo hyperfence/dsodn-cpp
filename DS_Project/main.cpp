@@ -29,19 +29,20 @@ int main()
 
     //cout << endl;
 
-    dht.insert("Talha", "1st", 12);
+  //  dht.insert("Talha", "1st", 12);
     dht.insert("Talha", "2nd", 2);
     dht.insert("Hunaid", "3rd", 5);
-    //dht.insert("Hassan Raza", "4th", 8);    // 0
+    dht.insert("Hassan Raza", "4th", 8);    // 0
     dht.insert("Hammad", "5th", 2);         // 0    
     dht.insert("Akmal", "5th", 3);
     // dht.insert("Ahsan", "6th", 5);
     // dht.insert("Adam", "7th", 12);
     // dht.insert("Khan", "8th", 8);
 
-    dht.removeData("Hunaid", 5);
+  //  dht.removeData("Hunaid", 5);
     //dht.removeData("Hassan Raza", 8);
-    dht.removeData("Akmal", 3);
+   // dht.removeData("Akmal", 3);
+
     cout << dht.searchData("Hunaid", 5);
     cout << dht.searchData("Talha", 8);
     cout << dht.searchData("Hassan Raza", 12);
@@ -65,9 +66,9 @@ int main()
 
     dht.insertMachineOnRuntime(0);
 
-    string command = "del /Q ";
-    string path = "Machine_Files\\*.txt";
-    system(command.append(path).c_str());
+    //string command = "del /Q ";
+    //string path = "Machine_Files\\*.txt";
+    //system(command.append(path).c_str());
 
     dht.clearAVLTreeListMemory();   // Release all unwanted memory from the AVL Lists
     //dht.clearAVLTreeMemory();   // Release all unwanted memory from AVL trees

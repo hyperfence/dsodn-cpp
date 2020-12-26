@@ -46,8 +46,16 @@ public:
         int hash = HashFunction(key, &beforeHashVal);
 
         Machine_Node<D,T>* curr = machines.searchResponsibleMachine(hash, machineID);
-        curr->file.insert(value);
         curr->file.increaseFileLineNumber(1);
+        /*
+        * This check deals with the case when line number 
+        * exceeds from 100 in a specific file.
+        */
+        if (curr->file.getFileLineNumber() > 100)
+        {
+            curr->file.makeNewFile(machineID);
+        }
+        curr->file.insert(value);
         curr->tree.setRoot(curr->tree.insert(curr->tree.getRoot(), hash, beforeHashVal, curr->file.getFileLineNumber()));
 
     }
