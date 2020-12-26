@@ -174,7 +174,6 @@ public:
                 AVL_Node<T>* temp = n->Right;
                 //delete n;
                 n->chainingList.RemoveByValue(befHash);
-                cout << "\n\nNode Removed" << endl;
                 return temp;
             }
             else if (n->Right == NULL) 
@@ -182,7 +181,6 @@ public:
                 AVL_Node<T>* temp = n->Left;
                 //delete n;
                 n->chainingList.RemoveByValue(befHash);
-                cout << "\n\nNode Removed: " << temp->chainingList.getHead()->data << endl;
                 return temp;
             }
             AVL_Node<T>* temp = n->Right;
@@ -245,10 +243,16 @@ public:
             {
                 if (successorTree->chainingList.getHead()->data <= machineID)
                 {
-                    AVL_Node<T>* root = retrievedAVL->getRoot();
-                    retrievedAVL->insert(root, successorTree->chainingList.getHead()->data, successorTree->chainingList.getHead()->beforeHash, 0);
-                    //successorRoot = this->remove(successorRoot, successorTree->chainingList.getHead()->data, successorTree->chainingList.getHead()->beforeHash);
+                    AVL_List_Node<T>* succTreeChainingList = successorTree->chainingList.getHead();
+                    while (succTreeChainingList != NULL)
+                    {
+                        AVL_Node<T>* root = retrievedAVL->getRoot();
+                        retrievedAVL->insert(root, succTreeChainingList->data, succTreeChainingList->beforeHash, 0);
+                        successorRoot = this->remove(successorRoot, succTreeChainingList->data, succTreeChainingList->beforeHash);
+                        succTreeChainingList = successorTree->chainingList.getHead();
+                    }
                 }
+                
             }
             getMachineData(successorTree->Right, successorRoot, retrievedAVL, machineID);
 
@@ -266,7 +270,14 @@ public:
             {
                 return;
             }
-            cout << n->chainingList.getHead()->data << ",";
+            AVL_List_Node<T>* treeChainingList = n->chainingList.getHead();
+            cout << "| -> ";
+            while (treeChainingList != NULL)
+            {
+                cout << treeChainingList->data << " >> ";
+                treeChainingList = treeChainingList->next;
+            }
+            cout << "NULL" << endl;
             inOrder(n->Right);
         }
     }

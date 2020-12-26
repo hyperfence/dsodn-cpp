@@ -116,19 +116,29 @@ public:
 
     void insertMachineOnRuntime(int value)
     {
+        cout << "\n\n*** ------- Inserting Machine "<< value << " In Identifier Space ------- ***" << endl;
         Machine_Node<D, T>* successorMachine = machines.getSuccessorMachine(0);
         machines.insertMachine(value);
         machines.sortMachines();
+        cout << "\n\n> ------ Adjusting Routing Tables Of Machines ------ <" << endl << endl;
         machines.configureRoutingTable();
+        cout << "\n\n> --- Fetching & Removing Data From Successor Machine --- <" << endl << endl;
         AVL<T>* retrievedAVL = new AVL<T>;
         AVL_Node<T>* successorRoot = machines.getMachineAVL(successorMachine->data);
         retrievedAVL->getMachineData(successorRoot, successorRoot, retrievedAVL, value);
-        cout << "\n\nIn order of the AVL: " << endl;
+        machines.setMachineAVLRoot(retrievedAVL->getRoot(), value); // Set The AVL of New Machine
+        cout << "\n> --- Machine " << value << " Got Inserted Successfully --- <" << endl;
+        cout << "\n\n--- In Order of Machine " << value << " AVL Tree ---" << endl;
+        cout << "|" << endl;
         retrievedAVL->inOrder(retrievedAVL->getRoot());
-        cout << "\n\nIn order ended" << endl;
-        cout << "\n\n--- In order of Machine " << 2<< " AVL Tree ---" << endl;
+        cout << "|" << endl;
+        cout << "----------- In order Ended -----------" << endl;
+        cout << "\n\n--- In Order of Machine " << "2" << " AVL Tree ---" << endl;
+        cout << "|" << endl;
         machines.getMachineAVLTree(2).inOrder(machines.getMachineAVL(2));
-        cout << "\n--------- In order Ended ---------" << endl;
+        cout << "|" << endl;
+        cout << "----------- In order Ended -----------" << endl << endl;
+        cout << "\n*** ------- End Of Machine " << value << " Insertion ------- ***" << endl << endl;
     }
 
     D removeData(D key, T machineID)
@@ -152,13 +162,12 @@ public:
                 int lineNumber = listNode->valLineNumber;
                 removedData = curr->file.remove(lineNumber);
                 //tempPtr->chainingList.RemoveByValue(beforeHashVal);
-                tempPtr = machines.getMachineAVLTree(curr->data).remove(tempPtr, hash, beforeHashVal);
+                tempPtr = machines.getMachineAVLTree(curr->data).remove(curr->tree.getRoot(), hash, beforeHashVal);
                 machines.setMachineAVLRoot(tempPtr, curr->data);
                 cout << "\n\n--- In Order of Machine " << curr->data << " AVL Tree ---" << endl;
                 cout << "|" << endl;
-                cout << "| -> ";
                 machines.getMachineAVLTree(curr->data).inOrder(machines.getMachineAVL(curr->data));
-                cout << "\n|" << endl;
+                cout << "|" << endl;
                 cout << "----------- In order Ended -----------" << endl << endl;
                 return removedData;
             }

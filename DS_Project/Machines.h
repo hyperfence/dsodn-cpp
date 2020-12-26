@@ -282,7 +282,7 @@ public:
             cout << "\n No Machines Found" << endl;
             return;
         }
-        cout << "\n---  Machines List  ---" << endl;
+        cout << "\n----------  Machines List  ----------" << endl;
         cout << "|" << endl;
         cout << "|  ";
         do
@@ -290,9 +290,9 @@ public:
             cout << curr->data << " -> ";
             curr = curr->next;
         } while (curr != head);
-        cout << "NULL" << endl;
+        cout << "--- <- " << head->data << endl;
         cout << "|" << endl;
-        cout << "-----------------------" << endl << endl;
+        cout << "-------------------------------------" << endl << endl;
     }
 
     /*
@@ -455,7 +455,7 @@ public:
     {
         int numOfMachines = this->getTotalSize();
         Machine_Node<D,T>* temp = head;
-        cout << "\n---- Routing Tables of Machines ----" << endl;
+        cout << "\n-------- Routing Tables of Machines --------" << endl;
         cout << "|" << endl;
         do
         {
@@ -481,14 +481,14 @@ public:
             {
                 // Now typecast the void pointer back to Machine_Node pointer to access the data
                 Machine_Node<D,T>* temp2 = static_cast<Machine_Node<D,T>*>(temp->routingTable->getElement(i));
-                cout << " " << temp2->data;
+                cout<< setfill(' ') << setw(3) << temp2->data << "  ";
             }
             temp = temp->next;
             cout << endl;
             delete[] routingTable;
         } while (temp != head);
         cout << "|" << endl;
-        cout << "------------------------------------" << endl << endl;
+        cout << "--------------------------------------------" << endl << endl;
     }
 
     /*
