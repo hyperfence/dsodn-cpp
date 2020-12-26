@@ -19,10 +19,9 @@ public:
         path = "Machine_Files/";
         fileName = "";
     }
-
     void setFileName(int machineID) 
     {
-        fileName = "Machine_" + to_string(machineID) + ".txt";
+        fileName = "Machine_" + to_string(machineID) + "(1).txt";
     }
 
     T* getFileContents(string filePath, int& size)
@@ -129,5 +128,16 @@ public:
         in.close();
         out.close();
         return removedData;
+    }
+
+    /*
+    *   This function makes a new file of specific machine provided that
+    *   number of lines of that specific machine exceeds 100.
+    */
+    void makeNewFile(int machineID)
+    {
+        static int fileCounter = 2;
+        this->fileLineNumber = 0;
+        this->fileName = "Machine_" + to_string(machineID) + "(" + to_string(fileCounter++) + ").txt";
     }
 };
