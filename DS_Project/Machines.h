@@ -133,7 +133,7 @@ public:
     /*
         This function deletes the specified machine
     */
-    D* removeMachine(T value) {
+    bool removeMachine(T value) {
         Machine_Node<D, T>* pre = new Machine_Node<D, T>;
         Machine_Node<D, T>* curr = head;
         while (curr->data != value) {
@@ -145,6 +145,7 @@ public:
         curr->routingTable->clearRoutingTable();
         delete curr->routingTable;
         delete curr;
+        return true;
     }
 
     /*
@@ -258,7 +259,7 @@ public:
         Machine_Node<D, T>* ptr = head;
         while (1) // Infinite Loop Until Successor is found
         {
-            if (ptr->next == NULL || ptr == NULL)
+            if (ptr == NULL)
             {
                 break;
             }

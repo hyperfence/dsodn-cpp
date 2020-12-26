@@ -117,15 +117,16 @@ public:
     void insertMachineOnRuntime(int value)
     {
         cout << "\n\n*** ------- Inserting Machine "<< value << " In Identifier Space ------- ***" << endl;
-        Machine_Node<D, T>* successorMachine = machines.getSuccessorMachine(0);
+        Machine_Node<D, T>* successorMachine = machines.getSuccessorMachine(value);
         machines.insertMachine(value);
+        Machine_Node<D, T>* predecessorMachine = machines.getPredecessorMachine(value);
         machines.sortMachines();
         cout << "\n\n> ------ Adjusting Routing Tables Of Machines ------ <" << endl << endl;
         machines.configureRoutingTable();
-        cout << "\n\n> --- Fetching & Removing Data From Successor Machine --- <" << endl << endl;
+        cout << "\n> --- Fetching & Removing Data From Successor Machine --- <" << endl << endl;
         AVL<T>* retrievedAVL = new AVL<T>;
         AVL_Node<T>* successorRoot = machines.getMachineAVL(successorMachine->data);
-        retrievedAVL->getMachineData(successorRoot, successorRoot, retrievedAVL, value);
+        retrievedAVL->adjustMachineData(successorRoot, successorRoot, retrievedAVL, value, predecessorMachine->data);
         machines.setMachineAVLRoot(retrievedAVL->getRoot(), value); // Set The AVL of New Machine
         cout << "\n> --- Machine " << value << " Got Inserted Successfully --- <" << endl;
         cout << "\n\n--- In Order of Machine " << value << " AVL Tree ---" << endl;
@@ -139,6 +140,41 @@ public:
         cout << "|" << endl;
         cout << "----------- In order Ended -----------" << endl << endl;
         cout << "\n*** ------- End Of Machine " << value << " Insertion ------- ***" << endl << endl;
+    }
+
+    void deleteMachineOnRuntime(int value)
+    {
+        cout << "\n\n*** ------- Deleting Machine " << value << " From Identifier Space ------- ***" << endl;
+        if (machines.machineExists(value))
+        {
+            Machine_Node<D, T>* successorMachine = machines.getSuccessorMachine(value);
+            Machine_Node<D, T>* predecessorMachine = machines.getPredecessorMachine(value);  
+
+            AVL_Node<T>* successorRoot = machines.getMachineAVL(successorMachine->data);
+
+            cout << "\n> --- Removing Machine & Transfering Data To Successor Machine --- <" << endl << endl;
+            machines.removeMachine(value);
+            machines.sortMachines();
+            cout << "\n\n> ------ Adjusting Routing Tables Of Machines ------ <" << endl << endl;
+            machines.configureRoutingTable();
+
+            AVL<T>* successorAVL = &successorMachine->tree;
+            successorAVL->adjustMachineDataOnRemove(machines.getMachine(value)->tree.getRoot(), successorAVL, value, predecessorMachine->data);
+
+            cout << "\n> --- Machine " << value << " Was Removed Successfully --- <" << endl;
+            cout << "\n\n--- In Order of Machine " << value << " AVL Tree ---" << endl;
+            cout << "|" << endl;
+            machines.getMachineAVLTree(successorMachine->data).inOrder(successorMachine->tree.getRoot());
+            cout << "|" << endl;
+            cout << "----------- In order Ended -----------" << endl << endl;
+        }
+        else
+        {
+            cout << "\n\n----- Error! No Machine Found With ID " << value << " -----" << endl;
+            cout << "\n\n--- Following Machines are Currently Active ---" << endl << endl;
+            machines.display();
+        }
+        cout << "\n*** ---------- End Of Machine " << value << " Deletion ---------- ***" << endl << endl;
     }
 
     D removeData(D key, T machineID)
