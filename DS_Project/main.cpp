@@ -22,14 +22,13 @@ using namespace std;
 int main()
 {
     RingDHT<string, int> dht(4, 5);
-   // dht.autoAssigning();
+    //dht.autoAssigning();
     dht.manualAssigning();
     dht.getMachines().display();
     // dht.machines.display();
-
     //cout << endl;
 
-  //  dht.insert("Talha", "1st", 12);
+    //dht.insert("Talha", "1st", 12);
     dht.insert("Talha", "2nd", 2);
     dht.insert("Hunaid", "3rd", 5);
     dht.insert("Hassan Raza", "4th", 8);    // 0
@@ -39,13 +38,14 @@ int main()
     // dht.insert("Adam", "7th", 12);
     // dht.insert("Khan", "8th", 8);
 
+    dht.insertionOfNewMachine();
     //dht.removeData("Hunaid", 5);
     //dht.removeData("Hassan Raza", 8);
-   // dht.removeData("Akmal", 3);
+    //dht.removeData("Akmal", 3);
 
-    cout << dht.searchData("Hunaid", 5);
-    cout << dht.searchData("Talha", 8);
-    cout << dht.searchData("Hassan Raza", 12);
+    //cout << dht.searchData("Hunaid", 5);
+    //cout << dht.searchData("Talha", 8);
+    //cout << dht.searchData("Hassan Raza", 12);
     //cout << "Removed data is: " << dht.removeData("Hunaid", 5);
     //cout << dht.searchData("Adam", 3);
     //cout << dht.searchData("Khan", 8);
@@ -63,8 +63,7 @@ int main()
     //     cout << endl;
     //     searchPtr = searchPtr->next;
     // } while (searchPtr != dht.machines.head);
-
-    dht.insertMachineOnRuntime(0);
+    //  dht.insertMachineOnRuntime(0);
     //dht.deleteMachineOnRuntime(8);
 
     //string command = "del /Q ";

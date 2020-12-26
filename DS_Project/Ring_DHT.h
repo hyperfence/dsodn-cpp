@@ -71,11 +71,6 @@ public:
             int value = -1;
 
             string addressInString = to_string((long)searchPtr);
-
-            //ostringstream address;
-            //address << searchPtr;
-            //string addressInString = address.str();
-
             value = HashFunction(addressInString,&befHash);
             while (machines.machineExists(value) == true)
             {
@@ -104,7 +99,7 @@ public:
         {
             cout << "Value # " << (i + 1) << " : " << endl;
             cin >> value;
-            while (value < 0 || value > pow(2, identifierSpace) || (i > 0 && machines.machineExists(value) == true)) // check for unique number and for number between identifier space
+            while (value < 0 || value >= pow(2, identifierSpace) || (i > 0 && machines.machineExists(value) == true)) // check for unique number and for number between identifier space
             {
                 cout << "Error!\nPlease input a value;\n1) Less than total number of machines!\n2) Greater than zero\n3) Unique\nYour Input: ";
                 cin >> value;
@@ -116,25 +111,105 @@ public:
         machines.configureRoutingTable();
         Machine_Node<D,T>* searchPtr = machines.getFirstMachine();
         do {
-
             searchPtr->file.setFileName(searchPtr->data);
             searchPtr = searchPtr->next;
         } while (searchPtr != machines.getFirstMachine());
     }
 
+    /*
+    *   In progress..
+    */
+    void insertionOfNewMachine()
+    {
+        int value = -1;
+        char choice;
+        cout << "\n-------------------------- Add a new machine --------------------------\n";
+        cout << "|";
+        cout << "\n|Do you want to add the new machine manually or automatically?\n";
+        cout << "|Press A------------> Automatic Assigning.\n";
+        cout << "|Press M------------> Manual Assigning.\n\n";
+        cout << "|\n";
+        cout << "|> Your Choice: "; 
+        cin >> choice;
+        while (1)
+        {
+            if (choice != 'A' && choice != 'a' && choice != 'm' && choice != 'M')
+            {
+                cout << "|> Wrong input. Enter again please: ";
+                cin >> choice;
+            }
+            else
+                break;
+        }
+        switch (choice)
+        {
+            case 'A':
+            case 'a':
+            {
+                machines.insertMachine(-1);
+                Machine_Node<D, T>* searchPtr = machines.getFirstMachine();
+                do {
+                    if (searchPtr->data == -1)
+                    {
+                        unsigned long long int befHash = 0;
+                        string addressInString = to_string((long)searchPtr);
+                        value = HashFunction(addressInString, &befHash);
+                        while (machines.machineExists(value) == true)
+                        {
+                            value++;
+                            value = value % (int)pow(2, identifierSpace);
+                        }
+                        searchPtr->data = value;
+                        break;
+                    }
+                    searchPtr = searchPtr->next;
+                } while (searchPtr != machines.getFirstMachine());
+                machines.sortMachines(); 
+                searchPtr->file.setFileName(searchPtr->data);
+                break;
+            }
+            case 'M':
+            case 'm':
+            {
+                cout << "|> Enter the value for new machine: ";
+                cin >> value;
+
+                while (value < 0 || value >= pow(2, identifierSpace) || (machines.machineExists(value) == true)) // check for unique number and for number between identifier space
+                {
+                    cout << "Error!\nPlease input a value;\n1) Less than total number of machines!\n2) Greater than zero\n3) Unique\nYour Input: ";
+                    cin >> value;
+                }
+                machines.insertMachine(value);
+                machines.sortMachines();
+                Machine_Node<D, T>* searchPtr = machines.getFirstMachine();
+                do {
+                    if (searchPtr->data == value)
+                        searchPtr->file.setFileName(value);
+                    searchPtr = searchPtr->next;
+                } while (searchPtr != machines.getFirstMachine());
+                break;
+            }
+        }
+        if (value != -1)
+        {
+            cout << "\n\n*** ------- Inserting Machine " << value << " In Identifier Space ------- ***" << endl;
+            insertMachineOnRuntime(value);
+        }
+    }
+
     void insertMachineOnRuntime(int value)
     {
-        cout << "\n\n*** ------- Inserting Machine "<< value << " In Identifier Space ------- ***" << endl;
         Machine_Node<D, T>* successorMachine = machines.getSuccessorMachine(value);
-        machines.insertMachine(value);
+        //machines.insertMachine(value);
         Machine_Node<D, T>* predecessorMachine = machines.getPredecessorMachine(value);
-        machines.sortMachines();
+        //machines.sortMachines();
         cout << "\n\n> ------ Adjusting Routing Tables Of Machines ------ <" << endl << endl;
         machines.configureRoutingTable();
         cout << "\n> --- Fetching & Removing Data From Successor Machine --- <" << endl << endl;
         AVL<T>* retrievedAVL = new AVL<T>;
         AVL_Node<T>* successorRoot = machines.getMachineAVL(successorMachine->data);
-        retrievedAVL->adjustMachineData(successorRoot, successorRoot, retrievedAVL, value, predecessorMachine->data);
+        Machine_Node <D, T>* newMachine = machines.getMachine(value);
+        retrievedAVL->adjustMachineData(successorRoot, successorRoot, retrievedAVL, value, predecessorMachine->data, newMachine);
         machines.setMachineAVLRoot(retrievedAVL->getRoot(), value); // Set The AVL of New Machine
         cout << "\n> --- Machine " << value << " Got Inserted Successfully --- <" << endl;
         cout << "\n\n--- In Order of Machine " << value << " AVL Tree ---" << endl;
@@ -142,9 +217,9 @@ public:
         retrievedAVL->inOrder(retrievedAVL->getRoot());
         cout << "|" << endl;
         cout << "----------- In order Ended -----------" << endl;
-        cout << "\n\n--- In Order of Machine " << "2" << " AVL Tree ---" << endl;
+        cout << "\n\n--- In Order of Machine " << successorMachine->data << " AVL Tree ---" << endl;
         cout << "|" << endl;
-        machines.getMachineAVLTree(2).inOrder(machines.getMachineAVL(2));
+        machines.getMachineAVLTree(successorMachine->data).inOrder(machines.getMachineAVL(successorMachine->data));
         cout << "|" << endl;
         cout << "----------- In order Ended -----------" << endl << endl;
         cout << "\n*** ------- End Of Machine " << value << " Insertion ------- ***" << endl << endl;

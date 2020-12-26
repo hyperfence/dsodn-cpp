@@ -1,8 +1,18 @@
 #pragma once
 
 #include <iostream>
+#include "Machines.h"
 #include "AVL_Tree_Lists.h"
+#include <string>
 
+// forward declaration..
+template <typename D, typename N>
+struct Machine_Node;
+
+template <class D, class T>
+class Machines;
+
+//////////////////////////
 template <class U>
 struct AVL_Node {
     AVL_Tree_List<U> chainingList;
@@ -218,11 +228,11 @@ public:
         return n;
     }
 
-    void adjustMachineData(AVL_Node<T>* successorTree, AVL_Node<T>* successorRoot, AVL<T>* retrievedAVL, T machineID, T predecessorID)
+    void adjustMachineData(AVL_Node<T>* successorTree, AVL_Node<T>* successorRoot, AVL<T>* retrievedAVL, T machineID, T predecessorID, Machine_Node <string,T>* newMachine)
     {
         if (successorTree != NULL)
         {
-            adjustMachineData(successorTree->Left, successorRoot, retrievedAVL, machineID, predecessorID);
+            adjustMachineData(successorTree->Left, successorRoot, retrievedAVL, machineID, predecessorID,newMachine);
             if (successorTree->chainingList.getHead() != NULL)
             {
                 if (successorTree->chainingList.getHead()->data <= machineID)
@@ -234,7 +244,15 @@ public:
                         // Create The File of this Machine
                         // Then Insert the Data by calling succtreeChainingList->data
                         // Then insert the line number in the below function
-                        retrievedAVL->setRoot(retrievedAVL->insert(root, succTreeChainingList->data, succTreeChainingList->beforeHash, 0));
+                        //Machines <string, T> tempObject;
+                        //Machine_Node <string, T>* predecessorMachine = tempObject.getPredecessorMachine(newMachine->data);
+
+
+                      //  string valueInserted = succTreeChainingList->valLineNumber
+                        
+                        newMachine->file.increaseFileLineNumber(1);
+                        newMachine->file.insert(to_string(succTreeChainingList->data));
+                        retrievedAVL->setRoot(retrievedAVL->insert(root, succTreeChainingList->data, succTreeChainingList->beforeHash, newMachine->file.getFileLineNumber()));
                         successorRoot = this->remove(successorRoot, succTreeChainingList->data, succTreeChainingList->beforeHash);
                         succTreeChainingList = successorTree->chainingList.getHead();
                     }
@@ -245,16 +263,18 @@ public:
                     while (succTreeChainingList != NULL)
                     {
                         AVL_Node<T>* root = retrievedAVL->getRoot();
+                        newMachine->file.increaseFileLineNumber(1);
+                        newMachine->file.insert(to_string(succTreeChainingList->data));
                         // Create The File of this Machine
                         // Then Insert the Data by calling succtreeChainingList->data
                         // Then insert the line number in the below function
-                        retrievedAVL->setRoot(retrievedAVL->insert(root, succTreeChainingList->data, succTreeChainingList->beforeHash, 0));
+                        retrievedAVL->setRoot(retrievedAVL->insert(root, succTreeChainingList->data, succTreeChainingList->beforeHash, newMachine->file.getFileLineNumber()));
                         successorRoot = this->remove(successorRoot, succTreeChainingList->data, succTreeChainingList->beforeHash);
                         succTreeChainingList = successorTree->chainingList.getHead();
                     }
                 }      
             }
-            adjustMachineData(successorTree->Right, successorRoot, retrievedAVL, machineID, predecessorID);
+            adjustMachineData(successorTree->Right, successorRoot, retrievedAVL, machineID, predecessorID, newMachine);
         }
     }
     
