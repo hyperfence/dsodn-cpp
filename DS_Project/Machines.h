@@ -133,19 +133,34 @@ public:
     /*
         This function deletes the specified machine
     */
-    bool removeMachine(T value) {
+    Machine_Node<D,T>* removeMachine(T value) {
         Machine_Node<D, T>* pre = new Machine_Node<D, T>;
+        pre = head;
         Machine_Node<D, T>* curr = head;
         while (curr->data != value) {
             pre = curr;
             curr = curr->next;
         }
-        pre->next = curr->next;
+        
+        Machine_Node<D, T>* successorMachine = this->getSuccessorMachine(value);
+        Machine_Node<D, T>* predecessorMachine = this->getPredecessorMachine(value);
+
+        head->tree.adjustMachineDataOnRemove(curr->tree.getRoot(), successorMachine->tree, value, predecessorMachine->data);
+        if (pre == head)
+        {
+            pre = curr->next;
+            predecessorMachine->next = pre;
+            head = pre;
+        }
+        else
+        {
+            pre->next = curr->next;
+        }
         curr->next = NULL;
         curr->routingTable->clearRoutingTable();
         delete curr->routingTable;
         delete curr;
-        return true;
+        return pre;
     }
 
     /*

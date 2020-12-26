@@ -66,9 +66,9 @@ int main()
     //  dht.insertMachineOnRuntime(0);
     //dht.deleteMachineOnRuntime(8);
 
-    //string command = "del /Q ";
-    //string path = "Machine_Files\\*.txt";
-    //system(command.append(path).c_str());
+    string command = "del /Q ";
+    string path = "Machine_Files\\*.txt";
+    system(command.append(path).c_str());
 
     dht.clearAVLTreeListMemory();   // Release all unwanted memory from the AVL Lists
     //dht.clearAVLTreeMemory();   // Release all unwanted memory from AVL trees
