@@ -258,9 +258,9 @@ public:
         }
     }
     
-    void adjustMachineDataOnRemove(AVL_Node<T>* currentTree, AVL<T>* successorTree, T machineID, T predecessorID)
+    void adjustMachineDataOnRemove(AVL_Node<T>* currentTree, AVL<T>& successorTree, T machineID, T predecessorID)
     {
-        if (successorTree != NULL)
+        if (currentTree != NULL)
         {
             adjustMachineDataOnRemove(currentTree->Left, successorTree, machineID, predecessorID);
             if (currentTree->chainingList.getHead() != NULL)
@@ -270,8 +270,8 @@ public:
                     AVL_List_Node<T>* currTreeChainingList = currentTree->chainingList.getHead();
                     while (currTreeChainingList != NULL)
                     {
-                        AVL_Node<T>* root = successorTree->getRoot();
-                        successorTree->setRoot(successorTree->insert(root, currTreeChainingList->data, currTreeChainingList->beforeHash, 0));
+                        AVL_Node<T>* root = successorTree.getRoot();
+                        successorTree.setRoot(successorTree.insert(root, currTreeChainingList->data, currTreeChainingList->beforeHash, 0));
                         currTreeChainingList = currTreeChainingList->next;
                     }
                 }
@@ -280,8 +280,8 @@ public:
                     AVL_List_Node<T>* currTreeChainingList = currentTree->chainingList.getHead();
                     while (currTreeChainingList != NULL)
                     {
-                        AVL_Node<T>* root = successorTree->getRoot();
-                        successorTree->setRoot(successorTree->insert(root, currTreeChainingList->data, currTreeChainingList->beforeHash, 0));
+                        AVL_Node<T>* root = successorTree.getRoot();
+                        successorTree.setRoot(successorTree.insert(root, currTreeChainingList->data, currTreeChainingList->beforeHash, 0));
                         currTreeChainingList = currTreeChainingList->next;
                     }
                 }
