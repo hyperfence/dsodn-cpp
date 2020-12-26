@@ -153,7 +153,7 @@ public:
                 removedData = curr->file.remove(lineNumber);
                 //tempPtr->chainingList.RemoveByValue(beforeHashVal);
                 tempPtr = machines.getMachineAVLTree(curr->data).remove(tempPtr, hash, beforeHashVal);
-                //machines.setMachineAVLRoot(tempPtr);
+                machines.setMachineAVLRoot(tempPtr);
                 cout << "\n\n--- In order of Machine " << curr->data << " AVL Tree ---" << endl;
                 machines.getMachineAVLTree(curr->data).inOrder(machines.getMachineAVL(curr->data));
                 cout << "\n--------- In order Ended ---------" << endl;

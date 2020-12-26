@@ -81,7 +81,15 @@ public:
         AVL_List_Node<T>* pre = new AVL_List_Node<T>;
         pre = NULL;
         AVL_List_Node<T>* curr = head;
+        //while (curr->next != NULL) {
+        //    if (curr->beforeHash == n && curr->valLineNumber == lineNumber)
+        //        pre = curr;
+        //    curr = curr->next;
+        //}
+
         while (curr->beforeHash != n) {
+           if (pre != NULL && pre->beforeHash == n)
+                break;
             pre = curr;
             curr = curr->next;
         }
@@ -91,8 +99,23 @@ public:
         }
         else
         {
-            pre->next = curr->next;
+            while (pre->next != NULL)
+            {
+                if(pre->next == NULL)
+                    pre->next->next = curr->next;
+                pre = pre->next;
+            }
         }
+        // 6-6-6
+        // T-T-A
+        //else if(pre->next != NULL)
+        //{
+        //    pre->next->next = curr->next;
+        //}
+        //else
+        //{
+        //    pre->next = curr->next;
+        //}
         curr->next = NULL;
         cout << "Deleted File: " << curr->data << endl;
         delete curr;

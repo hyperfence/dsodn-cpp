@@ -32,15 +32,16 @@ int main()
     dht.insert("Talha", "1st", 12);
     dht.insert("Talha", "2nd", 2);
     dht.insert("Hunaid", "3rd", 5);
-    dht.insert("Hassan Raza", "4th", 8);
-    dht.insert("Hammad", "5th", 2);
+    dht.insert("Hassan Raza", "4th", 8);    // 0
+    dht.insert("Hammad", "5th", 2);         // 0    
     dht.insert("Akmal", "5th", 3);
     // dht.insert("Ahsan", "6th", 5);
     // dht.insert("Adam", "7th", 12);
     // dht.insert("Khan", "8th", 8);
+        
 
-    /*dht.removeData("Hunaid", 5);
-    dht.removeData("Hassan Raza", 8);*/
+    dht.removeData("Hunaid", 5);
+    dht.removeData("Hassan Raza", 8);
     dht.removeData("Akmal", 3);
 
     cout << dht.searchData("Hunaid", 5);
