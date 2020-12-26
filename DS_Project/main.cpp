@@ -38,9 +38,8 @@ int main()
     // dht.insert("Ahsan", "6th", 5);
     // dht.insert("Adam", "7th", 12);
     // dht.insert("Khan", "8th", 8);
-        
 
-    dht.removeData("Hunaid", 5);
+    //dht.removeData("Hunaid", 5);
     dht.removeData("Hassan Raza", 8);
     dht.removeData("Akmal", 3);
 

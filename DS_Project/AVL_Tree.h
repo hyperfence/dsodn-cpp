@@ -247,7 +247,7 @@ public:
                 {
                     AVL_Node<T>* root = retrievedAVL->getRoot();
                     retrievedAVL->insert(root, successorTree->chainingList.getHead()->data, successorTree->chainingList.getHead()->beforeHash, 0);
-                    successorRoot = this->remove(successorRoot, successorTree->chainingList.getHead()->data, successorTree->chainingList.getHead()->beforeHash);
+                    //successorRoot = this->remove(successorRoot, successorTree->chainingList.getHead()->data, successorTree->chainingList.getHead()->beforeHash);
                 }
             }
             getMachineData(successorTree->Right, successorRoot, retrievedAVL, machineID);
