@@ -15,6 +15,7 @@
     The main program starts here
 */
 #include "Ring_DHT.h"
+#include <math.h>
 
 using namespace std;
 
