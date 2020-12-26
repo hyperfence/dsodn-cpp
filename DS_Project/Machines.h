@@ -86,16 +86,19 @@ public:
     {
         head->tree = avl;
     }
-    void setMachineAVLRoot(AVL_Node<T>* root)
+    void setMachineAVLRoot(AVL_Node<T>* root, T machineID)
     {
-        head->tree.setRoot(root);
+        Machine_Node<D, T>* curr = head;
+        while (curr->data != machineID) {
+            curr = curr->next;
+        }
+        curr->tree.setRoot(root);
     }
 
     AVL_Node<T>* getMachineAVL(T machineID)
     {
         Machine_Node<D, T>* curr = head;
         while (curr->data != machineID) {
-            cout << "Data: " << curr->data << endl;
             curr = curr->next;
         }
         return curr->tree.getRoot();

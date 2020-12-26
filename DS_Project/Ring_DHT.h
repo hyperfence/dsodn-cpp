@@ -153,11 +153,13 @@ public:
                 removedData = curr->file.remove(lineNumber);
                 //tempPtr->chainingList.RemoveByValue(beforeHashVal);
                 tempPtr = machines.getMachineAVLTree(curr->data).remove(tempPtr, hash, beforeHashVal);
-                machines.setMachineAVLRoot(tempPtr);
-                cout << "\n\n--- In order of Machine " << curr->data << " AVL Tree ---" << endl;
+                machines.setMachineAVLRoot(tempPtr, curr->data);
+                cout << "\n\n--- In Order of Machine " << curr->data << " AVL Tree ---" << endl;
+                cout << "|" << endl;
+                cout << "| -> ";
                 machines.getMachineAVLTree(curr->data).inOrder(machines.getMachineAVL(curr->data));
-                cout << "\n--------- In order Ended ---------" << endl;
-                cout << "\nData succesfully removed!\n";
+                cout << "\n|" << endl;
+                cout << "----------- In order Ended -----------" << endl << endl;
                 return removedData;
             }
         }
