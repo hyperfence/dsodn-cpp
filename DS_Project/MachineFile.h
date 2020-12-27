@@ -19,61 +19,38 @@ public:
         path = "Machine_Files/";
         fileName = "";
     }
+
     void setFileName(int machineID) 
     {
         fileName = "Machine_" + to_string(machineID) + "(1).txt";
-    }
-
-    T* getFileContents(string filePath, int& size)
-    {
-        T* retrievedData = NULL;
-        ifstream in;
-        in.open(filePath);
-        string value = "";
-        int counter = 0;
-        while (getline(in, value))
-        {
-            if (value == "")
-            {
-                continue;
-            }
-            counter++;
-        }
-        retrievedData = new T[counter];
-        size = counter;
-        counter = 0;
-        in.close();
-        in.open(filePath);
-        while (getline(in, value))
-        {
-            if (value == "")
-            {
-                continue;
-            }
-            retrievedData[counter] = value;
-            counter++;
-        }
-        in.close();
-        return retrievedData;
     }
 
     int getFileLineNumber()const
     {
         return fileLineNumber;
     }
+
     string getFilePath()const
     {
         return path;
     }
+
     string getFileName()const 
     {
         return fileName;
     }
+
+    /*
+        This function increases file line Number when new value is inserted
+    */
     void increaseFileLineNumber(int val)
     {
         this->fileLineNumber += val;
     }
 
+    /*
+        This function is used to insert a value of data in file
+    */
     void insert(string value) 
     {
         ofstream out;
@@ -82,6 +59,9 @@ public:
         out.close();
     }
 
+    /*
+        This function is used to search the value using line Number of that value in file
+    */
     string search(int lineNumber) 
     {
         ifstream in;
@@ -97,6 +77,9 @@ public:
         return value;
     }
     
+    /*
+        This function is used to remove the value by taking lineNumber of that value
+    */
     T remove(int lineNumber) 
     {
         ifstream in;

@@ -178,6 +178,19 @@ public:
                     int temp = temp1->data;
                     temp1->data = temp2->data;
                     temp2->data = temp;
+
+                    RoutingTable* temproutingTable = temp1->routingTable;
+                    temp1->routingTable = temp2->routingTable;
+                    temp2->routingTable = temproutingTable;
+
+                    AVL<T> temptree = temp1->tree;
+                    temp1->tree = temp2->tree;
+                    temp2->tree = temptree;
+
+                    MachineFile<D> tempfile = temp1->file;
+                    temp1->file = temp2->file;
+                    temp2->file = tempfile;
+
                 }
                 temp2 = temp2->next;
             }
@@ -400,8 +413,6 @@ public:
         Machine_Node<D,T>* startingMachine = getMachine(machineKey);
         for (int i = 0; i < routingTableSize; i++)
         {
-            //Machine_Node<T>* temp = new Machine_Node<T>();
-            //Machine_Node<T>* temp2 = new Machine_Node<T>();
             Machine_Node<D,T>* temp = static_cast<Machine_Node<D,T>*>(startingMachine->routingTable->getElement(i));
             Machine_Node<D,T>* temp2 = static_cast<Machine_Node<D,T>*>(startingMachine->routingTable->getElement(i + 1));
             if (dataKey > getLastMachine()->data)

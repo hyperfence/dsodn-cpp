@@ -86,6 +86,10 @@ using namespace std;
 
 int main()
 {
+    string command = "del /Q ";
+    string path = "Machine_Files\\*.txt";
+    system(command.append(path).c_str());
+
     RingDHT<string, int> dht(4, 5);
     //dht.autoAssigning();
     dht.manualAssigning();
@@ -93,12 +97,12 @@ int main()
     // dht.machines.display();
     //cout << endl;
 
-    dht.insert("Talha", "1st", 12);
-    dht.insert("Talha", "2nd", 2);
-    dht.insert("Hunaid", "3rd", 5);
-    dht.insert("Hassan Raza", "4th", 8);    // 0
-    dht.insert("Hammad", "5th", 2);         // 0    
-    dht.insert("Akmal", "6th", 3);
+    //dht.insert("Talha", "1st", 12);
+    dht.insertData("Talha", "2nd", 2);
+    dht.insertData("Hunaid", "3rd", 5);
+    dht.insertData("Hassan Raza", "4th", 8);    // 0
+    dht.insertData("Hammad", "5th", 2);         // 0    
+    dht.insertData("Akmal", "6th", 3);
     // dht.insert("Ahsan", "6th", 5);
     // dht.insert("Adam", "7th", 12);
     // dht.insert("Khan", "8th", 8);

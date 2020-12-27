@@ -32,6 +32,9 @@ public:
         return head;
     }
 
+    /*
+        This function simply inserts the lineNumber and Hash in the singly LinkedList
+    */
     void insert(T n, unsigned long long int befHash, int lineNumber)
     {
         AVL_List_Node<T>* temp = new AVL_List_Node<T>;
@@ -58,21 +61,10 @@ public:
         head = list;
     }
 
-    void insertAt(T n, int index)
-    {
-        AVL_List_Node<T>* temp = new AVL_List_Node<T>;
-        temp->data = n;
-        AVL_List_Node<T>* pre = new AVL_List_Node<T>;
-        AVL_List_Node<T>* curr = head;
-        for (int i = 0; i < index; i++) {
-            pre = curr;
-            curr = curr->next;
-        }
-        pre->next = temp;
-        temp->next = curr;
-    } 
-
-   AVL_List_Node<T>* RemoveByValue(unsigned long long int n) {
+    /*
+        This function removes the node by taking value
+    */
+    AVL_List_Node<T>* RemoveByValue(unsigned long long int n) {
         if (head->beforeHash == n && head->next == NULL) {
             head = NULL;
             delete head;
@@ -117,38 +109,9 @@ public:
         return head;
     }
 
-    void Remove() {
-        AVL_List_Node<T>* curr = head;
-        AVL_List_Node<T>* pre = new AVL_List_Node<T>;
-        while (curr->next != NULL) {
-            pre = curr;
-            curr = curr->next;
-        }
-        pre->next = NULL;
-        curr->next = NULL;
-        delete curr;
-    }
-
-    void RemoveAt(int index) {
-        AVL_List_Node<T>* pre = new AVL_List_Node<T>;
-        AVL_List_Node<T>* curr = head;
-        for (int i = 0; i < index; i++) {
-            pre = curr;
-            curr = curr->next;
-        }
-        pre->next = curr->next;
-        curr->next = NULL;
-        delete curr;
-    }
-
-    void replaceAt(T n, int index) {
-        AVL_List_Node<T>* curr = head;
-        for (int i = 0; i < index; i++) {
-            curr = curr->next;
-        }
-        curr->data = n;
-    }
-
+    /*
+        This function clears/delete the singly chaining List
+    */
     void clear() {
         AVL_List_Node<T>* curr = head;
         AVL_List_Node<T>* next;
@@ -161,6 +124,9 @@ public:
         head = NULL;
     }
 
+    /*
+        This function displays the singly chaining List
+    */
     void display() {
         AVL_List_Node<T>* temp = head;
         if (head == NULL)
@@ -174,6 +140,9 @@ public:
         }
     }
 
+    /*
+        This function sorts the singly chaining List
+    */
     void sort() {
         AVL_List_Node<T>* temp1 = head;
         AVL_List_Node<T>* temp2;
@@ -194,17 +163,6 @@ public:
         }
     }
 
-    void insertAtMiddle(T n) {
-        int len = 0;
-        AVL_List_Node<T>* curr = head;
-        while (curr->next != NULL) 
-        {
-            len++;
-            curr = curr->next;
-        }
-        insertAt(n, len / 2 + 1);
-    }
-
     /*
         This function search for the value of beforeHash
         on each node of singly linked list.
@@ -221,6 +179,9 @@ public:
         return false;
     }
 
+    /*
+        This function seacrhes the node in singly LinkedList based on value and returns it
+    */
     AVL_List_Node<T>* searchNode(unsigned long long int befHash)
     {
         AVL_List_Node<T>* searchPtr = head;
