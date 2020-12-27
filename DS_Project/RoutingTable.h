@@ -6,7 +6,7 @@ using namespace std;
 
 struct Routing_Table_Node
 {
-	void* data;
+	void* data; // This void pointer is responsible for storing address Machine_Node
 	Routing_Table_Node* next;
 };
 
@@ -16,14 +16,21 @@ private:
 	Routing_Table_Node* head;
 
 public:
+
 	RoutingTable()
 	{
 		head = NULL;
 	}
+
 	void* getHead()
 	{
 		return head;
 	}
+
+	/*
+		Insert the Machine_Node address value into the linked list
+		of routing tables
+	*/
 	void insert(void* data)
 	{
 		Routing_Table_Node* temp = new Routing_Table_Node();
@@ -47,6 +54,12 @@ public:
 			}
 		}
 	}
+
+	/*
+		This function returns the address of Machine_Node pointer whose row in the routing
+		table is passed as argument. This void*  address needs to be type casted back to 
+		Machine_Node*
+	*/
 	void* getElement(int elementID)
 	{
 		Routing_Table_Node* n = head;
@@ -64,6 +77,7 @@ public:
 		}
 		return NULL;
 	}
+
 	void display()
 	{
 		Routing_Table_Node* n = head;
@@ -73,6 +87,7 @@ public:
 			n = n->next;
 		}
 	}
+
 	bool isEmpty()
 	{
 		bool flag = true;
@@ -82,6 +97,12 @@ public:
 		}
 		return flag;
 	}
+
+	/*
+		This function clears the memory occupied by the routing
+		table after the machine is removed. Call this function while
+		removing a machine
+	*/
 	void clearRoutingTable()
 	{
 		Routing_Table_Node* curr = head;

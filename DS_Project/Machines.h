@@ -82,10 +82,17 @@ public:
         }
     }
 
+    /*
+        This function sets the avl tree data member of the specified machine
+    */
     void setMachineAVL(AVL<T>* avl)
     {
         head->tree = avl;
     }
+
+    /*
+        This function sets the root of avl tree of the specified machine
+    */
     void setMachineAVLRoot(AVL_Node<T>* root, T machineID)
     {
         Machine_Node<D, T>* curr = head;
@@ -95,6 +102,9 @@ public:
         curr->tree.setRoot(root);
     }
 
+    /*
+        This function returns the root of avl tree of the specified machine
+    */
     AVL_Node<T>* getMachineAVL(T machineID)
     {
         Machine_Node<D, T>* curr = head;
@@ -104,6 +114,9 @@ public:
         return curr->tree.getRoot();
     }
 
+    /*
+        This function returns the avl tree object of the specified machine
+    */
     AVL<T> getMachineAVLTree(T machineID)
     {
         Machine_Node<D, T>* curr = head;
@@ -257,6 +270,10 @@ public:
         return successor;
     }
 
+    /*
+        This function takes the key of the machine and finds the immediate active predecessor
+        and then return that machine else this function will return NULL if machine not found.
+    */
     Machine_Node<D, T>* getPredecessorMachine(T value)
     {
         Machine_Node<D, T>* predecessor = NULL;

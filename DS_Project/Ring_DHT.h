@@ -198,7 +198,6 @@ public:
 
     void insertMachineOnRuntime(T value)
     {
-        cout << "\n\nAuto Insert: " << value << endl << endl;;
         Machine_Node<D, T>* successorMachine = machines.getSuccessorMachine(value);
         cout << "\n\n> ------ Adjusting Routing Tables Of Machines ------ <" << endl << endl;
         machines.configureRoutingTable();
