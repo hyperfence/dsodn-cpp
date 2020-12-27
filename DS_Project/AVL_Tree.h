@@ -51,6 +51,9 @@ public:
             return 0;
     }
 
+    /*
+        This function is used to find max between two AVL nodes data
+    */
     int max(int val1, int val2)
     {
         if (val1 > val2)
@@ -58,6 +61,9 @@ public:
         return val2;
     }
 
+    /*
+        This function is used to right rotate the AVL tree
+    */
     AVL_Node<T>* rotateRight(AVL_Node<T>* n) {
         AVL_Node<T>* temp1 = n->Left;
         AVL_Node<T>* T2 = temp1->Right;
@@ -71,6 +77,9 @@ public:
         return temp1;
     }
 
+    /*
+        This function is used to left rotate the AVL tree
+    */
     AVL_Node<T>* rotateLeft(AVL_Node<T>* n)
     {
         AVL_Node<T>* temp1 = n->Right;
@@ -85,6 +94,9 @@ public:
         return temp1;
     }
 
+    /*
+        This function to return the balance factor by taking AVL node
+    */
     int Balance(AVL_Node<T>* n)
     {
         if (n == NULL)
@@ -92,6 +104,10 @@ public:
         return getHeight(n->Left) - getHeight(n->Right);
     }
 
+    /*
+        This function inserts the Hash id in AVL tree and the lineNumber of that value
+        in the chaining list of AVL node of counter collisions.
+    */
     AVL_Node<T>* insert(AVL_Node<T>* n, T value, unsigned long long int befHash, int lineNumber) 
     {
         if (n == NULL) 
@@ -143,16 +159,10 @@ public:
         return n;
     }
 
-    AVL_Node<T>* leftMostNode(AVL_Node<T>* n)
-    {
-        AVL_Node<T>* current = n;
-        while (current->Left != NULL)
-        {
-            current = current->Left;
-        }
-        return current;
-    }
-
+    /*
+        This function removes the Hash id in AVL tree and the lineNumber of that value
+        in the chaining list of AVL node of counter collisions.
+    */
     AVL_Node<T>* remove(AVL_Node<T>* n, T value, unsigned long long int befHash)
     {
 
@@ -182,14 +192,12 @@ public:
             if (n->Left == NULL) 
             {
                 AVL_Node<T>* temp = n->Right;
-                //delete n;
                 n->chainingList.RemoveByValue(befHash);
                 return temp;
             }
             else if (n->Right == NULL) 
             {
                 AVL_Node<T>* temp = n->Left;
-                //delete n;
                 n->chainingList.RemoveByValue(befHash);
                 return temp;
             }
@@ -365,6 +373,7 @@ public:
             adjustMachineDataOnRemove(currentTree->Right, successorTree, machineID, machines);
         }
     }
+
     /*
         This function deos simple inorder traversal of AVL Tree of a machine, also
         along with inorder of AVL Nodes it also traverses the chaining lists associated
@@ -392,6 +401,9 @@ public:
         }
     }
 
+    /*
+        This function searches the AVL node the based on value and returns the node
+    */
     AVL_Node<T>* search(AVL_Node <T>* temp, int val)
     {
         if (temp == NULL)
@@ -417,7 +429,9 @@ public:
         }
     }
 
-    // deleting the list of every node of tree
+    /*
+        deleting the list of every node of tree
+    */
     void deleteTreeList(AVL_Node<T>* n)
     {
         if (n != NULL)
@@ -428,7 +442,9 @@ public:
         }
     }
 
-    // deleting the tree itself
+    /*
+        deleting the tree itself
+    */
     void deleteTree(AVL_Node<T>* n) {
         if (n != NULL) {
             deleteTree(n->Left);

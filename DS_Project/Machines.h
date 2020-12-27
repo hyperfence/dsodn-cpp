@@ -413,8 +413,6 @@ public:
         Machine_Node<D,T>* startingMachine = getMachine(machineKey);
         for (int i = 0; i < routingTableSize; i++)
         {
-            //Machine_Node<T>* temp = new Machine_Node<T>();
-            //Machine_Node<T>* temp2 = new Machine_Node<T>();
             Machine_Node<D,T>* temp = static_cast<Machine_Node<D,T>*>(startingMachine->routingTable->getElement(i));
             Machine_Node<D,T>* temp2 = static_cast<Machine_Node<D,T>*>(startingMachine->routingTable->getElement(i + 1));
             if (dataKey > getLastMachine()->data)

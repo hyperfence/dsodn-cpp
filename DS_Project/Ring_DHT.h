@@ -39,7 +39,7 @@ public:
         return hashedValue % (T)pow(2, identifierSpace);
     }
 
-    void insert(D key, D value, T machineID)
+    void insertData(D key, D value, T machineID)
     {
         unsigned long long int beforeHashVal = 0;
         T hash = HashFunction(key, &beforeHashVal);
