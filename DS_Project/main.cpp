@@ -66,7 +66,7 @@ int main()
     //     searchPtr = searchPtr->next;
     // } while (searchPtr != dht.machines.head);
     //  dht.insertMachineOnRuntime(0);
-    dht.deleteMachineOnRuntime(0);
+    // dht.deleteMachineOnRuntime(0);
 
     //string command = "del /Q ";
     //string path = "Machine_Files\\*.txt";

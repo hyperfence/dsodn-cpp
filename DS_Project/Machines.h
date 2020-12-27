@@ -114,23 +114,6 @@ public:
     }
 
     /*
-        This function takes machineID as input and returns the data
-        stored on that machine as a pointer to the template data type
-    */
-    //D* getMachineData(T value, int& size)
-    //{
-    //    D* retrievedData = NULL;
-    //    if (machineExists(value))
-    //    {
-    //        AVL<T> temp = head->tree->getRoot();
-
-    //    }
-    //    return retrievedData;
-    //}
-
-
-
-    /*
         This function deletes the specified machine
     */
     Machine_Node<D,T>* removeMachine(T value) {
@@ -210,18 +193,18 @@ public:
     */
     Machine_Node<D,T>* getMachine(T value)
     {
-        Machine_Node<D, T>* successor = NULL;
+        Machine_Node<D, T>* machine = NULL;
         Machine_Node<D, T>* ptr = head;
         do
         {
             if (ptr->data == value)
             {
-                successor = ptr;
+                machine = ptr;
                 break;
             }
             ptr = ptr->next;
         } while (ptr != head);
-        return successor;
+        return machine;
     }
 
     /*
@@ -514,6 +497,45 @@ public:
             delete[] routingTable;
         } while (temp != head);
         cout << "|" << endl;
+        cout << "--------------------------------------------" << endl << endl;
+    }
+
+    /*
+        This function prints the routing table of the machine whose ID is
+        passed as argument
+    */
+    void printMachineRoutingTable(T machineID)
+    {
+        Machine_Node<D, T>* machine = NULL;
+        Machine_Node<D, T>* ptr = head;
+        do
+        {
+            if (ptr->data == machineID)
+            {
+                machine = ptr;
+                break;
+            }
+            ptr = ptr->next;
+        } while (ptr != head);
+        if (machine == NULL)
+        {
+            cout << "\n-------- Routing Table of Machine " << machineID << " --------" << endl;
+            cout << "|" << endl;
+            cout << "| No Machine Found! " << endl;
+            cout << "|" << endl;
+            cout << "--------------------------------------------" << endl << endl;
+            return;
+        }
+        cout << "\n-------- Routing Table of Machine " << machineID <<" --------" << endl;
+        cout << "|" << endl;
+        cout << "| -> Machine " << setfill('0') << setw(3) << machineID << ": ";
+        for (int i = 0; i < this->routingTableSize; i++)
+        {
+            // Typecast the void pointer back to Machine_Node pointer to access the data
+            Machine_Node<D, T>* temp = static_cast<Machine_Node<D, T>*>(machine->routingTable->getElement(i));
+            cout << setfill(' ') << setw(3) << temp->data << "  ";
+        }
+        cout << "\n|" << endl;
         cout << "--------------------------------------------" << endl << endl;
     }
 
