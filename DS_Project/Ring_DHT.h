@@ -1,18 +1,17 @@
 #pragma once
 
 #include "Machines.h"
-#include <sstream>
 
 template <typename D, typename T>
 class RingDHT {
 private:
-    int noOfmachines;
-    int identifierSpace;
+    T noOfmachines;
+    T identifierSpace;
     Machines<D, T> machines;
 
 public:
 
-    RingDHT(int space, int no_machines) 
+    RingDHT(T space, T no_machines) 
     {
         identifierSpace = space;
         noOfmachines = no_machines;
@@ -24,7 +23,7 @@ public:
         return machines;
     }
 
-    int HashFunction(string key, unsigned long long* befHash)
+    T HashFunction(D key, unsigned long long* befHash)
     {
         unsigned long long int hashedValue = 0;
         int length = key.size();
@@ -37,13 +36,13 @@ public:
             hashedValue = 37 * hashedValue + key[i];
         }
         *befHash = hashedValue;
-        return hashedValue % (int)pow(2, identifierSpace);
+        return hashedValue % (T)pow(2, identifierSpace);
     }
 
-    void insert(string key, string value, int machineID)
+    void insert(D key, D value, T machineID)
     {
         unsigned long long int beforeHashVal = 0;
-        int hash = HashFunction(key, &beforeHashVal);
+        T hash = HashFunction(key, &beforeHashVal);
 
         Machine_Node<D,T>* curr = machines.searchResponsibleMachine(hash, machineID);
         curr->file.increaseFileLineNumber(1);
@@ -68,14 +67,14 @@ public:
         Machine_Node<D,T>* searchPtr = machines.getFirstMachine();
         do {
             unsigned long long int befHash = 0;
-            int value = -1;
+            T value = -1;
 
-            string addressInString = to_string((long)searchPtr);
+            D addressInString = to_string((long)searchPtr);
             value = HashFunction(addressInString,&befHash);
             while (machines.machineExists(value) == true)
             {
                 value++;
-                value = value % (int)pow(2, identifierSpace);
+                value = value % (T)pow(2, identifierSpace);
             }
             searchPtr->data = value;
             searchPtr->file.setFileName(value);
@@ -94,7 +93,7 @@ public:
     void manualAssigning()
     {
         cout << "Enter values for machines respectively: \n";
-        int value = -1;
+        T value = -1;
         for (int i = 0; i < noOfmachines; i++)
         {
             cout << "Value # " << (i + 1) << " : " << endl;
@@ -121,7 +120,7 @@ public:
     */
     void insertionOfNewMachine()
     {
-        int value = -1;
+        T value = -1;
         char choice;
         cout << "\n-------------------------- Add a new machine --------------------------\n";
         cout << "|";
@@ -152,12 +151,12 @@ public:
                     if (searchPtr->data == -1)
                     {
                         unsigned long long int befHash = 0;
-                        string addressInString = to_string((long)searchPtr);
+                        D addressInString = to_string((long)searchPtr);
                         value = HashFunction(addressInString, &befHash);
                         while (machines.machineExists(value) == true)
                         {
                             value++;
-                            value = value % (int)pow(2, identifierSpace);
+                            value = value % (T)pow(2, identifierSpace);
                         }
                         searchPtr->data = value;
                         break;
@@ -197,7 +196,7 @@ public:
         }
     }
 
-    void insertMachineOnRuntime(int value)
+    void insertMachineOnRuntime(T value)
     {
         Machine_Node<D, T>* successorMachine = machines.getSuccessorMachine(value);
         //machines.insertMachine(value);
@@ -225,7 +224,7 @@ public:
         cout << "\n*** ------- End Of Machine " << value << " Insertion ------- ***" << endl << endl;
     }
 
-    void deleteMachineOnRuntime(int value)
+    void deleteMachineOnRuntime(T value)
     {
         cout << "\n\n*** ------- Deleting Machine " << value << " From Identifier Space ------- ***" << endl;
         if (machines.machineExists(value))
@@ -255,7 +254,7 @@ public:
     D removeData(D key, T machineID)
     {
         unsigned long long int beforeHashVal = 0;
-        int hash = HashFunction(key, &beforeHashVal);
+        T hash = HashFunction(key, &beforeHashVal);
         D removedData = "";
 
         Machine_Node<D,T>* curr = machines.searchResponsibleMachine(hash, machineID);
@@ -290,9 +289,9 @@ public:
     D searchData(D key, T machineID)
     {
         unsigned long long int beforeHashVal = 0;
-        int hash = HashFunction(key, &beforeHashVal);
+        T hash = HashFunction(key, &beforeHashVal);
 
-        string finalOutput = "";
+        D finalOutput = "";
 
         Machine_Node<D, T>* curr = machines.searchResponsibleMachine(hash, machineID);
         AVL_Node<T>* tempPtr = curr->tree.search(curr->tree.getRoot(), hash);

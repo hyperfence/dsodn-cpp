@@ -33,7 +33,7 @@ int main()
     dht.insert("Hunaid", "3rd", 5);
     dht.insert("Hassan Raza", "4th", 8);    // 0
     dht.insert("Hammad", "5th", 2);         // 0    
-    dht.insert("Akmal", "5th", 3);
+    dht.insert("Akmal", "6th", 3);
     // dht.insert("Ahsan", "6th", 5);
     // dht.insert("Adam", "7th", 12);
     // dht.insert("Khan", "8th", 8);
@@ -71,7 +71,7 @@ int main()
     //system(command.append(path).c_str());
 
     dht.clearAVLTreeListMemory();   // Release all unwanted memory from the AVL Lists
-    //dht.clearAVLTreeMemory();   // Release all unwanted memory from AVL trees
+    dht.clearAVLTreeMemory();   // Release all unwanted memory from AVL trees
     dht.clearAllMachineMemory(); // Release all unwanted memory from the machines
 
     _CrtDumpMemoryLeaks(); // This line is required to debug memory leaks
