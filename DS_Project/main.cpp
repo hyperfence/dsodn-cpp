@@ -104,6 +104,7 @@ int main()
     // dht.insert("Khan", "8th", 8);
 
     dht.insertionOfNewMachine();
+    dht.deleteMachineOnRuntime();
 
     //dht.removeData("Hunaid", 5);
     //dht.removeData("Hassan Raza", 8);

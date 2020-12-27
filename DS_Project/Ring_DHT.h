@@ -1,16 +1,23 @@
 #pragma once
-
 #include "Machines.h"
-
 template <typename D, typename T>
 class RingDHT {
+
 private:
     T noOfmachines;
     T identifierSpace;
     Machines<D, T> machines;
 
 public:
-
+    /*
+        Default Constructors && Parameterized Constructor.
+    */
+    RingDHT()
+    {
+        identifierSpace = 0;
+        noOfmachines = 0;
+        machines.setidentifierSpace(0);
+    }
     RingDHT(T space, T no_machines) 
     {
         identifierSpace = space;
@@ -22,7 +29,14 @@ public:
     {
         return machines;
     }
-
+    /*
+        This function takes a key, a variable of long long passed by reference and 
+        it returns a finalized hashed key by multiplying 37 repeatedily while adding the 
+        ascii of every character in that passed key. 
+        37 is a very mysteric prime number that makes this hash function unique to give
+        as much as unique hashed key always. The variable that has been passed by reference
+        is set before taking mod; which will help us to stop collisions.
+    */
     T HashFunction(D key, unsigned long long* befHash)
     {
         unsigned long long int hashedValue = 0;
@@ -38,7 +52,10 @@ public:
         *befHash = hashedValue;
         return hashedValue % (T)pow(2, identifierSpace);
     }
-
+    /*
+        This function takes a key, value pair and a starting machineID number and
+        then inserts the data on the specific machine (hashed value of the key).
+    */
     void insert(D key, D value, T machineID)
     {
         unsigned long long int beforeHashVal = 0;
@@ -59,6 +76,11 @@ public:
 
     }
 
+    /*
+       This function auto assigns the machine IDs by;
+       - Accessing the Nodal address from memory and storing it in a string.
+       - Hashing those memory addresses and assiging machine IDs on that base.
+    */
     void autoAssigning()
     {
         for (int i = 0; i < noOfmachines; i++) {
@@ -89,7 +111,9 @@ public:
         } while (searchPtr != machines.getFirstMachine());
     }
 
-    // getting values from user manually 
+    /*
+        This function takes machine IDs from user and then assign them.
+    */
     void manualAssigning()
     {
         cout << "Enter values for machines respectively: \n";
@@ -104,7 +128,6 @@ public:
                 cin >> value;
             }
             machines.insertMachine(value);
-            // function adjusts machine data .... paramater 
         }
         machines.sortMachines();
         machines.configureRoutingTable();
@@ -116,7 +139,9 @@ public:
     }
 
     /*
-    *   In progress..
+        This function shows the menu at run time when user wants to add a new 
+        machine. At the end, it calls another function which adjusts that
+        machine ID and it's neighbouring AVL tree.
     */
     void insertionOfNewMachine()
     {
@@ -124,9 +149,9 @@ public:
         char choice;
         cout << "\n-------------------------- Add a new machine --------------------------\n";
         cout << "|";
-        cout << "\n|Do you want to add the new machine manually or automatically?\n";
-        cout << "|Press A------------> Automatic Assigning.\n";
-        cout << "|Press M------------> Manual Assigning.\n\n";
+        cout << "\n|    Do you want to add the new machine manually or automatically?\n";
+        cout << "|  Press A------------> Automatic Assigning.\n";
+        cout << "|  Press M------------> Manual Assigning.\n\n";
         cout << "|\n";
         cout << "|> Your Choice: "; 
         cin >> choice;
@@ -195,7 +220,10 @@ public:
             insertMachineOnRuntime(value);
         }
     }
-
+    /*
+        This function inserts the data into newly added machine by removing
+        data from successor machine. It also adjusts each AVL side by side.
+    */
     void insertMachineOnRuntime(T value)
     {
         Machine_Node<D, T>* successorMachine = machines.getSuccessorMachine(value);
@@ -220,8 +248,20 @@ public:
         cout << "\n*** ------- End Of Machine " << value << " Insertion ------- ***" << endl << endl;
     }
 
-    void deleteMachineOnRuntime(T value)
+    /*
+        This function prompts the user to enter the machine to be deleted
+        on run-time and then retrieve and inserts the data of the machine 
+        to be deleted (if it exists) into next responsible machine and also
+        adjusts the AVL of the responsible machine.
+    */
+    void deleteMachineOnRuntime()
     {
+        T value = -1;
+        cout << "\n-------------------------- Delete a new machine --------------------------\n";
+        cout << "|";
+        cout << "\n|    Enter the machine you want to delete: ";
+        cin >> value;
+        cout << "|\n";
         cout << "\n\n*** ------- Deleting Machine " << value << " From Identifier Space ------- ***" << endl;
         if (machines.machineExists(value))
         {
@@ -246,7 +286,10 @@ public:
         }
         cout << "\n*** ---------- End Of Machine " << value << " Deletion ---------- ***" << endl << endl;
     }
-
+    /*
+        This function prompts the user to enter the key and a starting machine
+        to delete the data if that 
+    */
     D removeData(D key, T machineID)
     {
         unsigned long long int beforeHashVal = 0;
@@ -267,7 +310,6 @@ public:
             if (listNode != NULL) {
                 int lineNumber = listNode->valLineNumber;
                 removedData = curr->file.remove(lineNumber);
-                //tempPtr->chainingList.RemoveByValue(beforeHashVal);
                 tempPtr = machines.getMachineAVLTree(curr->data).remove(curr->tree.getRoot(), hash, beforeHashVal);
                 machines.setMachineAVLRoot(tempPtr, curr->data);
                 cout << "\n\n--- In Order of Machine " << curr->data << " AVL Tree ---" << endl;
@@ -281,7 +323,10 @@ public:
         cout << "\nData not found!\n";
         return removedData;   
     }
-
+    /*
+        This function prompts the user to enter the key and a starting machine
+        to fetch the data and show to user (if that data exists).
+    */
     D searchData(D key, T machineID)
     {
         unsigned long long int beforeHashVal = 0;
@@ -307,6 +352,7 @@ public:
                 return finalOutput;
             }
         }
+        cout << "\nData not found!";
         return finalOutput;
     }
 
@@ -369,7 +415,6 @@ public:
         cout << "|  Your choice: ";
 
     }
-
     ~RingDHT()
     {
     }
