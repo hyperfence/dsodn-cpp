@@ -228,14 +228,14 @@ public:
         return n;
     }
 
-    void adjustMachineData(AVL_Node<T>* successorTree, AVL_Node<T>* successorRoot, AVL<T>* retrievedAVL, T machineID, T predecessorID, Machines <string, T> machines)//Machine_Node <string,T>* newMachine)
+    void adjustMachineData(AVL_Node<T>* successorTree, AVL_Node<T>* successorRoot, AVL<T>* retrievedAVL, T machineID, Machines <string, T> machines)//Machine_Node <string,T>* newMachine)
     {
         if (successorTree != NULL)
         {
-            adjustMachineData(successorTree->Left, successorRoot, retrievedAVL, machineID, predecessorID,machines);
+            adjustMachineData(successorTree->Left, successorRoot, retrievedAVL, machineID, machines);
             if (successorTree->chainingList.getHead() != NULL)
             {
-                if (successorTree->chainingList.getHead()->data <= machineID)
+                if (successorTree->chainingList.getHead()->data <= machineID && machines.isFirstMachine(machineID) == true)
                 {
                     AVL_List_Node<T>* succTreeChainingList = successorTree->chainingList.getHead();
                     while (succTreeChainingList != NULL)
@@ -247,8 +247,6 @@ public:
                         //Machines <string, T> tempObject;
                         //Machine_Node <string, T>* predecessorMachine = tempObject.getPredecessorMachine(newMachine->data);
 
-
-                      
                         Machine_Node <string, T>* newMachine = machines.getMachine(machineID);
                         Machine_Node <string, T>* successorMachine = machines.getSuccessorMachine(newMachine->data);
 
@@ -261,7 +259,31 @@ public:
                         succTreeChainingList = successorTree->chainingList.getHead();
                     }
                 }
-                else if (successorTree->chainingList.getHead() != NULL && successorTree->chainingList.getHead()->data > machineID && predecessorID > machineID)
+                else if (successorTree->chainingList.getHead()->data <= machineID && successorTree->chainingList.getHead()->data > machines.getPredecessorMachine(machineID)->data)
+                {
+                    AVL_List_Node<T>* succTreeChainingList = successorTree->chainingList.getHead();
+                    while (succTreeChainingList != NULL)
+                    {
+                        AVL_Node<T>* root = retrievedAVL->getRoot();
+                        // Create The File of this Machine
+                        // Then Insert the Data by calling succtreeChainingList->data
+                        // Then insert the line number in the below function
+                        //Machines <string, T> tempObject;
+                        //Machine_Node <string, T>* predecessorMachine = tempObject.getPredecessorMachine(newMachine->data);
+
+                        Machine_Node <string, T>* newMachine = machines.getMachine(machineID);
+                        Machine_Node <string, T>* successorMachine = machines.getSuccessorMachine(newMachine->data);
+
+                        string valueInserted = successorMachine->file.remove(succTreeChainingList->valLineNumber);
+
+                        newMachine->file.increaseFileLineNumber(1);
+                        newMachine->file.insert(valueInserted);
+                        retrievedAVL->setRoot(retrievedAVL->insert(root, succTreeChainingList->data, succTreeChainingList->beforeHash, newMachine->file.getFileLineNumber()));
+                        successorRoot = this->remove(successorRoot, succTreeChainingList->data, succTreeChainingList->beforeHash);
+                        succTreeChainingList = successorTree->chainingList.getHead();
+                    }
+                }
+                else if (successorTree->chainingList.getHead() != NULL && successorTree->chainingList.getHead()->data > machineID && machines.getPredecessorMachine(machineID)->data < successorTree->chainingList.getHead()->data && machines.isFirstMachine(machineID) == true)
                 {
                     AVL_List_Node<T>* succTreeChainingList = successorTree->chainingList.getHead();
                     while (succTreeChainingList != NULL)
@@ -283,7 +305,7 @@ public:
                     }
                 }      
             }
-            adjustMachineData(successorTree->Right, successorRoot, retrievedAVL, machineID, predecessorID, machines);
+            adjustMachineData(successorTree->Right, successorRoot, retrievedAVL, machineID, machines);
         }
     }
     
