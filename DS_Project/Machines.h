@@ -182,6 +182,19 @@ public:
                     int temp = temp1->data;
                     temp1->data = temp2->data;
                     temp2->data = temp;
+
+                    RoutingTable* temproutingTable = temp1->routingTable;
+                    temp1->routingTable = temp2->routingTable;
+                    temp2->routingTable = temproutingTable;
+
+                    AVL<T> temptree = temp1->tree;
+                    temp1->tree = temp2->tree;
+                    temp2->tree = temptree;
+
+                    MachineFile<D> tempfile = temp1->file;
+                    temp1->file = temp2->file;
+                    temp2->file = tempfile;
+
                 }
                 temp2 = temp2->next;
             }

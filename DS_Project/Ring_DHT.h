@@ -164,7 +164,15 @@ public:
                     searchPtr = searchPtr->next;
                 } while (searchPtr != machines.getFirstMachine());
                 machines.sortMachines(); 
-                searchPtr->file.setFileName(searchPtr->data);
+                do {
+                    if (searchPtr->data == value)
+                    {
+                        searchPtr->file.setFileName(value);
+                        break;
+                    }
+                    searchPtr = searchPtr->next;
+                } while (searchPtr != machines.getFirstMachine());
+                
                 break;
             }
             case 'M':
@@ -191,6 +199,7 @@ public:
         }
         if (value != -1)
         {
+            noOfmachines++;
             cout << "\n\n*** ------- Inserting Machine " << value << " In Identifier Space ------- ***" << endl;
             insertMachineOnRuntime(value);
         }
@@ -237,6 +246,7 @@ public:
             machines.getMachineAVLTree(successorMachine->data).inOrder(successorMachine->tree.getRoot());
             cout << "|" << endl;
             cout << "----------- In order Ended -----------" << endl << endl;
+            noOfmachines--;
         }
         else
         {
@@ -245,6 +255,7 @@ public:
             machines.display();
         }
         cout << "\n*** ---------- End Of Machine " << value << " Deletion ---------- ***" << endl << endl;
+        
     }
 
     D removeData(D key, T machineID)
