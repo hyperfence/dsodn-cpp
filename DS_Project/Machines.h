@@ -82,10 +82,17 @@ public:
         }
     }
 
+    /*
+        This function sets the avl tree data member of the specified machine
+    */
     void setMachineAVL(AVL<T>* avl)
     {
         head->tree = avl;
     }
+
+    /*
+        This function sets the root of avl tree of the specified machine
+    */
     void setMachineAVLRoot(AVL_Node<T>* root, T machineID)
     {
         Machine_Node<D, T>* curr = head;
@@ -95,6 +102,9 @@ public:
         curr->tree.setRoot(root);
     }
 
+    /*
+        This function returns the root of avl tree of the specified machine
+    */
     AVL_Node<T>* getMachineAVL(T machineID)
     {
         Machine_Node<D, T>* curr = head;
@@ -104,6 +114,9 @@ public:
         return curr->tree.getRoot();
     }
 
+    /*
+        This function returns the avl tree object of the specified machine
+    */
     AVL<T> getMachineAVLTree(T machineID)
     {
         Machine_Node<D, T>* curr = head;
@@ -112,23 +125,6 @@ public:
         }
         return curr->tree;
     }
-
-    /*
-        This function takes machineID as input and returns the data
-        stored on that machine as a pointer to the template data type
-    */
-    //D* getMachineData(T value, int& size)
-    //{
-    //    D* retrievedData = NULL;
-    //    if (machineExists(value))
-    //    {
-    //        AVL<T> temp = head->tree->getRoot();
-
-    //    }
-    //    return retrievedData;
-    //}
-
-
 
     /*
         This function deletes the specified machine
@@ -223,18 +219,18 @@ public:
     */
     Machine_Node<D,T>* getMachine(T value)
     {
-        Machine_Node<D, T>* successor = NULL;
+        Machine_Node<D, T>* machine = NULL;
         Machine_Node<D, T>* ptr = head;
         do
         {
             if (ptr->data == value)
             {
-                successor = ptr;
+                machine = ptr;
                 break;
             }
             ptr = ptr->next;
         } while (ptr != head);
-        return successor;
+        return machine;
     }
 
     /*
@@ -287,6 +283,10 @@ public:
         return successor;
     }
 
+    /*
+        This function takes the key of the machine and finds the immediate active predecessor
+        and then return that machine else this function will return NULL if machine not found.
+    */
     Machine_Node<D, T>* getPredecessorMachine(T value)
     {
         Machine_Node<D, T>* predecessor = NULL;
@@ -527,6 +527,45 @@ public:
             delete[] routingTable;
         } while (temp != head);
         cout << "|" << endl;
+        cout << "--------------------------------------------" << endl << endl;
+    }
+
+    /*
+        This function prints the routing table of the machine whose ID is
+        passed as argument
+    */
+    void printMachineRoutingTable(T machineID)
+    {
+        Machine_Node<D, T>* machine = NULL;
+        Machine_Node<D, T>* ptr = head;
+        do
+        {
+            if (ptr->data == machineID)
+            {
+                machine = ptr;
+                break;
+            }
+            ptr = ptr->next;
+        } while (ptr != head);
+        if (machine == NULL)
+        {
+            cout << "\n-------- Routing Table of Machine " << machineID << " --------" << endl;
+            cout << "|" << endl;
+            cout << "| No Machine Found! " << endl;
+            cout << "|" << endl;
+            cout << "--------------------------------------------" << endl << endl;
+            return;
+        }
+        cout << "\n-------- Routing Table of Machine " << machineID <<" --------" << endl;
+        cout << "|" << endl;
+        cout << "| -> Machine " << setfill('0') << setw(3) << machineID << ": ";
+        for (int i = 0; i < this->routingTableSize; i++)
+        {
+            // Typecast the void pointer back to Machine_Node pointer to access the data
+            Machine_Node<D, T>* temp = static_cast<Machine_Node<D, T>*>(machine->routingTable->getElement(i));
+            cout << setfill(' ') << setw(3) << temp->data << "  ";
+        }
+        cout << "\n|" << endl;
         cout << "--------------------------------------------" << endl << endl;
     }
 

@@ -355,6 +355,32 @@ public:
         machines.clear();
     }
 
+    /*
+    *   This function shows the menu to the user 
+    */
+    void Menu()
+    {
+        cout << "\t\t\t\t\t--------------------------------------\n";
+        cout << "\t\t\t\t\tData Storage over Distributed Networks\n";
+        cout << "\t\t\t\t\t--------------------------------------\n";
+        
+        cout << "|\n";
+        cout << "|  1. Specify the number of machines.\n";
+        cout << "|  2. Specify the size of identifier space.\n";
+        cout << "|  3. Assign unique machines IDS to machines.\n";
+        cout << "|  4. Insert data in (key,value) pair.\n";
+        cout << "|  5. Remove data by specifying key from a starting machine.\n";
+        cout << "|  6. Print routing table of a specific machine.\n";
+        cout << "|  7. Print AVL tree of a machine with location of files & line numbers.\n";
+        cout << "|  8. Add a new machine in Ring DHT.\n";
+        cout << "|  9. Remove a machine from Ring DHT.\n";
+        cout << "|  0. Exit.\n";
+        cout << "|\n\n\n";
+
+        cout << "|  Your choice: ";
+
+    }
+
     ~RingDHT()
     {
     }

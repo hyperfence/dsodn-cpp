@@ -5,7 +5,7 @@
 #include <string>
 
 /*
-*   Forward declarations..
+    Forward Declaration of Machines Class Along with Machines Node
 */
 template <typename D, typename N>
 struct Machine_Node;
@@ -228,6 +228,12 @@ public:
         return n;
     }
 
+    /*
+        This function takes AVL Tree root of the successor machine along with the a pointer to entire avl tree of the new machine which
+        in turn will be responisble for its data stored on successor machine. The machine ID of the new machine along with machines object is
+        also passed. The below function performs inorder traversal of the AVL tree of the successor machine and inserts the values of interest
+        in the AVL of new machine
+    */
     void adjustMachineData(AVL_Node<T>* successorTree, AVL_Node<T>* successorRoot, AVL<T>* retrievedAVL, T machineID, Machines <string, T> machines)//Machine_Node <string,T>* newMachine)
     {
         if (successorTree != NULL)
@@ -241,17 +247,9 @@ public:
                     while (succTreeChainingList != NULL)
                     {
                         AVL_Node<T>* root = retrievedAVL->getRoot();
-                        // Create The File of this Machine
-                        // Then Insert the Data by calling succtreeChainingList->data
-                        // Then insert the line number in the below function
-                        //Machines <string, T> tempObject;
-                        //Machine_Node <string, T>* predecessorMachine = tempObject.getPredecessorMachine(newMachine->data);
-
                         Machine_Node <string, T>* newMachine = machines.getMachine(machineID);
                         Machine_Node <string, T>* successorMachine = machines.getSuccessorMachine(newMachine->data);
-
                         string valueInserted = successorMachine->file.remove(succTreeChainingList->valLineNumber);
-
                         newMachine->file.increaseFileLineNumber(1);
                         newMachine->file.insert(valueInserted);
                         retrievedAVL->setRoot(retrievedAVL->insert(root, succTreeChainingList->data, succTreeChainingList->beforeHash, newMachine->file.getFileLineNumber()));
@@ -267,9 +265,7 @@ public:
                         AVL_Node<T>* root = retrievedAVL->getRoot();
                         Machine_Node <string, T>* newMachine = machines.getMachine(machineID);
                         Machine_Node <string, T>* successorMachine = machines.getSuccessorMachine(newMachine->data);
-
                         string valueInserted = successorMachine->file.remove(succTreeChainingList->valLineNumber);
-
                         newMachine->file.increaseFileLineNumber(1);
                         newMachine->file.insert(valueInserted);
                         retrievedAVL->setRoot(retrievedAVL->insert(root, succTreeChainingList->data, succTreeChainingList->beforeHash, newMachine->file.getFileLineNumber()));
@@ -285,14 +281,9 @@ public:
                         AVL_Node<T>* root = retrievedAVL->getRoot();
                         Machine_Node <string, T>* newMachine = machines.getMachine(machineID);
                         Machine_Node <string, T>* successorMachine = machines.getSuccessorMachine(newMachine->data);
-
                         string valueInserted = successorMachine->file.remove(succTreeChainingList->valLineNumber);
-
                         newMachine->file.increaseFileLineNumber(1);
                         newMachine->file.insert(valueInserted);
-                        // Create The File of this Machine
-                        // Then Insert the Data by calling succtreeChainingList->data
-                        // Then insert the line number in the below function
                         retrievedAVL->setRoot(retrievedAVL->insert(root, succTreeChainingList->data, succTreeChainingList->beforeHash, newMachine->file.getFileLineNumber()));
                         successorRoot = this->remove(successorRoot, succTreeChainingList->data, succTreeChainingList->beforeHash);
                         succTreeChainingList = successorTree->chainingList.getHead();
@@ -303,6 +294,12 @@ public:
         }
     }
     
+    /*
+        This function takes AVL Tree root of the machine to be deleted along with the entire avl tree of successor machine which
+        in turn will be responisble for the data of deleted machine. The machine ID of the successor machine along with machines object is 
+        also passed. The below function performs inorder traversal of the AVL tree of machine to be deleted and inserts the values of interest 
+        in the AVL of successor machine
+    */
     void adjustMachineDataOnRemove(AVL_Node<T>* currentTree, AVL<T>& successorTree, T machineID, Machines <string, T> machines)
     {
         if (currentTree != NULL)
@@ -368,7 +365,11 @@ public:
             adjustMachineDataOnRemove(currentTree->Right, successorTree, machineID, machines);
         }
     }
-
+    /*
+        This function deos simple inorder traversal of AVL Tree of a machine, also
+        along with inorder of AVL Nodes it also traverses the chaining lists associated
+        with that node.
+    */
     void inOrder(AVL_Node<T>* n) 
     {
         if (n != NULL) 
