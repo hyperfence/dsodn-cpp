@@ -1,3 +1,14 @@
+/*
+    Data Storage over Distributed Networks - C++
+
+    Version: 1.0.0
+
+    A Project By:
+        Hammad Ahmed @hammadahmedpk
+        Hundai Sohail @hunaid2000
+        Malik Talha @malik727
+*/
+
 #include "Ring_DHT.h"
 #include <string>
 
