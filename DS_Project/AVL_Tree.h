@@ -108,12 +108,12 @@ public:
         This function inserts the Hash id in AVL tree and the lineNumber of that value
         in the chaining list of AVL node of counter collisions.
     */
-    AVL_Node<T>* insert(AVL_Node<T>* n, T value, unsigned long long int befHash, int lineNumber) 
+    AVL_Node<T>* insert(AVL_Node<T>* n, T value, unsigned long long int encryptedID, int lineNumber) 
     {
         if (n == NULL) 
         {
             n = new AVL_Node<T>;
-            n->chainingList.insert(value, befHash, lineNumber);
+            n->chainingList.insert(value, encryptedID, lineNumber);
             n->Left = NULL;
             n->Right = NULL;
             n->height = 1;
@@ -122,15 +122,15 @@ public:
         }
         else if (value < n->chainingList.getHead()->data)
         {
-            n->Left = insert(n->Left, value, befHash, lineNumber);
+            n->Left = insert(n->Left, value, encryptedID, lineNumber);
         }
         else if (value > n->chainingList.getHead()->data)
         {
-            n->Right = insert(n->Right, value, befHash, lineNumber);
+            n->Right = insert(n->Right, value, encryptedID, lineNumber);
         }
         else if (value == n->chainingList.getHead()->data)
         {
-            n->chainingList.insert(value, befHash, lineNumber);
+            n->chainingList.insert(value, encryptedID, lineNumber);
         }
         else
         {
@@ -163,14 +163,14 @@ public:
         This function removes the Hash id in AVL tree and the lineNumber of that value
         in the chaining list of AVL node of counter collisions.
     */
-    AVL_Node<T>* remove(AVL_Node<T>* n, T value, unsigned long long int befHash)
+    AVL_Node<T>* remove(AVL_Node<T>* n, T value, unsigned long long int encryptedID)
     {
 
         AVL_Node<T>* searchNode = search(n,value);
        
         if(searchNode->chainingList.getHead()->next != NULL)
         {
-            searchNode->chainingList.setAVLTreeList(searchNode->chainingList.RemoveByValue(befHash));
+            searchNode->chainingList.setAVLTreeList(searchNode->chainingList.RemoveByValue(encryptedID));
             return n;
         }
 
@@ -180,25 +180,25 @@ public:
         }
         if (value < n->chainingList.getHead()->data)
         {
-            n->Left = remove(n->Left, value, befHash);
+            n->Left = remove(n->Left, value, encryptedID);
         }
 
         else if (value > n->chainingList.getHead()->data)
         {
-            n->Right = remove(n->Right, value, befHash);
+            n->Right = remove(n->Right, value, encryptedID);
         }
         else
         {
             if (n->Left == NULL) 
             {
                 AVL_Node<T>* temp = n->Right;
-                n->chainingList.RemoveByValue(befHash);
+                n->chainingList.RemoveByValue(encryptedID);
                 return temp;
             }
             else if (n->Right == NULL) 
             {
                 AVL_Node<T>* temp = n->Left;
-                n->chainingList.RemoveByValue(befHash);
+                n->chainingList.RemoveByValue(encryptedID);
                 return temp;
             }
             AVL_Node<T>* temp = n->Right;
@@ -207,7 +207,7 @@ public:
                 temp = temp->Left;
             }
             n->chainingList.getHead()->data = temp->chainingList.getHead()->data;
-            n->Right = remove(n->Right, temp->chainingList.getHead()->data, befHash);
+            n->Right = remove(n->Right, temp->chainingList.getHead()->data, encryptedID);
         }
         if (n == NULL)
         {
@@ -260,8 +260,8 @@ public:
                         string valueInserted = successorMachine->file.remove(succTreeChainingList->valLineNumber);
                         newMachine->file.increaseFileLineNumber(1);
                         newMachine->file.insert(valueInserted);
-                        retrievedAVL->setRoot(retrievedAVL->insert(root, succTreeChainingList->data, succTreeChainingList->beforeHash, newMachine->file.getFileLineNumber()));
-                        successorRoot = this->remove(successorRoot, succTreeChainingList->data, succTreeChainingList->beforeHash);
+                        retrievedAVL->setRoot(retrievedAVL->insert(root, succTreeChainingList->data, succTreeChainingList->encryptedID, newMachine->file.getFileLineNumber()));
+                        successorRoot = this->remove(successorRoot, succTreeChainingList->data, succTreeChainingList->encryptedID);
                         succTreeChainingList = successorTree->chainingList.getHead();
                     }
                 }
@@ -276,8 +276,8 @@ public:
                         string valueInserted = successorMachine->file.remove(succTreeChainingList->valLineNumber);
                         newMachine->file.increaseFileLineNumber(1);
                         newMachine->file.insert(valueInserted);
-                        retrievedAVL->setRoot(retrievedAVL->insert(root, succTreeChainingList->data, succTreeChainingList->beforeHash, newMachine->file.getFileLineNumber()));
-                        successorRoot = this->remove(successorRoot, succTreeChainingList->data, succTreeChainingList->beforeHash);
+                        retrievedAVL->setRoot(retrievedAVL->insert(root, succTreeChainingList->data, succTreeChainingList->encryptedID, newMachine->file.getFileLineNumber()));
+                        successorRoot = this->remove(successorRoot, succTreeChainingList->data, succTreeChainingList->encryptedID);
                         succTreeChainingList = successorTree->chainingList.getHead();
                     }
                 }
@@ -292,8 +292,8 @@ public:
                         string valueInserted = successorMachine->file.remove(succTreeChainingList->valLineNumber);
                         newMachine->file.increaseFileLineNumber(1);
                         newMachine->file.insert(valueInserted);
-                        retrievedAVL->setRoot(retrievedAVL->insert(root, succTreeChainingList->data, succTreeChainingList->beforeHash, newMachine->file.getFileLineNumber()));
-                        successorRoot = this->remove(successorRoot, succTreeChainingList->data, succTreeChainingList->beforeHash);
+                        retrievedAVL->setRoot(retrievedAVL->insert(root, succTreeChainingList->data, succTreeChainingList->encryptedID, newMachine->file.getFileLineNumber()));
+                        successorRoot = this->remove(successorRoot, succTreeChainingList->data, succTreeChainingList->encryptedID);
                         succTreeChainingList = successorTree->chainingList.getHead();
                     }
                 }      
@@ -329,7 +329,7 @@ public:
                         successorMachine->file.increaseFileLineNumber(1);
                         successorMachine->file.insert(valueInserted);
 
-                        successorTree.setRoot(successorTree.insert(root, currTreeChainingList->data, currTreeChainingList->beforeHash, successorMachine->file.getFileLineNumber()));
+                        successorTree.setRoot(successorTree.insert(root, currTreeChainingList->data, currTreeChainingList->encryptedID, successorMachine->file.getFileLineNumber()));
                         currTreeChainingList = currTreeChainingList->next;
                     }
                 }
@@ -347,7 +347,7 @@ public:
                         successorMachine->file.increaseFileLineNumber(1);
                         successorMachine->file.insert(valueInserted);
 
-                        successorTree.setRoot(successorTree.insert(root, currTreeChainingList->data, currTreeChainingList->beforeHash, successorMachine->file.getFileLineNumber()));
+                        successorTree.setRoot(successorTree.insert(root, currTreeChainingList->data, currTreeChainingList->encryptedID, successorMachine->file.getFileLineNumber()));
                         currTreeChainingList = currTreeChainingList->next;
                     }
                 }
@@ -365,7 +365,7 @@ public:
                         successorMachine->file.increaseFileLineNumber(1);
                         successorMachine->file.insert(valueInserted);
 
-                        successorTree.setRoot(successorTree.insert(root, currTreeChainingList->data, currTreeChainingList->beforeHash, successorMachine->file.getFileLineNumber()));
+                        successorTree.setRoot(successorTree.insert(root, currTreeChainingList->data, currTreeChainingList->encryptedID, successorMachine->file.getFileLineNumber()));
                         currTreeChainingList = currTreeChainingList->next;
                     }
                 }
@@ -428,6 +428,33 @@ public:
             return temp;
         }
     }
+
+    /*
+        This function displays the lineNumber of value in file by taking AVL node
+    */
+    void displayLineNumber(AVL_Node<T>* n)
+    {
+        if (n != NULL)
+        {
+            displayLineNumber(n->Left);
+            // We can add a loop here till the end of singly list to display content of that list
+            if (n->chainingList.getHead() == NULL)
+            {
+                return;
+            }
+            AVL_List_Node<T>* treeChainingList = n->chainingList.getHead();
+            cout << "|  >. ";
+            while (treeChainingList != NULL)
+            {
+                cout << "Hash ID: " << treeChainingList->data << " --" << "Line #: " << treeChainingList->valLineNumber << " >> ";
+                treeChainingList = treeChainingList->next;
+            }
+            cout << "NULL" << endl;
+            displayLineNumber(n->Right);
+        }
+    }
+
+
 
     /*
         deleting the list of every node of tree

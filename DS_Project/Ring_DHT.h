@@ -37,7 +37,7 @@ public:
         as much as unique hashed key always. The variable that has been passed by reference
         is set before taking mod; which will help us to stop collisions.
     */
-    T HashFunction(D key, unsigned long long* befHash)
+    T HashFunction(D key, unsigned long long* encryptedID)
     {
         unsigned long long int hashedValue = 0;
         int length = key.size();
@@ -49,7 +49,7 @@ public:
         {
             hashedValue = 37 * hashedValue + key[i];
         }
-        *befHash = hashedValue;
+        *encryptedID = hashedValue;
         return hashedValue % (T)pow(2, identifierSpace);
     }
     /*
@@ -58,8 +58,8 @@ public:
     */
     void insertData(D key, D value, T machineID)
     {
-        unsigned long long int beforeHashVal = 0;
-        T hash = HashFunction(key, &beforeHashVal);
+        unsigned long long int encryptedID = 0;
+        T hash = HashFunction(key, &encryptedID);
 
         Machine_Node<D,T>* curr = machines.searchResponsibleMachine(hash, machineID);
         curr->file.increaseFileLineNumber(1);
@@ -72,7 +72,7 @@ public:
             curr->file.makeNewFile(machineID);
         }
         curr->file.insert(value);
-        curr->tree.setRoot(curr->tree.insert(curr->tree.getRoot(), hash, beforeHashVal, curr->file.getFileLineNumber()));
+        curr->tree.setRoot(curr->tree.insert(curr->tree.getRoot(), hash, encryptedID, curr->file.getFileLineNumber()));
     }
 
     /*
@@ -87,11 +87,11 @@ public:
         }
         Machine_Node<D,T>* searchPtr = machines.getFirstMachine();
         do {
-            unsigned long long int befHash = 0;
+            unsigned long long int encryptedID = 0;
             T value = -1;
 
             D addressInString = to_string((long)searchPtr);
-            value = HashFunction(addressInString,&befHash);
+            value = HashFunction(addressInString,&encryptedID);
             while (machines.machineExists(value) == true)
             {
                 value++;
@@ -108,6 +108,8 @@ public:
             searchPtr->file.setFileName(searchPtr->data);
             searchPtr = searchPtr->next;
         } while (searchPtr != machines.getFirstMachine());
+
+        cout << "\n|  >. Machines succesfully inserted!\n";
     }
 
     /*
@@ -115,15 +117,15 @@ public:
     */
     void manualAssigning()
     {
-        cout << "Enter values for machines respectively: \n";
+        cout << "|  >. Enter values for machines respectively: \n";
         T value = -1;
         for (int i = 0; i < noOfmachines; i++)
         {
-            cout << "Value # " << (i + 1) << " : " << endl;
+            cout << "|  >. Value # " << (i + 1) << " : ";
             cin >> value;
             while (value < 0 || value >= pow(2, identifierSpace) || (i > 0 && machines.machineExists(value) == true)) // check for unique number and for number between identifier space
             {
-                cout << "Error!\nPlease input a value;\n1) Less than total number of machines!\n2) Greater than zero\n3) Unique\nYour Input: ";
+                cout << "\n\n|  >. Error!\nPlease input a value;\n|  >. 1) Less than total number of machines!\n|  >. 2) Greater than zero\n|  >. 3) Unique\n|  >. Your Input: ";
                 cin >> value;
             }
             machines.insertMachine(value);
@@ -146,19 +148,20 @@ public:
     {
         T value = -1;
         char choice;
+        cout << endl << endl;
         cout << "\n-------------------------- Add a new machine --------------------------\n";
         cout << "|";
-        cout << "\n|    Do you want to add the new machine manually or automatically?\n";
-        cout << "|  Press A------------> Automatic Assigning.\n";
-        cout << "|  Press M------------> Manual Assigning.\n\n";
+        cout << "\n|  >. Do you want to add the new machine manually or automatically?\n";
+        cout << "|  >. Press A------------> Automatic Assigning.\n";
+        cout << "|  >. Press M------------> Manual Assigning.\n\n";
         cout << "|\n";
-        cout << "|> Your Choice: "; 
+        cout << "|  >. Your Choice: "; 
         cin >> choice;
         while (1)
         {
             if (choice != 'A' && choice != 'a' && choice != 'm' && choice != 'M')
             {
-                cout << "|> Wrong input. Enter again please: ";
+                cout << "|  >. Wrong input. Enter again please: ";
                 cin >> choice;
             }
             else
@@ -174,9 +177,9 @@ public:
                 do {
                     if (searchPtr->data == -1)
                     {
-                        unsigned long long int befHash = 0;
+                        unsigned long long int encryptedID = 0;
                         D addressInString = to_string((long)searchPtr);
-                        value = HashFunction(addressInString, &befHash);
+                        value = HashFunction(addressInString, &encryptedID);
                         while (machines.machineExists(value) == true)
                         {
                             value++;
@@ -202,7 +205,7 @@ public:
             case 'M':
             case 'm':
             {
-                cout << "|> Enter the value for new machine: ";
+                cout << "|  >. Enter the value for new machine: ";
                 cin >> value;
 
                 while (value < 0 || value >= pow(2, identifierSpace) || (machines.machineExists(value) == true)) // check for unique number and for number between identifier space
@@ -301,8 +304,8 @@ public:
     */
     D removeData(D key, T machineID)
     {
-        unsigned long long int beforeHashVal = 0;
-        T hash = HashFunction(key, &beforeHashVal);
+        unsigned long long int encryptedID = 0;
+        T hash = HashFunction(key, &encryptedID);
         D removedData = "";
 
         Machine_Node<D,T>* curr = machines.searchResponsibleMachine(hash, machineID);
@@ -313,13 +316,13 @@ public:
         }
         AVL_Node<T>* tempPtr = curr->tree.search(curr->tree.getRoot(), hash);
 
-        if (tempPtr != NULL && (tempPtr->chainingList.searchBefHash(beforeHashVal) == true))
+        if (tempPtr != NULL && (tempPtr->chainingList.searchBefHash(encryptedID) == true))
         {
-            AVL_List_Node<T>* listNode = tempPtr->chainingList.searchNode(beforeHashVal);
+            AVL_List_Node<T>* listNode = tempPtr->chainingList.searchNode(encryptedID);
             if (listNode != NULL) {
                 int lineNumber = listNode->valLineNumber;
                 removedData = curr->file.remove(lineNumber);
-                tempPtr = machines.getMachineAVLTree(curr->data).remove(curr->tree.getRoot(), hash, beforeHashVal);
+                tempPtr = machines.getMachineAVLTree(curr->data).remove(curr->tree.getRoot(), hash, encryptedID);
                 machines.setMachineAVLRoot(tempPtr, curr->data);
                 cout << "\n\n--- In Order of Machine " << curr->data << " AVL Tree ---" << endl;
                 cout << "|" << endl;
@@ -337,16 +340,16 @@ public:
     */
     D searchData(D key, T machineID)
     {
-        unsigned long long int beforeHashVal = 0;
-        T hash = HashFunction(key, &beforeHashVal);
+        unsigned long long int encryptedID = 0;
+        T hash = HashFunction(key, &encryptedID);
 
         D finalOutput = "";
 
         Machine_Node<D, T>* curr = machines.searchResponsibleMachine(hash, machineID);
         AVL_Node<T>* tempPtr = curr->tree.search(curr->tree.getRoot(), hash);
-        if (tempPtr != NULL && (tempPtr->chainingList.searchBefHash(beforeHashVal) == true))
+        if (tempPtr != NULL && (tempPtr->chainingList.searchBefHash(encryptedID) == true))
         {
-            AVL_List_Node<T>* listNode = tempPtr->chainingList.searchNode(beforeHashVal);
+            AVL_List_Node<T>* listNode = tempPtr->chainingList.searchNode(encryptedID);
             if (listNode != NULL) {
                 int lineNumber = listNode->valLineNumber;
                 finalOutput += "\n---------- Searching Data From Machine "+to_string(machineID);
@@ -405,6 +408,15 @@ public:
     void printSpecificRoutingTable(T machineID)
     {
         machines.printMachineRoutingTable(machineID);
+    }
+
+    /*
+        This functions takes machine ID as an input and display it's
+        AVL tree and file line numbers.
+    */
+
+    void displayMachineAVL(T MachineID) {
+        machines.displayAVLOfMachine(MachineID);
     }
 
     /*

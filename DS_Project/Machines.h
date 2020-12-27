@@ -568,6 +568,16 @@ public:
     }
 
     /*
+        This functions takes machine ID as an input and display it's 
+        AVL tree and file line numbers.
+    */
+    void displayAVLOfMachine(T MachineID) {
+        Machine_Node<D, T>* Machine = getMachine(MachineID);
+        cout << "|  >. File Path: " << Machine->file.getFilePath() + Machine->file.getFileName() << endl;
+        Machine->tree.displayLineNumber(Machine->tree.getRoot());
+    }
+
+    /*
         This function clears up the memory allocated for the active machines 
     */
     void clear() 

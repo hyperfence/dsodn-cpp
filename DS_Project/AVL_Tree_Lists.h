@@ -9,7 +9,7 @@ struct AVL_List_Node
 {
     U data;
     AVL_List_Node<U>* next;
-    unsigned long long int beforeHash;
+    unsigned long long int encryptedID;
     int valLineNumber = 0;
 
 };
@@ -39,7 +39,7 @@ public:
     {
         AVL_List_Node<T>* temp = new AVL_List_Node<T>;
         temp->data = n;
-        temp->beforeHash = befHash;
+        temp->encryptedID = befHash;
         temp->valLineNumber = lineNumber;
         temp->next = NULL;
         AVL_List_Node<T>* curr = head;
@@ -65,7 +65,7 @@ public:
         This function removes the node by taking value
     */
     AVL_List_Node<T>* RemoveByValue(unsigned long long int n) {
-        if (head->beforeHash == n && head->next == NULL) {
+        if (head->encryptedID == n && head->next == NULL) {
             head = NULL;
             delete head;
             return NULL;
@@ -73,7 +73,7 @@ public:
         AVL_List_Node<T>* mainList = head;
         AVL_List_Node<T>* traverseList = head;
         while (traverseList != NULL) {
-            if (traverseList->beforeHash == n)
+            if (traverseList->encryptedID == n)
             {
                 if (traverseList == mainList)
                 {
@@ -81,7 +81,7 @@ public:
                     cout << "\n------- Chaining List Data Removed -------" << endl;
                     cout << "|" << endl;
                     cout << "| Deleted Data Key:  " << traverseList->data << endl;
-                    cout << "| Deleted Data Hash: " << traverseList->beforeHash << endl;
+                    cout << "| Deleted Data Hash: " << traverseList->encryptedID << endl;
                     cout << "|" << endl;
                     cout << "------------------------------------------" << endl << endl;
                     AVL_List_Node<T>* delNode = new AVL_List_Node<T>();
@@ -94,7 +94,7 @@ public:
                 cout << "\n------- Chaining List Data Removed -------" << endl;
                 cout << "|" << endl;
                 cout << "| Deleted Data Key:  " << traverseList->data << endl;
-                cout << "| Deleted Data Hash: " << traverseList->beforeHash << endl;
+                cout << "| Deleted Data Hash: " << traverseList->encryptedID << endl;
                 cout << "|" << endl;
                 cout << "------------------------------------------" << endl << endl;
                 AVL_List_Node<T>* delNode = new AVL_List_Node<T>();
@@ -164,7 +164,7 @@ public:
     }
 
     /*
-        This function search for the value of beforeHash
+        This function search for the value of encryptedID
         on each node of singly linked list.
     */
     bool searchBefHash(unsigned long long int befHash)
@@ -172,7 +172,7 @@ public:
         AVL_List_Node<T>* searchPtr = head;
         while (searchPtr != NULL)
         {
-            if (searchPtr->beforeHash == befHash)
+            if (searchPtr->encryptedID == befHash)
                 return true;
             searchPtr = searchPtr->next;
         }
@@ -187,7 +187,7 @@ public:
         AVL_List_Node<T>* searchPtr = head;
         while (searchPtr != NULL)
         {
-            if (searchPtr->beforeHash == befHash)
+            if (searchPtr->encryptedID == befHash)
                 return searchPtr;
             searchPtr = searchPtr->next;
         }

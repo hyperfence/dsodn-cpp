@@ -1,15 +1,3 @@
-/*
-    The lines below are required for debugging memeory leaks.
-    These lines will be removed when all memory leaks are resolved.
-*/
-#define _CRTDBG_MAP_ALLOC
-#include <stdlib.h>
-#include <crtdbg.h>
-#ifdef _DEBUG
-#define DEBUG_NEW new(_NORMAL_BLOCK, __FILE__, __LINE__)
-#define new DEBUG_NEW
-#endif
-
 #include "Ring_DHT.h"
 #include <string>
 
@@ -105,7 +93,7 @@ int main()
 
                 while (machineID < 0 || machineID >= pow(2, identifierSpace) || (dht.getMachines().machineExists(machineID) == false)) // check for unique number and for number between identifier space
                 {
-                    cout << "Error!\nPlease input a value;\n1) Less than total number of machines!\n2) Greater than zero\n3) Unique\nYour Input: ";
+                    cout << "\n\n|  >. Error!\n|  >. Please input a value;\n|  >. 1) Less than total number of machines!\n|  >. 2) Greater than zero\n|  >. 3) An active machine.\n|  >. Your Input: ";
                     cin >> machineID;
                 }
 
@@ -126,9 +114,9 @@ int main()
                 cout << "|  >. Enter starting machine ID: ";
                 cin >> machineID;
 
-                while (machineID < 0 || machineID >= pow(2, identifierSpace) || (dht.getMachines().machineExists(machineID) == true)) // check for unique number and for number between identifier space
+                while (machineID < 0 || machineID >= pow(2, identifierSpace) || (dht.getMachines().machineExists(machineID) == false)) // check for unique number and for number between identifier space
                 {
-                    cout << "Error!\nPlease input a value;\n1) Less than total number of machines!\n2) Greater than zero\n3) Unique\nYour Input: ";
+                    cout << "\n\n|  >. Error!\n|  >. Please input a value;\n|  >. 1) Less than total number of machines!\n|  >. 2) Greater than zero\n|  >. 3) An active machine.\n|  >. Your Input: ";
                     cin >> machineID;
                 }
 
@@ -152,6 +140,12 @@ int main()
                 cout << "|  >. Enter starting machine ID: ";
                 cin >> machineID;
 
+                while (machineID < 0 || machineID >= pow(2, identifierSpace) || (dht.getMachines().machineExists(machineID) == false)) // check for unique number and for number between identifier space
+                {
+                    cout << "\n\n|  >. Error!\n|  >. Please input a value;\n|  >. 1) Less than total number of machines!\n|  >. 2) Greater than zero\n|  >. 3) An active machine.\n|  >. Your Input: ";
+                    cin >> machineID;
+                }
+
                 dht.printSpecificRoutingTable(machineID);
 
                 break;
@@ -159,25 +153,45 @@ int main()
 
             case '4':
             {
+                int machineID;
 
+                cout << "|  >. Enter starting machine ID: ";
+                cin >> machineID;
+
+                while (machineID < 0 || machineID >= pow(2, identifierSpace) || (dht.getMachines().machineExists(machineID) == false)) // check for unique number and for number between identifier space
+                {
+                    cout << "\n\n|  >. Error!\n|  >. Please input a value;\n|  >. 1) Less than total number of machines!\n|  >. 2) Greater than zero\n|  >. 3) An active machine.\n|  >. Your Input: ";
+                    cin >> machineID;
+                }
+
+                dht.displayMachineAVL(machineID);
+                break;
+            }
+
+            case '5':
+            {
+                dht.getMachines().display();
+                dht.insertionOfNewMachine();
+                break;
+            }
+
+            case '6':
+            {
+                dht.getMachines().display();
+                dht.deleteMachineOnRuntime();
+                break;
+            }
+
+            case '0':
+            {
+                choice = '0';
                 break;
             }
         }
     }
-    //switch(choice)
-    //{
-    //    case '1':
-    //    {
-    //       
-    //        dht.
-    //        break;
-    //    }
-    //}
-    //
 
     dht.clearAVLTreeListMemory();   // Release all unwanted memory from the AVL Lists
     dht.clearAVLTreeMemory();   // Release all unwanted memory from AVL trees
     dht.clearAllMachineMemory(); // Release all unwanted memory from the machines
 
-    _CrtDumpMemoryLeaks(); // This line is required to debug memory leaks
 }
