@@ -5,7 +5,7 @@
 
     A Project By:
         Hammad Ahmed @hammadahmedpk
-        Hundai Sohail @hunaid2000
+        Hunaid Sohail @hunaid2000
         Malik Talha @malik727
 */
 
