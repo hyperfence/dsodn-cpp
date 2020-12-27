@@ -1,2 +1,96 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ClassDiagram /> 
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="AVL&lt;T&gt;">
+    <Position X="1" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEADAAAhBAiAEAAgAAAAAAAgAQAgACCAIEAAAAAA=</HashCode>
+      <FileName>AVL_Tree.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="Root" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="AVL_Tree_List&lt;T&gt;">
+    <Position X="6.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gEAAAAQAgABIAAAAAAAABAAgEAEACAACCACAgAAAgAA=</HashCode>
+      <FileName>AVL_Tree_Lists.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="head" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="MachineFile&lt;T&gt;">
+    <Position X="8" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>DAAAABAkAABAAAAEAABCAAAAAAAAAAAAAGAAAECAAAA=</HashCode>
+      <FileName>MachineFile.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Machines&lt;D, T&gt;">
+    <Position X="4.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gFAAoCAAgQIiAAIABAAAABAEAAEAQAAAAAQAAAHAQAQ=</HashCode>
+      <FileName>Machines.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="head" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="RingDHT&lt;D, T&gt;">
+    <Position X="2.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAgAAAAAABgAAQAADCABAAAEQAEEgIBAAAAAAAAFAA=</HashCode>
+      <FileName>Ring_DHT.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="machines" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="RoutingTable">
+    <Position X="9.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAAAAAiABAAAAAAAAAAAAAAAEAAAAAAAgIAAAAQAA=</HashCode>
+      <FileName>RoutingTable.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="head" />
+    </ShowAsAssociation>
+  </Class>
+  <Struct Name="AVL_Node&lt;U&gt;" Collapsed="true">
+    <Position X="2" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAAAAAAQAAAAAAAAAAAAAAAAACACAAAAAAAA=</HashCode>
+      <FileName>AVL_Tree.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="chainingList" />
+    </ShowAsAssociation>
+  </Struct>
+  <Struct Name="AVL_List_Node&lt;U&gt;" Collapsed="true">
+    <Position X="6.75" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAQAIIAAAA=</HashCode>
+      <FileName>AVL_Tree_Lists.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Machine_Node&lt;D, N&gt;" Collapsed="true">
+    <Position X="4.25" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAgAAAAAAAAAAAAAgABAAQAAIAAAA=</HashCode>
+      <FileName>Machines.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="routingTable" />
+      <Field Name="file" />
+    </ShowAsAssociation>
+  </Struct>
+  <Struct Name="Routing_Table_Node" Collapsed="true">
+    <Position X="11.25" Y="1.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAIAAAA=</HashCode>
+      <FileName>RoutingTable.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

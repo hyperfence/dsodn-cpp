@@ -1,18 +1,18 @@
 #pragma once
-
 #include <iostream>
 #include "Machines.h"
 #include "AVL_Tree_Lists.h"
 #include <string>
 
-// forward declaration..
+/*
+*   Forward declarations..
+*/
 template <typename D, typename N>
 struct Machine_Node;
 
 template <class D, class T>
 class Machines;
 
-//////////////////////////
 template <class U>
 struct AVL_Node {
     AVL_Tree_List<U> chainingList;
