@@ -10,146 +10,174 @@
 #define new DEBUG_NEW
 #endif
 
+#include "Ring_DHT.h"
+#include <string>
+
 
 /*
     The main program starts here
 */
-#include "Ring_DHT.h"
-#include <math.h>
-
-using namespace std;
-//
-//int main()
-//{
-//    RingDHT<string, int> dht(4, 5);
-//    //dht.autoAssigning();
-//    dht.manualAssigning();
-//    dht.getMachines().display();
-//    // dht.machines.display();
-//    //cout << endl;
-//
-//    dht.insert("Talha", "1st", 12);
-//    dht.insert("Talha", "2nd", 2);
-//    dht.insert("Hunaid", "3rd", 5);
-//    dht.insert("Hassan Raza", "4th", 8);    // 0
-//    dht.insert("Hammad", "5th", 2);         // 0    
-//    dht.insert("Akmal", "6th", 3);
-//    // dht.insert("Ahsan", "6th", 5);
-//    // dht.insert("Adam", "7th", 12);
-//    // dht.insert("Khan", "8th", 8);
-//
-//    dht.insertionOfNewMachine();
-//
-//    //dht.removeData("Hunaid", 5);
-//    //dht.removeData("Hassan Raza", 8);
-//    //dht.removeData("Akmal", 3);
-//
-//    //cout << dht.searchData("Hunaid", 5);
-//    //cout << dht.searchData("Talha", 8);
-//    //cout << dht.searchData("Hassan Raza", 12);
-//    //cout << "Removed data is: " << dht.removeData("Hunaid", 5);
-//    //cout << dht.searchData("Adam", 3);
-//    //cout << dht.searchData("Khan", 8);
-//    // cout << dht.searchData("Ahsan", 2);
-//
-//    // dht.insert(5, "1st",12);
-//    // dht.insert(5, "2nd",2);
-//    // dht.insert(9,"3rd",5);
-//    // dht.insert(13,"4th",8);
-//
-//    // 4,5,3
-//    // Machine_Node<int>* searchPtr = dht.machines.head;
-//    // do {
-//    //     cout << searchPtr->data << " ";
-//    //     searchPtr->tree.inOrder(searchPtr->tree.Root);
-//    //     cout << endl;
-//    //     searchPtr = searchPtr->next;
-//    // } while (searchPtr != dht.machines.head);
-//    //  dht.insertMachineOnRuntime(0);
-//
-//
-//
-//
-//    dht.deleteMachineOnRuntime(0);
-//
-//    //string command = "del /Q ";
-//    //string path = "Machine_Files\\*.txt";
-//    //system(command.append(path).c_str());
-//
-//    dht.clearAVLTreeListMemory();   // Release all unwanted memory from the AVL Lists
-//    dht.clearAVLTreeMemory();   // Release all unwanted memory from AVL trees
-//    dht.clearAllMachineMemory(); // Release all unwanted memory from the machines
-//
-//    _CrtDumpMemoryLeaks(); // This line is required to debug memory leaks
-//	return 0;
-//}
-
 int main()
 {
+    /*
+        These three lines deletes all the .txt files stored in Machine_Files 
+        directory before starting the Ring DHT's execution.
+    */
     string command = "del /Q ";
     string path = "Machine_Files\\*.txt";
     system(command.append(path).c_str());
 
-    RingDHT<string, int> dht(4, 5);
-    //dht.autoAssigning();
-    dht.manualAssigning();
-    dht.getMachines().display();
-    // dht.machines.display();
-    //cout << endl;
+    /*
+        Execution of Ring DHT starts from here..
+    */
 
-    //dht.insert("Talha", "1st", 12);
-    dht.insertData("Talha", "2nd", 2);
-    dht.insertData("Hunaid", "3rd", 5);
-    dht.insertData("Hassan Raza", "4th", 8);    // 0
-    dht.insertData("Hammad", "5th", 2);         // 0    
-    dht.insertData("Akmal", "6th", 3);
-    // dht.insert("Ahsan", "6th", 5);
-    // dht.insert("Adam", "7th", 12);
-    // dht.insert("Khan", "8th", 8);
+    int numberOfMachines, identifierSpace;
+    char choice = '\0';
 
-    dht.insertionOfNewMachine();
-    dht.deleteMachineOnRuntime();
+    cout << "|  >. Specify the number of machines: ";
+    cin >> numberOfMachines;
 
-    //dht.removeData("Hunaid", 5);
-    //dht.removeData("Hassan Raza", 8);
-    //dht.removeData("Akmal", 3);
+    cout << "|  >. Specify the size of identifier space in bits: ";
+    cin >> identifierSpace;
 
-    //cout << dht.searchData("Hunaid", 5);
-    //cout << dht.searchData("Talha", 8);
-    //cout << dht.searchData("Hassan Raza", 12);
-    //cout << "Removed data is: " << dht.removeData("Hunaid", 5);
-    //cout << dht.searchData("Adam", 3);
-    //cout << dht.searchData("Khan", 8);
-    // cout << dht.searchData("Ahsan", 2);
+    RingDHT <string, int> dht(identifierSpace, numberOfMachines);
 
-    // dht.insert(5, "1st",12);
-    // dht.insert(5, "2nd",2);
-    // dht.insert(9,"3rd",5);
-    // dht.insert(13,"4th",8);
+    cout << "\n\n|  >. Assign unique machines IDS to machines: ";
+    cout << "\n|";
+    cout << "\n|  Do you want to add the new machine manually or automatically?\n";
+    cout << "|  Press A------------> Automatic Assigning.\n";
+    cout << "|  Press M------------> Manual Assigning.\n\n";
+    cout << "|\n";
+    cout << "|  >. Your Choice: ";
+    cin >> choice;
 
-    // 4,5,3
-    // Machine_Node<int>* searchPtr = dht.machines.head;
-    // do {
-    //     cout << searchPtr->data << " ";
-    //     searchPtr->tree.inOrder(searchPtr->tree.Root);
-    //     cout << endl;
-    //     searchPtr = searchPtr->next;
-    // } while (searchPtr != dht.machines.head);
-    //  dht.insertMachineOnRuntime(0);
-    // dht.deleteMachineOnRuntime(0);
+    while (1)
+    {
+        if (choice != 'A' && choice != 'a' && choice != 'm' && choice != 'M')
+        {
+            cout << "|  >. Wrong input. Enter again please: ";
+            cin >> choice;
+        }
+        else
+            break;
+    }
 
-    //string command = "del /Q ";
-    //string path = "Machine_Files\\*.txt";
-    //system(command.append(path).c_str());
+    switch (choice)
+    {
+        case 'A':
+        case 'a':
+        {
+            dht.autoAssigning();
+            break;
+        }
+
+        case 'M':
+        case 'm':
+        {   
+            dht.manualAssigning();
+            break;
+        }
+    }
+
+    choice = '\0';
+    
+    while (choice != '0')
+    {
+        cin.ignore(100, '\n');
+        dht.Menu();
+        cin >> choice;
+        switch (choice)
+        {
+            case '1':
+            {
+                string key, value;
+                int machineID;
+
+                cout << "\n\n|  >. Enter key: ";
+                getline(cin, key);
+                cin.ignore(100,'\n');
+
+                cout << "|  >. Enter value: ";
+                getline(cin, value);
+
+                cout << "|  >. Enter starting machine ID: ";
+                cin >> machineID;
+
+                while (machineID < 0 || machineID >= pow(2, identifierSpace) || (dht.getMachines().machineExists(machineID) == false)) // check for unique number and for number between identifier space
+                {
+                    cout << "Error!\nPlease input a value;\n1) Less than total number of machines!\n2) Greater than zero\n3) Unique\nYour Input: ";
+                    cin >> machineID;
+                }
+
+                dht.insertData(key, value, machineID);
+                break;
+            }
+            
+            case '2':
+            {
+                string key, value;
+                string removedData = "";
+                int machineID;
+
+                cout << "\n\n|  >. Enter key: ";
+                getline(cin, key);
+                cin.ignore(100, '\n');
+
+                cout << "|  >. Enter starting machine ID: ";
+                cin >> machineID;
+
+                while (machineID < 0 || machineID >= pow(2, identifierSpace) || (dht.getMachines().machineExists(machineID) == true)) // check for unique number and for number between identifier space
+                {
+                    cout << "Error!\nPlease input a value;\n1) Less than total number of machines!\n2) Greater than zero\n3) Unique\nYour Input: ";
+                    cin >> machineID;
+                }
+
+                removedData = dht.removeData(key, machineID);
+
+                if (removedData != "")
+                {
+                    cout << "|  >. Data removed sucessfully!\n";
+                    cout << "|  >. Removed data is:\t" << removedData << endl;
+                }
+                else
+                    cout << "|  >. Data NOT found!\n";
+
+                break;
+            }
+
+            case '3':
+            {
+                int machineID;
+
+                cout << "|  >. Enter starting machine ID: ";
+                cin >> machineID;
+
+                dht.printSpecificRoutingTable(machineID);
+
+                break;
+            }
+
+            case '4':
+            {
+
+                break;
+            }
+        }
+    }
+    //switch(choice)
+    //{
+    //    case '1':
+    //    {
+    //       
+    //        dht.
+    //        break;
+    //    }
+    //}
+    //
 
     dht.clearAVLTreeListMemory();   // Release all unwanted memory from the AVL Lists
     dht.clearAVLTreeMemory();   // Release all unwanted memory from AVL trees
     dht.clearAllMachineMemory(); // Release all unwanted memory from the machines
 
-    char choice = '\0';
-    while (choice != '0')
-    {
-        dht.Menu();
-        cin >> choice;
-    }
+    _CrtDumpMemoryLeaks(); // This line is required to debug memory leaks
 }

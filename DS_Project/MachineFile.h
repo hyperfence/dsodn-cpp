@@ -57,6 +57,8 @@ public:
         out.open(path + fileName, ios::app);
         out << value << endl;
         out.close();
+
+        cout << "|  >. Data inserted sucessfully!\n";
     }
 
     /*

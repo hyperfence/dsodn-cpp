@@ -56,7 +56,7 @@ public:
         This function takes a key, value pair and a starting machineID number and
         then inserts the data on the specific machine (hashed value of the key).
     */
-    void insert(D key, D value, T machineID)
+    void insertData(D key, D value, T machineID)
     {
         unsigned long long int beforeHashVal = 0;
         T hash = HashFunction(key, &beforeHashVal);
@@ -73,7 +73,6 @@ public:
         }
         curr->file.insert(value);
         curr->tree.setRoot(curr->tree.insert(curr->tree.getRoot(), hash, beforeHashVal, curr->file.getFileLineNumber()));
-
     }
 
     /*
@@ -277,7 +276,6 @@ public:
             Machine_Node<D, T>* successorMachine = machines.getSuccessorMachine(value); 
             cout << "\n\n> --- Removing Machine & Transfering Data To Successor Machine --- <" << endl << endl;
             machines.removeMachine(value);
-            //machines.sortMachines();
             cout << "\n\n> ------ Adjusting Routing Tables Of Machines ------ <" << endl << endl;
             machines.configureRoutingTable();
             cout << "\n> --- Machine " << value << " Was Removed Successfully --- <" << endl;
@@ -331,7 +329,6 @@ public:
                 return removedData;
             }
         }
-        cout << "\nData not found!\n";
         return removedData;   
     }
     /*
@@ -402,7 +399,16 @@ public:
     }
 
     /*
-    *   This function shows the menu to the user 
+        This function prints the routing table of the machine whose ID is
+        passed as argument
+    */
+    void printSpecificRoutingTable(T machineID)
+    {
+        machines.printMachineRoutingTable(machineID);
+    }
+
+    /*
+        This function shows the menu to the user 
     */
     void Menu()
     {
@@ -411,15 +417,12 @@ public:
         cout << "\t\t\t\t\t--------------------------------------\n";
         
         cout << "|\n";
-        cout << "|  1. Specify the number of machines.\n";
-        cout << "|  2. Specify the size of identifier space.\n";
-        cout << "|  3. Assign unique machines IDS to machines.\n";
-        cout << "|  4. Insert data in (key,value) pair.\n";
-        cout << "|  5. Remove data by specifying key from a starting machine.\n";
-        cout << "|  6. Print routing table of a specific machine.\n";
-        cout << "|  7. Print AVL tree of a machine with location of files & line numbers.\n";
-        cout << "|  8. Add a new machine in Ring DHT.\n";
-        cout << "|  9. Remove a machine from Ring DHT.\n";
+        cout << "|  1. Insert data in (key,value) pair.\n";
+        cout << "|  2. Remove data by specifying key from a starting machine.\n";
+        cout << "|  3. Print routing table of a specific machine.\n";
+        cout << "|  4. Print AVL tree of a machine with location of files & line numbers.\n";
+        cout << "|  5. Add a new machine in Ring DHT.\n";
+        cout << "|  6. Remove a machine from Ring DHT.\n";
         cout << "|  0. Exit.\n";
         cout << "|\n\n\n";
 

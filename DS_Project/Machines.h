@@ -525,7 +525,7 @@ public:
             delete[] routingTable;
         } while (temp != head);
         cout << "|" << endl;
-        cout << "--------------------------------------------" << endl << endl;
+        cout << "--------------------------------------------" << endl << endl << endl << endl;
     }
 
     /*
