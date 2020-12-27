@@ -145,7 +145,11 @@ public:
         Machine_Node<D, T>* successorMachine = this->getSuccessorMachine(value);
         Machine_Node<D, T>* predecessorMachine = this->getPredecessorMachine(value);
 
-        head->tree.adjustMachineDataOnRemove(curr->tree.getRoot(), successorMachine->tree, value, predecessorMachine->data);
+
+        Machines <D, T> newObject;
+        newObject.head = this->head;
+
+        head->tree.adjustMachineDataOnRemove(curr->tree.getRoot(), successorMachine->tree, value, predecessorMachine->data, newObject);
         if (pre == head)
         {
             pre = curr->next;
@@ -485,6 +489,10 @@ public:
                 {
                     routingTable[i] = routingTable[i] - identifierSpace;
                 }
+            }
+            if (temp->routingTable != NULL)
+            {
+                temp->routingTable->clearRoutingTable();
             }
             temp->routingTable = new RoutingTable();
             for (int i = 0; i < routingTableSize; i++)

@@ -28,7 +28,7 @@ int main()
     // dht.machines.display();
     //cout << endl;
 
-    //dht.insert("Talha", "1st", 12);
+    dht.insert("Talha", "1st", 12);
     dht.insert("Talha", "2nd", 2);
     dht.insert("Hunaid", "3rd", 5);
     dht.insert("Hassan Raza", "4th", 8);    // 0
@@ -39,6 +39,7 @@ int main()
     // dht.insert("Khan", "8th", 8);
 
     dht.insertionOfNewMachine();
+
     //dht.removeData("Hunaid", 5);
     //dht.removeData("Hassan Raza", 8);
     //dht.removeData("Akmal", 3);
@@ -56,6 +57,7 @@ int main()
     // dht.insert(9,"3rd",5);
     // dht.insert(13,"4th",8);
 
+    // 4,5,3
     // Machine_Node<int>* searchPtr = dht.machines.head;
     // do {
     //     cout << searchPtr->data << " ";
@@ -64,7 +66,7 @@ int main()
     //     searchPtr = searchPtr->next;
     // } while (searchPtr != dht.machines.head);
     //  dht.insertMachineOnRuntime(0);
-    //dht.deleteMachineOnRuntime(8);
+    dht.deleteMachineOnRuntime(0);
 
     //string command = "del /Q ";
     //string path = "Machine_Files\\*.txt";
