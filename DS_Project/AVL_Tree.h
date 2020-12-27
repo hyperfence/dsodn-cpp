@@ -303,14 +303,14 @@ public:
         }
     }
     
-    void adjustMachineDataOnRemove(AVL_Node<T>* currentTree, AVL<T>& successorTree, T machineID, T predecessorID, Machines <string, T> machines)
+    void adjustMachineDataOnRemove(AVL_Node<T>* currentTree, AVL<T>& successorTree, T machineID, Machines <string, T> machines)
     {
         if (currentTree != NULL)
         {
-            adjustMachineDataOnRemove(currentTree->Left, successorTree, machineID, predecessorID, machines);
+            adjustMachineDataOnRemove(currentTree->Left, successorTree, machineID, machines);
             if (currentTree->chainingList.getHead() != NULL)
             {
-                if (currentTree->chainingList.getHead()->data <= machineID)
+                if (currentTree->chainingList.getHead()->data <= machineID && machines.isFirstMachine(machineID) == true)
                 {
                     AVL_List_Node<T>* currTreeChainingList = currentTree->chainingList.getHead();
                     while (currTreeChainingList != NULL)
@@ -328,7 +328,25 @@ public:
                         currTreeChainingList = currTreeChainingList->next;
                     }
                 }
-                else if (currentTree->chainingList.getHead() != NULL && currentTree->chainingList.getHead()->data > machineID && predecessorID > machineID)
+                else if (currentTree->chainingList.getHead()->data <= machineID && currentTree->chainingList.getHead()->data > machines.getPredecessorMachine(machineID)->data)
+                {
+                    AVL_List_Node<T>* currTreeChainingList = currentTree->chainingList.getHead();
+                    while (currTreeChainingList != NULL)
+                    {
+                        AVL_Node<T>* root = successorTree.getRoot();
+                        Machine_Node <string, T>* currMachine = machines.getMachine(machineID);
+                        Machine_Node <string, T>* successorMachine = machines.getSuccessorMachine(currMachine->data);
+
+                        string valueInserted = currMachine->file.remove(currTreeChainingList->valLineNumber);
+
+                        successorMachine->file.increaseFileLineNumber(1);
+                        successorMachine->file.insert(valueInserted);
+
+                        successorTree.setRoot(successorTree.insert(root, currTreeChainingList->data, currTreeChainingList->beforeHash, successorMachine->file.getFileLineNumber()));
+                        currTreeChainingList = currTreeChainingList->next;
+                    }
+                }
+                else if (currentTree->chainingList.getHead() != NULL && currentTree->chainingList.getHead()->data > machineID && machines.getPredecessorMachine(machineID)->data < currentTree->chainingList.getHead()->data && machines.isFirstMachine(machineID) == true)
                 {
                     AVL_List_Node<T>* currTreeChainingList = currentTree->chainingList.getHead();
                     while (currTreeChainingList != NULL)
@@ -347,7 +365,7 @@ public:
                     }
                 }
             }
-            adjustMachineDataOnRemove(currentTree->Right, successorTree, machineID, predecessorID, machines);
+            adjustMachineDataOnRemove(currentTree->Right, successorTree, machineID, machines);
         }
     }
 

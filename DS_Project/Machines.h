@@ -149,7 +149,9 @@ public:
         Machines <D, T> newObject;
         newObject.head = this->head;
 
-        head->tree.adjustMachineDataOnRemove(curr->tree.getRoot(), successorMachine->tree, value, predecessorMachine->data, newObject);
+        successorMachine->tree.setRoot(NULL);
+
+        head->tree.adjustMachineDataOnRemove(curr->tree.getRoot(), successorMachine->tree, value, newObject);
         if (pre == head)
         {
             pre = curr->next;
