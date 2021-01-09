@@ -148,6 +148,8 @@ public:
         successorMachine->tree.setRoot(NULL);
 
         head->tree.adjustMachineDataOnRemove(curr->tree.getRoot(), successorMachine->tree, value, newObject);
+        string fname = curr->file.getFilePath() + curr->file.getFileName();
+        remove(fname.c_str());
         if (pre == head)
         {
             pre = curr->next;

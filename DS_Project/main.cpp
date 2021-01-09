@@ -82,9 +82,9 @@ int main()
     
     while (choice != '0')
     {
-        cin.ignore(100, '\n');
         dht.Menu();
         cin >> choice;
+        cin.ignore(100, '\n');
         switch (choice)
         {
             case '1':
@@ -94,7 +94,6 @@ int main()
 
                 cout << "\n\n|  >. Enter key: ";
                 getline(cin, key);
-                cin.ignore(100,'\n');
 
                 cout << "|  >. Enter value: ";
                 getline(cin, value);
@@ -120,7 +119,6 @@ int main()
 
                 cout << "\n\n|  >. Enter key: ";
                 getline(cin, key);
-                cin.ignore(100, '\n');
 
                 cout << "|  >. Enter starting machine ID: ";
                 cin >> machineID;
