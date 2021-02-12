@@ -35,9 +35,23 @@ int main()
 
     cout << "|  >. Specify the number of machines: ";
     cin >> numberOfMachines;
+    while (cin.fail())
+    {
+        cout << "|  >. Specify the number of machines: ";
+        cin.clear();
+        std::cin.ignore(256, '\n');
+        cin >> numberOfMachines;
+    }
 
     cout << "|  >. Specify the size of identifier space in bits: ";
     cin >> identifierSpace;
+    while (cin.fail())
+    {
+        cout << "|  >. Specify the size of identifier space in bits: ";
+        cin.clear();
+        std::cin.ignore(256, '\n');
+        cin >> identifierSpace;
+    }
 
     RingDHT <string, int> dht(identifierSpace, numberOfMachines);
 

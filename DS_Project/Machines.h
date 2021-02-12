@@ -408,80 +408,94 @@ public:
         This function takes hashed key of data and machine from the Ring_DHT class and then
         performs the search according to the given keys
     */
-    Machine_Node<D,T>* searchResponsibleMachine(T dataKey, T machineKey)
+    Machine_Node<D, T>* searchResponsibleMachine(T dataKey, T machineKey)
     {
         cout << "\n\n------ Routing Starting From Machine " << setfill('0') << setw(3) << machineKey << " ------" << endl;
+        cout << "|  Routing Started" << endl;
         cout << "|" << endl;
-        Machine_Node<D,T>* startingMachine = getMachine(machineKey);
+        Machine_Node<D, T>* currentMachine = getMachine(machineKey);
+        int totalRoutingLookups = 0;
         for (int i = 0; i < routingTableSize; i++)
         {
-            Machine_Node<D,T>* temp = static_cast<Machine_Node<D,T>*>(startingMachine->routingTable->getElement(i));
-            Machine_Node<D,T>* temp2 = static_cast<Machine_Node<D,T>*>(startingMachine->routingTable->getElement(i + 1));
-            if (dataKey > getLastMachine()->data)
+            if (totalRoutingLookups > pow(2, routingTableSize)) // More than N lookups have been done but no responsible machine was found
             {
-                cout << "|  Routing From Machine : " << setfill('0') << setw(3) << startingMachine->data << " -> " << setfill('0') << setw(3) << getFirstMachine()->data << endl;
-                startingMachine = getFirstMachine();
-                cout << "|" << endl;
-                cout << "-----------------------------------------------" << endl << endl;
-                return startingMachine;
+                break;
             }
-            else if (dataKey < getFirstMachine()->data)
+            Machine_Node<D, T>* routingTableMachine = static_cast<Machine_Node<D, T>*>(currentMachine->routingTable->getElement(i));
+            Machine_Node<D, T>* preMachine = getPredecessorMachine(currentMachine->data);       
+            if (isFirstMachine(currentMachine->data) == true)
             {
-                cout << "|  Routing From Machine : " << setfill('0') << setw(3) << startingMachine->data << " -> " << setfill('0') << setw(3) << getFirstMachine()->data << endl;
-                startingMachine = getFirstMachine();
-                cout << "|" << endl;
-                cout << "-----------------------------------------------" << endl << endl;
-                return startingMachine;
+                if (preMachine->data != NULL && dataKey > preMachine->data || dataKey <= currentMachine->data)
+                {
+                    cout << "|  Routing From Machine: " << setfill('0') << setw(3) << currentMachine->data << " -> " << setfill('0') << setw(3) << currentMachine->data << endl;
+                    cout << "|" << endl;
+                    cout << "|  Routing Ended" << endl;
+                    cout << "-----------------------------------------------" << endl << endl;
+                    return currentMachine;
+                }
             }
-            else if (isLastMachine(startingMachine->data) == true && dataKey >= startingMachine->data)
+            else if (isLastMachine(currentMachine->data) == true)
             {
-                cout << "|  Routing From Machine: " << setfill('0') << setw(3) << startingMachine->data << " -> " << setfill('0') << setw(3) << getFirstMachine()->data << endl;
-                startingMachine = getFirstMachine();
-                cout << "|" << endl;
-                cout << "-----------------------------------------------" << endl << endl;
-                return startingMachine;
+                if (dataKey > currentMachine->data)
+                {
+                    cout << "|  Routing From Machine: " << setfill('0') << setw(3) << currentMachine->data << " -> " << setfill('0') << setw(3) << getFirstMachine()->data << endl;
+                    cout << "|" << endl;
+                    cout << "|  Routing Ended" << endl;
+                    cout << "-----------------------------------------------" << endl << endl;
+                    currentMachine = getFirstMachine();
+                    return currentMachine;
+                }
             }
-            else if (dataKey == startingMachine->data)
+            if (preMachine->data != NULL && dataKey > preMachine->data && dataKey <= currentMachine->data)
             {
-                cout << "|  Routing From Machine: " << setfill('0') << setw(3) << startingMachine->data << endl;
+                cout << "|  Routing From Machine: " << setfill('0') << setw(3) << currentMachine->data << " -> " << setfill('0') << setw(3) << currentMachine->data << endl;
                 cout << "|" << endl;
+                cout << "|  Routing Ended" << endl;
                 cout << "-----------------------------------------------" << endl << endl;
-                return startingMachine;
+                return currentMachine;
             }
-            else if (temp->data == dataKey)
+            else if (i == 0 && dataKey > currentMachine->data && dataKey <= routingTableMachine->data)
             {
-                cout << "|  Routing From Machine: " << setfill('0') << setw(3) << startingMachine->data << " -> " << setfill('0') << setw(3) << temp->data << endl;
-                startingMachine = temp;
-                cout << "|" << endl;
-                cout << "-----------------------------------------------" << endl << endl;
-                return startingMachine;
-            }
-            else if (dataKey > startingMachine->data && temp->data >= dataKey)
-            {
-                cout << "|  Routing From Machine: " << setfill('0') << setw(3) << startingMachine->data << " -> " << setfill('0') << setw(3) << temp->data << endl;
-                startingMachine = temp;
-                cout << "|" << endl;
-                cout << "-----------------------------------------------" << endl << endl;
-                return startingMachine;
-            }
-            else if (dataKey > temp->data && temp2 != NULL && dataKey < temp2->data)
-            {
-                cout << "|  Routing From Machine: " << setfill('0') << setw(3) << startingMachine->data << " -> " << setfill('0') << setw(3) << temp->data << endl;
-                startingMachine = temp;
+                cout << "|  Routing From Machine: " << setfill('0') << setw(3) << currentMachine->data << " -> " << setfill('0') << setw(3) << routingTableMachine->data << endl;
+                currentMachine = routingTableMachine;
                 i = -1;
+                totalRoutingLookups++;
             }
-            else if (dataKey > temp->data && temp2 == NULL)
+            else if (i < routingTableSize - 1)
             {
-                cout << "|  Routing From Machine: " << setfill('0') << setw(3) << startingMachine->data << " -> " << setfill('0') << setw(3) << temp->data << endl;
-                startingMachine = temp;
+                Machine_Node<D, T>* routingTableNextMachine = static_cast<Machine_Node<D, T>*>(currentMachine->routingTable->getElement(i + 1));
+                if (dataKey > routingTableMachine->data && dataKey <= routingTableNextMachine->data)
+                {
+                    cout << "|  Routing From Machine: " << setfill('0') << setw(3) << currentMachine->data << " -> " << setfill('0') << setw(3) << routingTableMachine->data << endl;
+                    currentMachine = routingTableMachine;
+                    i = -1;
+                    totalRoutingLookups++;
+                }
+            }
+            else if (i == routingTableSize-1) // No suitable routing machine found, So we'll treat this special case differently
+            {
+                Machine_Node<D, T>* routingTableBiggestMachine = static_cast<Machine_Node<D, T>*>(currentMachine->routingTable->getElement(0));
+                for (int j = 0; j < routingTableSize; j++)
+                {
+                    Machine_Node<D, T>* routingTableIteratedMachine = static_cast<Machine_Node<D, T>*>(currentMachine->routingTable->getElement(j));
+                    if (routingTableIteratedMachine->data > routingTableBiggestMachine->data)
+                    {
+                        routingTableBiggestMachine = static_cast<Machine_Node<D, T>*>(currentMachine->routingTable->getElement(j));
+                    }
+                }
+                // initially lets rout to the biggest availble machine of the current routing table
+                cout << "|  Routing From Machine: " << setfill('0') << setw(3) << currentMachine->data << " -> " << setfill('0') << setw(3) << routingTableBiggestMachine->data << " [Intelligent]" <<endl;
+                currentMachine = routingTableBiggestMachine;
                 i = -1;
+                totalRoutingLookups++;
             }
         }
-        cout << "|       -NULL-" << endl;
+        cout << "|  No Routing Machine Found" << endl;
+        cout << "|  " << endl;
+        cout << "|  Routing Ended" << endl;
         cout << "-----------------------------------------------" << endl << endl;
         return NULL;
     }
-
 
     /*
         This function adjusts routing tables for every machine
