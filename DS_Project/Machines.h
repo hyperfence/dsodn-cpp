@@ -405,6 +405,50 @@ public:
     }
 
     /*
+        This function returns true if the data key is greater than the current machine
+        it was made seperate to cater the circular property of the identifier space
+    */
+    bool isDataKeyGreater(T key, Machine_Node<D, T>* currentMachine)
+    {
+        bool result = false;
+        if (key > currentMachine->data)
+        {
+            result = true;
+        }
+        else if (isLastMachine(currentMachine->data) == true)
+        {
+            Machine_Node<D, T>* nextMachine = getSuccessorMachine(currentMachine->data);
+            if (key < nextMachine->data)
+            {
+                result = true;
+            }
+        }
+        return result;
+    }
+
+    /*
+        This function returns true if the data key is lesser than the current machine
+        it was made seperate to cater the circular property of the identifier space
+    */
+    bool isDataKeyLesser(T key, Machine_Node<D, T>* currentMachine)
+    {
+        bool result = false;
+        if (key < currentMachine->data)
+        {
+            result = true;
+        }
+        else if (isFirstMachine(currentMachine->data) == true)
+        {
+            Machine_Node<D, T>* prevMachine = getPredecessorMachine(currentMachine->data);
+            if (key > prevMachine->data)
+            {
+                result = true;
+            }
+        }
+        return result;
+    }
+
+    /*
         This function takes hashed key of data and machine from the Ring_DHT class and then
         performs the search according to the given keys
     */
@@ -454,7 +498,7 @@ public:
                 cout << "-----------------------------------------------" << endl << endl;
                 return currentMachine;
             }
-            else if (i == 0 && dataKey > currentMachine->data && dataKey <= routingTableMachine->data)
+            else if (i == 0 && isDataKeyGreater(dataKey, currentMachine) == true && (isDataKeyLesser(dataKey, routingTableMachine) == true || dataKey == routingTableMachine->data))
             {
                 cout << "|  Routing From Machine: " << setfill('0') << setw(3) << currentMachine->data << " -> " << setfill('0') << setw(3) << routingTableMachine->data << endl;
                 currentMachine = routingTableMachine;
@@ -464,7 +508,7 @@ public:
             else if (i < routingTableSize - 1)
             {
                 Machine_Node<D, T>* routingTableNextMachine = static_cast<Machine_Node<D, T>*>(currentMachine->routingTable->getElement(i + 1));
-                if (dataKey > routingTableMachine->data && dataKey <= routingTableNextMachine->data)
+                if (isDataKeyGreater(dataKey, routingTableMachine) == true && (isDataKeyLesser(dataKey, routingTableNextMachine) == true || dataKey == routingTableNextMachine->data))
                 {
                     cout << "|  Routing From Machine: " << setfill('0') << setw(3) << currentMachine->data << " -> " << setfill('0') << setw(3) << routingTableMachine->data << endl;
                     currentMachine = routingTableMachine;
